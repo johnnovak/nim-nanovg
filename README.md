@@ -1,2 +1,5 @@
 # nim-nanovg
-NanoVG for Nim in style
+
+A NanoVG wrapper for Nim in style.
+
+Not for general consumption yet. Things will explode. You have been warned.
