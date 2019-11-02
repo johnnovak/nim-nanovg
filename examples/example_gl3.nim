@@ -1,57 +1,64 @@
-import math
-import strutils
+import strformat
 
 import glad/gl
 import glfw
-import glfw/wrapper as glfwWrapper
-
 import nanovg
-import demo
-import perf
+
+import demo, perf
 
 
 var
   blowup = false
   screenshot = false
   premult = false
+  vsync = false
 
 
-proc keyCb(win: Win, key: Key, scanCode: int, action: KeyAction,
-           modKeys: ModifierKeySet) =
+proc keyCb(win: Window, key: Key, scanCode: int32, action: KeyAction,
+           modKeys: set[ModifierKey]) =
 
   if action != kaDown: return
 
   case key
   of keyEscape: win.shouldClose = true
   of keySpace: blowup = not blowup
-  of keyS: screenshot = true
+  of keyS: screenshot = true  # TODO
   of keyP: premult = not premult
+  of keyV: vsync = not vsync
   else: return
 
 
+proc createWindow(): Window =
+  var cfg = DefaultOpenglWindowConfig
+  cfg.size = (w: 1000, h: 600)
+  cfg.title = "NanoVG GL3 Demo"
+  cfg.resizable = true
+  cfg.bits = (r: 8, g: 8, b: 8, a: 8, stencil: 8, depth: 16)
+  cfg.debugContext = true
+
+  when defined(macosx):
+    cfg.version = glv32
+    cfg.forwardCompat = true
+    cfg.profile = opCoreProfile
+
+  when defined(demoMSAA):
+    cfg.nMultiSamples = 4
+
+  newWindow(cfg)
+
+
 proc main() =
-  glfw.init()
+  glfw.initialize()
 
-  var fps = initGraph(GRAPH_RENDER_FPS, "Frame Time")
-  var cpuGraph = initGraph(GRAPH_RENDER_MS, "CPU Time");
-  var gpuGraph = initGraph(GRAPH_RENDER_MS, "GPU Time");
-
-  var win = newGlWin(
-    dim = (w: 1000, h: 600),
-    title = "",
-    resizable = true,
-    bits = (8, 8, 8, 8, 8, 16),
-    version = glv20
-    #ifdef DEMO_MSAA
-    # glfwWindowHint(GLFW_SAMPLES, 4)
-    # #endif
-    #
-  )
-
+  var win = createWindow()
   win.keyCb = keyCb
+
   glfw.makeContextCurrent(win)
 
-  var vg = nvgInit(getProcAddress)
+  var flags = {nifStencilStrokes, nifDebug}
+  when not defined(demoMSAA): flags = flags + {nifAntialias}
+
+  var vg = nvgInit(getProcAddress, flags) # TODO exception like glfw?
   if vg == nil:
     quit "Error creating NanoVG context"
 
@@ -59,11 +66,12 @@ proc main() =
     quit "Error initialising OpenGL"
 
   var data: DemoData
-
-  if not loadDemoData(vg, data):
+  if not loadDemoData(vg, data):   # TODO cleanup
     quit "Could not load demo data"
 
-  glfw.swapInterval(0)
+  var fps      = initGraph(grsFramesPerSec, "Frame Time")
+  var cpuGraph = initGraph(grsMilliseconds, "CPU Time")
+  var gpuGraph = initGraph(grsMilliseconds, "GPU Time")
 
   var gpuTimer: GPUtimer
   setTime(0)
@@ -73,31 +81,40 @@ proc main() =
     var
       t = getTime()
       dt = t - prevt
-      prevt = t
       gpuTimes: array[3, float]
+
+    prevt = t
+
+    if vsync:
+      glfw.swapInterval(1)
+    else:
+      glfw.swapInterval(0)
 
     startGPUTimer(gpuTimer)
 
     var
       (mx, my) = win.cursorPos()
       (winWidth, winHeight) = win.size
-      (fbWidth, fbHeight) = win.framebufSize
-      pxRatio = float(fbWidth) / float(winWidth)
+      (fbWidth, fbHeight) = win.framebufferSize
+
+      # Calculate pixel ration for hi-dpi devices.
+      pxRatio = fbWidth / winWidth
 
     # Update and render
-    glViewport(GLint(0), GLint(0), GLsizei(fbWidth), GLsizei(fbHeight))
+    glViewport(0, 0, fbWidth, fbHeight)
 
     if premult:
       glClearColor(0, 0, 0, 0)
     else:
       glClearColor(0.3, 0.3, 0.32, 1.0)
 
-    glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or
+    glClear(GL_COLOR_BUFFER_BIT or
+            GL_DEPTH_BUFFER_BIT or
             GL_STENCIL_BUFFER_BIT)
 
-    vg.beginFrame(winWidth, winHeight, pxRatio)
+    vg.beginFrame(winWidth.float, winHeight.float, pxRatio)
 
-    renderDemo(vg, mx, my, float(winWidth), float(winHeight), t, blowup, data)
+    renderDemo(vg, mx, my, winWidth.float, winHeight.float, t, blowup, data)
 
     renderGraph(vg, 5, 5, fps)
     renderGraph(vg, 5+200+5, 5, cpuGraph)
@@ -118,25 +135,26 @@ proc main() =
     for i in 0..<n:
       updateGraph(gpuGraph, gpuTimes[i])
 
-    #if screenshot:
-    #  screenshot = false
-    #  saveScreenShot(fbWidth, fbHeight, premult, "dump.png")
+    if screenshot:
+      screenshot = false
+    #  saveScreenShot(fbWidth, fbHeight, premult, "dump.png")   // TODO
 
-    glfw.swapBufs(win)
+    glfw.swapBuffers(win)
     glfw.pollEvents()
+
 
   freeDemoData(vg, data)
 
-  nvgDelete(vg)
+  nvgDeinit(vg)
 
   let
-    frameTime = (getGraphAverage(fps) * 1000.0).formatFloat(ffDecimal, 2)
-    cpuTime = (getGraphAverage(cpuGraph) * 1000.0).formatFloat(ffDecimal, 2)
-    gpuTime = (getGraphAverage(gpuGraph) * 1000.0).formatFloat(ffDecimal, 2)
+    frameTime = getGraphAverage(fps)      * 1000
+    cpuTime   = getGraphAverage(cpuGraph) * 1000
+    gpuTime   = getGraphAverage(gpuGraph) * 1000
 
-  echo "Average Frame Time: " & frameTime & " ms"
-  echo "          CPU Time: " & cpuTime & " ms"
-  echo "          GPU Time: " & gpuTime & " ms"
+  echo fmt"Average Frame Time: {frameTime:6.2f} ms"
+  echo fmt"          CPU Time: {cpuTime:6.2f} ms"
+  echo fmt"          GPU Time: {gpuTime:6.2f} ms"
 
   glfw.terminate()
 
