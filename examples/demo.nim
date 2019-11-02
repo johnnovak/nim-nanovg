@@ -793,8 +793,8 @@ proc loadDemoData*(vg: NVGcontext, data: var DemoData): bool =
     echo "Could not add font bold.\n"
     return false
 
-  data.fontBold = vg.createFont("emoji", "data/NotoEmoji-Regular.ttf")
-  if data.fontBold == NoFont:
+  data.fontEmoji = vg.createFont("emoji", "data/NotoEmoji-Regular.ttf")
+  if data.fontEmoji == NoFont:
     echo "Could not add font emoji.\n"
     return false
 
@@ -812,19 +812,6 @@ proc freeDemoData*(vg: NVGcontext, data: DemoData) =
 
 
 proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
-  var
-    rows: array[3, TextRow]
-    glyphs: array[100, GlyphPosition]
-    text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉"
-    textStart, textEnd: cstring
-
-  var
-    lineNum = 0
-    px: cfloat
-    gx, gy: float
-    gutter = 0
-    numRows: int
-
   vg.save()
 
   vg.fontSize(18.0)
@@ -835,19 +822,29 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   # The text break API can be used to fill a large buffer of rows,
   # or to iterate over the text just few lines (or just one) at a time.
   # The "next" variable of the last returned item tells where to continue.
-  textStart = text
-  textEnd = cast[cstring](cast[int](text) + len(text))
+  var
+    text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉"
 
-  var yy = y
+    rows: array[3, TextRow]
 
-  numRows = vg.textBreakLines(textStart, textEnd, width, rows[0].addr,
-                              rows.len.cint)
+    textStart: cstring = text[0].addr
+    textEnd: cstring = cast[cstring](cast[int](textStart) + len(text))
+
+    numRows = vg.textBreakLines(textStart, textEnd, width,
+                                rows[0].addr, rows.len.cint)
+
+    glyphs: array[100, GlyphPosition]
+    lineNum = 0
+    px: cfloat
+    gx, gy: float
+    gutter = 0
+    yy = y
 
   while numRows > 0:
     for i in 0..<numRows:
       let
         row = rows[i]
-        hit = mx > x and mx < (x+width) and
+        hit = mx > x and mx < (x + width) and
               my >= yy and my < (yy + lineHeight)
 
       vg.beginPath()
@@ -860,15 +857,15 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
 
       if hit:
         let nglyphs = vg.textGlyphPositions(x, yy, row.start, row.end,
-                                            glyphs[0].addr, 100)
+                                            glyphs[0].addr, glyphs.len.cint)
         var
-          caretX = if (mx < x+row.width/2): x else: x+row.width
+          caretX = if (mx < x + row.width / 2): x else: x + row.width
           px = x
 
-        for j in 0..nglyphs-1:
+        for j in 0..<nglyphs:
           let
             x0 = glyphs[j].x
-            x1 = if (j+1 < nglyphs): glyphs[j+1].x else: x+row.width
+            x1 = if (j+1 < nglyphs): glyphs[j+1].x else: x + row.width
             gx = x0 * 0.3 + x1 * 0.7
 
           if mx >= px and mx < gx:
