@@ -751,35 +751,34 @@ type
     fontEmoji:  Font
 
 proc loadDemoData*(vg: NVGcontext, data: var DemoData): bool =
-  if vg == nil:
-    return false
+  if vg == nil: return false
 
   for i in 0..data.images.high:
     let file = fmt"data/images/image{i+1}.jpg"
 
     data.images[i] = vg.createImage(file)
     if data.images[i] == NoImage:
-      echo fmt"Could not load {file} .\n"
+      echo fmt"Could not load {file}."
       return false
 
   data.fontIcons = vg.createFont("icons", "data/entypo.ttf")
   if data.fontIcons == NoFont:
-    echo "Could not add font icons.\n"
+    echo "Could not add font icons."
     return false
 
   data.fontNormal = vg.createFont("sans", "data/Roboto-Regular.ttf")
   if data.fontNormal == NoFont:
-    echo "Could not add font italic.\n"
+    echo "Could not add font italic."
     return false
 
   data.fontBold = vg.createFont("sans-bold", "data/Roboto-Bold.ttf")
   if data.fontBold == NoFont:
-    echo "Could not add font bold.\n"
+    echo "Could not add font bold."
     return false
 
   data.fontEmoji = vg.createFont("emoji", "data/NotoEmoji-Regular.ttf")
   if data.fontEmoji == NoFont:
-    echo "Could not add font emoji.\n"
+    echo "Could not add font emoji."
     return false
 
   discard addFallbackFont(vg, data.fontNormal, data.fontEmoji)
