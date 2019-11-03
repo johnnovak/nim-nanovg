@@ -763,22 +763,22 @@ proc loadDemoData*(vg: NVGcontext, data: var DemoData): bool =
 
   data.fontIcons = vg.createFont("icons", "data/entypo.ttf")
   if data.fontIcons == NoFont:
-    echo "Could not add font icons."
+    echo "Could not add icon font."
     return false
 
   data.fontNormal = vg.createFont("sans", "data/Roboto-Regular.ttf")
   if data.fontNormal == NoFont:
-    echo "Could not add font italic."
+    echo "Could not load regular font."
     return false
 
   data.fontBold = vg.createFont("sans-bold", "data/Roboto-Bold.ttf")
   if data.fontBold == NoFont:
-    echo "Could not add font bold."
+    echo "Could not load bold font."
     return false
 
   data.fontEmoji = vg.createFont("emoji", "data/NotoEmoji-Regular.ttf")
   if data.fontEmoji == NoFont:
-    echo "Could not add font emoji."
+    echo "Could not load emoji font."
     return false
 
   discard addFallbackFont(vg, data.fontNormal, data.fontEmoji)
