@@ -801,7 +801,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   vg.fontSize(18.0)
   vg.fontFace("sans")
   vg.textAlign(haLeft, vaTop)
-  var (ascender, descender, lineHeight) = vg.textMetrics()
+  var (_, _, lineHeight) = vg.textMetrics()
 
   # The text break API can be used to fill a large buffer of rows,
   # or to iterate over the text just few lines (or just one) at a time.
@@ -810,7 +810,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
     text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉"
 
     textStart: cstring = text[0].addr
-    textEnd: cstring = cast[cstring](cast[int](textStart) + len(text))
+    textEnd: cstring = text[text.high].addr
 
     rows: array[3, TextRow]
     numRows = vg.textBreakLines(textStart, textEnd, width, rows)
@@ -838,8 +838,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
       discard vg.text(x, yy, row.start, row.end)
 
       if hit:
-        let nglyphs = vg.textGlyphPositions(x, yy, row.start, row.end,
-                                            glyphs[0].addr, glyphs.len.cint)
+        let nglyphs = vg.textGlyphPositions(x, yy, row.start, row.end, glyphs)
         var
           caretX = if (mx < x + row.width / 2): x else: x + row.width
           px = x
@@ -1073,6 +1072,7 @@ proc renderDemo*(vg: NVGcontext, mx, my, width, height, t: float,
   vg.restore()
 
 
+# TODO implement image saving
 #proc mini(int a, int b): int =
 #  a < b ? a : b
 #

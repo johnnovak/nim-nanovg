@@ -517,7 +517,7 @@ proc transform*(ctx: NVGContext,
   ##   [0 0 1]
   ## ```
 
-proc translate*(ctx: NVGContext, x: cfloat, y: cfloat)
+proc translate*(ctx: NVGContext, tx: cfloat, ty: cfloat)
     {.cdecl, importc: "nvgTranslate".}
   ## Translates current coordinate system.
 
@@ -532,7 +532,7 @@ proc skewY*(ctx: NVGContext, angle: cfloat) {.cdecl, importc: "nvgSkewY".}
   ## Skews the current coordinate system along Y axis. Angle is specified in
   ## radians.
 
-proc scale*(ctx: NVGContext, x: cfloat, y: cfloat)
+proc scale*(ctx: NVGContext, sx: cfloat, sy: cfloat)
   {.cdecl, importc: "nvgScale".}
   ## Scales the current coordinate system.
 
@@ -549,44 +549,41 @@ proc currentTransform*(ctx: NVGContext, xform: TransformMatrix)
   ##
   ## There should be space for 6 floats in the return buffer for the values a-f.
 
-## The following functions can be used to make calculations on 2x3
-## transformation matrices.
-
-proc transformIdentity*(dst: TransformMatrix)
+proc identity*(dst: TransformMatrix)
     {.cdecl, importc: "nvgTransformIdentity".}
   ## Sets the transform to identity matrix.
 
-proc transformTranslate*(dst: TransformMatrix, tx: cfloat, ty: cfloat)
+proc translate*(dst: TransformMatrix, tx: cfloat, ty: cfloat)
     {.cdecl, importc: "nvgTransformTranslate".}
   ## Sets the transform to translation matrix matrix.
 
-proc transformScale*(dst: TransformMatrix, sx: cfloat, sy: cfloat)
+proc scale*(dst: TransformMatrix, sx: cfloat, sy: cfloat)
     {.cdecl, importc: "nvgTransformScale".}
   ## Sets the transform to scale matrix.
 
-proc transformRotate*(dst: TransformMatrix, a: cfloat)
+proc rotate*(dst: TransformMatrix, angle: cfloat)
     {.cdecl, importc: "nvgTransformRotate".}
   ## Sets the transform to rotate matrix. Angle is specified in radians.
 
-proc transformSkewX*(dst: TransformMatrix, a: cfloat)
+proc skewX*(dst: TransformMatrix, angle: cfloat)
     {.cdecl, importc: "nvgTransformSkewX".}
   ## Sets the transform to skew-x matrix. Angle is specified in radians.
 
-proc transformSkewY*(dst: TransformMatrix, a: cfloat)
+proc skewY*(dst: TransformMatrix, angle: cfloat)
     {.cdecl, importc: "nvgTransformSkewY".}
   ## Sets the transform to skew-y matrix. Angle is specified in radians.
 
-proc transformMultiply*(dst: TransformMatrix, src: TransformMatrix)
+proc multiply*(dst: TransformMatrix, src: TransformMatrix)
     {.cdecl, importc: "nvgTransformMultiply".}
   ## Sets the transform to the result of multiplication of two transforms, of
   ## A = A*B.
 
-proc transformPremultiply*(dst: TransformMatrix, src: TransformMatrix)
+proc premultiply*(dst: TransformMatrix, src: TransformMatrix)
     {.cdecl, importc: "nvgTransformPremultiply".}
   ## Sets the transform to the result of multiplication of two transforms, of
   ## A = B*A.
 
-proc transformInverse*(dst: TransformMatrix, src: TransformMatrix): cint
+proc inverse*(dst: TransformMatrix, src: TransformMatrix): cint
     {.cdecl, importc: "nvgTransformInverse".}
   ## Sets the destination to inverse of specified transform.
   ## Returns 1 if the inverse could be calculated, else 0.
@@ -876,8 +873,7 @@ proc textBoxBounds*(ctx: NVGContext, x: cfloat, y: cfloat,
 
 proc textGlyphPositions*(ctx: NVGContext, x: cfloat, y: cfloat,
                          string: cstring, `end`: cstring,
-                         positions: ptr GlyphPosition,
-                         maxPositions: cint): cint
+                         positions: ptr GlyphPosition, maxPositions: cint): cint
   {.cdecl, importc: "nvgTextGlyphPositions".}
   ## Calculates the glyph x positions of the specified text. If end is
   ## specified only the sub-string will be used.

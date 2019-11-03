@@ -920,6 +920,12 @@ function main() {
   x*: cfloat                   ## The x-coordinate of the logical glyph position.
   minx*: cfloat
   maxx*: cfloat                ## The bounds of the glyph shape."><wbr />Glyph<wbr />Position<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#TransformMatrix"
+    title="TransformMatrix = object
+  m*: array[6, cfloat]"><wbr />Transform<wbr />Matrix<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#Bounds"
+    title="Bounds = object
+  b*: array[4, cfloat]"><wbr />Bounds<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#TextRow"
     title="TextRow {.bycopy.} = object
   start*: cstring              ## Pointer to the input text where the row starts.
@@ -1034,7 +1040,7 @@ function main() {
   <li><a class="reference" href="#transform%2CNVGContext%2Ccfloat%2Ccfloat%2Ccfloat%2Ccfloat%2Ccfloat%2Ccfloat"
     title="transform(ctx: NVGContext; a: cfloat; b: cfloat; c: cfloat; d: cfloat; e: cfloat; f: cfloat)"><wbr />transform<span class="attachedType">NVGContext</span></a></li>
   <li><a class="reference" href="#translate%2CNVGContext%2Ccfloat%2Ccfloat"
-    title="translate(ctx: NVGContext; x: cfloat; y: cfloat)"><wbr />translate<span class="attachedType">NVGContext</span></a></li>
+    title="translate(ctx: NVGContext; tx: cfloat; ty: cfloat)"><wbr />translate<span class="attachedType">NVGContext</span></a></li>
   <li><a class="reference" href="#rotate%2CNVGContext%2Ccfloat"
     title="rotate(ctx: NVGContext; angle: cfloat)"><wbr />rotate<span class="attachedType">NVGContext</span></a></li>
   <li><a class="reference" href="#skewX%2CNVGContext%2Ccfloat"
@@ -1042,30 +1048,30 @@ function main() {
   <li><a class="reference" href="#skewY%2CNVGContext%2Ccfloat"
     title="skewY(ctx: NVGContext; angle: cfloat)"><wbr />skew<wbr />Y<span class="attachedType">NVGContext</span></a></li>
   <li><a class="reference" href="#scale%2CNVGContext%2Ccfloat%2Ccfloat"
-    title="scale(ctx: NVGContext; x: cfloat; y: cfloat)"><wbr />scale<span class="attachedType">NVGContext</span></a></li>
-  <li><a class="reference" href="#currentTransform%2CNVGContext%2Cptr.cfloat"
-    title="currentTransform(ctx: NVGContext; xform: ptr cfloat)"><wbr />current<wbr />Transform<span class="attachedType">NVGContext</span></a></li>
-  <li><a class="reference" href="#transformIdentity%2Cptr.cfloat"
-    title="transformIdentity(dst: ptr cfloat)"><wbr />transform<wbr />Identity<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformTranslate%2Cptr.cfloat%2Ccfloat%2Ccfloat"
-    title="transformTranslate(dst: ptr cfloat; tx: cfloat; ty: cfloat)"><wbr />transform<wbr />Translate<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformScale%2Cptr.cfloat%2Ccfloat%2Ccfloat"
-    title="transformScale(dst: ptr cfloat; sx: cfloat; sy: cfloat)"><wbr />transform<wbr />Scale<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformRotate%2Cptr.cfloat%2Ccfloat"
-    title="transformRotate(dst: ptr cfloat; a: cfloat)"><wbr />transform<wbr />Rotate<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformSkewX%2Cptr.cfloat%2Ccfloat"
-    title="transformSkewX(dst: ptr cfloat; a: cfloat)"><wbr />transform<wbr />Skew<wbr />X<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformSkewY%2Cptr.cfloat%2Ccfloat"
-    title="transformSkewY(dst: ptr cfloat; a: cfloat)"><wbr />transform<wbr />Skew<wbr />Y<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformMultiply%2Cptr.cfloat%2Cptr.cfloat"
-    title="transformMultiply(dst: ptr cfloat; src: ptr cfloat)"><wbr />transform<wbr />Multiply<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformPremultiply%2Cptr.cfloat%2Cptr.cfloat"
-    title="transformPremultiply(dst: ptr cfloat; src: ptr cfloat)"><wbr />transform<wbr />Premultiply<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformInverse%2Cptr.cfloat%2Cptr.cfloat"
-    title="transformInverse(dst: ptr cfloat; src: ptr cfloat): cint"><wbr />transform<wbr />Inverse<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#transformPoint%2Cptr.cfloat%2Cptr.cfloat%2Cptr.cfloat%2Ccfloat%2Ccfloat"
-    title="transformPoint(destX: ptr cfloat; destY: ptr cfloat; xform: ptr cfloat; srcX: cfloat;
-               srcY: cfloat)"><wbr />transform<wbr />Point<span class="attachedType"></span></a></li>
+    title="scale(ctx: NVGContext; sx: cfloat; sy: cfloat)"><wbr />scale<span class="attachedType">NVGContext</span></a></li>
+  <li><a class="reference" href="#currentTransform%2CNVGContext%2CTransformMatrix"
+    title="currentTransform(ctx: NVGContext; xform: TransformMatrix)"><wbr />current<wbr />Transform<span class="attachedType">NVGContext</span></a></li>
+  <li><a class="reference" href="#identity%2CTransformMatrix"
+    title="identity(dst: TransformMatrix)"><wbr />identity<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#translate%2CTransformMatrix%2Ccfloat%2Ccfloat"
+    title="translate(dst: TransformMatrix; tx: cfloat; ty: cfloat)"><wbr />translate<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#scale%2CTransformMatrix%2Ccfloat%2Ccfloat"
+    title="scale(dst: TransformMatrix; sx: cfloat; sy: cfloat)"><wbr />scale<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#rotate%2CTransformMatrix%2Ccfloat"
+    title="rotate(dst: TransformMatrix; angle: cfloat)"><wbr />rotate<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#skewX%2CTransformMatrix%2Ccfloat"
+    title="skewX(dst: TransformMatrix; angle: cfloat)"><wbr />skew<wbr />X<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#skewY%2CTransformMatrix%2Ccfloat"
+    title="skewY(dst: TransformMatrix; angle: cfloat)"><wbr />skew<wbr />Y<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#multiply%2CTransformMatrix%2CTransformMatrix"
+    title="multiply(dst: TransformMatrix; src: TransformMatrix)"><wbr />multiply<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#premultiply%2CTransformMatrix%2CTransformMatrix"
+    title="premultiply(dst: TransformMatrix; src: TransformMatrix)"><wbr />premultiply<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#inverse%2CTransformMatrix%2CTransformMatrix"
+    title="inverse(dst: TransformMatrix; src: TransformMatrix): cint"><wbr />inverse<span class="attachedType">TransformMatrix</span></a></li>
+  <li><a class="reference" href="#transformPoint%2Cptr.cfloat%2Cptr.cfloat%2CTransformMatrix%2Ccfloat%2Ccfloat"
+    title="transformPoint(destX: ptr cfloat; destY: ptr cfloat; xform: TransformMatrix;
+               srcX: cfloat; srcY: cfloat)"><wbr />transform<wbr />Point<span class="attachedType">TransformMatrix</span></a></li>
   <li><a class="reference" href="#degToRad%2Ccfloat"
     title="degToRad(deg: cfloat): cfloat"><wbr />deg<wbr />To<wbr />Rad<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#radToDeg%2Ccfloat"
@@ -1241,7 +1247,7 @@ function main() {
                 nvgFill(vg),
 </pre></p>
 <p>Note: currently only solid color fill is supported for text.</p>
-The following functions can be used to make calculations on 2x3 transformation matrices. A 2x3 matrix is represented as float[6]. TODO type safe 2x3 matrix</p>
+</p>
   <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
@@ -1407,6 +1413,24 @@ The following functions can be used to make calculations on 2x3 transformation m
   <span class="Identifier">minx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>
   <span class="Identifier">maxx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>                <span class="Comment">## The bounds of the glyph shape.</span>
   </pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="TransformMatrix"></a>
+<dt><pre><a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">m</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">6</span><span class="Other">,</span> <span class="Identifier">cfloat</span><span class="Other">]</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="Bounds"></a>
+<dt><pre><a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">b</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">cfloat</span><span class="Other">]</span>
+</pre></dt>
 <dd>
 
 
@@ -1638,7 +1662,8 @@ Resets current render state to default values. Does not affect the render state 
 
 </dd>
 <a id="shapeAntiAlias,NVGContext,cint"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#shapeAntiAlias%2CNVGContext%2Ccint"><span class="Identifier">shapeAntiAlias</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">enabled</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#shapeAntiAlias%2CNVGContext%2Ccint"><span class="Identifier">shapeAntiAlias</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">enabled</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgShapeAntiAlias&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets whether to draw antialias for nvgStroke() and nvgFill().
@@ -1730,7 +1755,7 @@ Resets current transform to a identity matrix.
 
 </dd>
 <a id="translate,NVGContext,cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#translate%2CNVGContext%2Ccfloat%2Ccfloat"><span class="Identifier">translate</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTranslate&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#translate%2CNVGContext%2Ccfloat%2Ccfloat"><span class="Identifier">translate</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">tx</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">ty</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTranslate&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Translates current coordinate system.
@@ -1758,14 +1783,14 @@ Skews the current coordinate system along Y axis. Angle is specified in radians.
 
 </dd>
 <a id="scale,NVGContext,cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#scale%2CNVGContext%2Ccfloat%2Ccfloat"><span class="Identifier">scale</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgScale&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#scale%2CNVGContext%2Ccfloat%2Ccfloat"><span class="Identifier">scale</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">sx</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">sy</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgScale&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Scales the current coordinate system.
 
 </dd>
-<a id="currentTransform,NVGContext,ptr.cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#currentTransform%2CNVGContext%2Cptr.cfloat"><span class="Identifier">currentTransform</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">xform</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+<a id="currentTransform,NVGContext,TransformMatrix"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#currentTransform%2CNVGContext%2CTransformMatrix"><span class="Identifier">currentTransform</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">xform</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgCurrentTransform&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -1779,77 +1804,78 @@ Scales the current coordinate system.
 
 
 </dd>
-<a id="transformIdentity,ptr.cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformIdentity%2Cptr.cfloat"><span class="Identifier">transformIdentity</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformIdentity&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="identity,TransformMatrix"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#identity%2CTransformMatrix"><span class="Identifier">identity</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformIdentity&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to identity matrix.
 
 </dd>
-<a id="transformTranslate,ptr.cfloat,cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformTranslate%2Cptr.cfloat%2Ccfloat%2Ccfloat"><span class="Identifier">transformTranslate</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">tx</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">ty</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+<a id="translate,TransformMatrix,cfloat,cfloat"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#translate%2CTransformMatrix%2Ccfloat%2Ccfloat"><span class="Identifier">translate</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">tx</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">ty</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformTranslate&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to translation matrix matrix.
 
 </dd>
-<a id="transformScale,ptr.cfloat,cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformScale%2Cptr.cfloat%2Ccfloat%2Ccfloat"><span class="Identifier">transformScale</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">sx</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">sy</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+<a id="scale,TransformMatrix,cfloat,cfloat"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#scale%2CTransformMatrix%2Ccfloat%2Ccfloat"><span class="Identifier">scale</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">sx</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">sy</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformScale&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to scale matrix.
 
 </dd>
-<a id="transformRotate,ptr.cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformRotate%2Cptr.cfloat%2Ccfloat"><span class="Identifier">transformRotate</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformRotate&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="rotate,TransformMatrix,cfloat"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#rotate%2CTransformMatrix%2Ccfloat"><span class="Identifier">rotate</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformRotate&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to rotate matrix. Angle is specified in radians.
 
 </dd>
-<a id="transformSkewX,ptr.cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformSkewX%2Cptr.cfloat%2Ccfloat"><span class="Identifier">transformSkewX</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformSkewX&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="skewX,TransformMatrix,cfloat"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#skewX%2CTransformMatrix%2Ccfloat"><span class="Identifier">skewX</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformSkewX&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to skew-x matrix. Angle is specified in radians.
 
 </dd>
-<a id="transformSkewY,ptr.cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformSkewY%2Cptr.cfloat%2Ccfloat"><span class="Identifier">transformSkewY</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformSkewY&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="skewY,TransformMatrix,cfloat"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#skewY%2CTransformMatrix%2Ccfloat"><span class="Identifier">skewY</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformSkewY&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to skew-y matrix. Angle is specified in radians.
 
 </dd>
-<a id="transformMultiply,ptr.cfloat,ptr.cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformMultiply%2Cptr.cfloat%2Cptr.cfloat"><span class="Identifier">transformMultiply</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+<a id="multiply,TransformMatrix,TransformMatrix"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#multiply%2CTransformMatrix%2CTransformMatrix"><span class="Identifier">multiply</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformMultiply&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to the result of multiplication of two transforms, of A = A*B.
 
 </dd>
-<a id="transformPremultiply,ptr.cfloat,ptr.cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformPremultiply%2Cptr.cfloat%2Cptr.cfloat"><span class="Identifier">transformPremultiply</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+<a id="premultiply,TransformMatrix,TransformMatrix"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#premultiply%2CTransformMatrix%2CTransformMatrix"><span class="Identifier">premultiply</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformPremultiply&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the transform to the result of multiplication of two transforms, of A = B*A.
 
 </dd>
-<a id="transformInverse,ptr.cfloat,ptr.cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformInverse%2Cptr.cfloat%2Cptr.cfloat"><span class="Identifier">transformInverse</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+<a id="inverse,TransformMatrix,TransformMatrix"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#inverse%2CTransformMatrix%2CTransformMatrix"><span class="Identifier">inverse</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformInverse&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the destination to inverse of specified transform. Returns 1 if the inverse could be calculated, else 0.
 
 </dd>
-<a id="transformPoint,ptr.cfloat,ptr.cfloat,ptr.cfloat,cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transformPoint%2Cptr.cfloat%2Cptr.cfloat%2Cptr.cfloat%2Ccfloat%2Ccfloat"><span class="Identifier">transformPoint</span></a><span class="Other">(</span><span class="Identifier">destX</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">destY</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">xform</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">srcX</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span>
-                   <span class="Identifier">srcY</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformPoint&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="transformPoint,ptr.cfloat,ptr.cfloat,TransformMatrix,cfloat,cfloat"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#transformPoint%2Cptr.cfloat%2Cptr.cfloat%2CTransformMatrix%2Ccfloat%2Ccfloat"><span class="Identifier">transformPoint</span></a><span class="Other">(</span><span class="Identifier">destX</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">destY</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">xform</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span>
+                   <span class="Identifier">srcX</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">srcY</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTransformPoint&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Transform a point by given transform.
@@ -1904,7 +1930,8 @@ Updates image data specified by image handle.
 
 </dd>
 <a id="imageSize,NVGContext,Image,ptr.cint,ptr.cint"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#imageSize%2CNVGContext%2CImage%2Cptr.cint%2Cptr.cint"><span class="Identifier">imageSize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a><span class="Other">;</span> <span class="Identifier">w</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#imageSize%2CNVGContext%2CImage%2Cptr.cint%2Cptr.cint"><span class="Identifier">imageSize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a><span class="Other">;</span> <span class="Identifier">w</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span>
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgImageSize&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Returns the dimensions of a created image.
@@ -2179,7 +2206,7 @@ Sets the proportional line height of current text style. The line height is spec
 
 </dd>
 <a id="textAlign,NVGContext,cint"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textAlign%2CNVGContext%2Ccint"><span class="Identifier">textAlign</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">align</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#textAlign%2CNVGContext%2Ccint"><span class="Identifier">textAlign</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">align</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTextAlign&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the text align of current text style, see NVGalign for options.
@@ -2254,7 +2281,7 @@ Draws text string at specified location. If end is specified only the sub-string
 </dd>
 <a id="textMetrics,NVGContext,ptr.cfloat,ptr.cfloat,ptr.cfloat"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#textMetrics%2CNVGContext%2Cptr.cfloat%2Cptr.cfloat%2Cptr.cfloat"><span class="Identifier">textMetrics</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">ascender</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">descender</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">;</span>
-                <span class="Identifier">lineh</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span></span><span class="Other">.}</span></span></pre></dt>
+                <span class="Identifier">lineh</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cfloat</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgTextMetrics&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Returns the vertical metrics based on the current text style. Measured values are returned in local coordinate space.
@@ -2281,7 +2308,7 @@ Returns the vertical metrics based on the current text style. Measured values ar
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-11-03 00:41:59 UTC</small>
+        <small>Made with Nim. Generated: 2019-11-03 05:18:33 UTC</small>
       </div>
     </div>
   </div>

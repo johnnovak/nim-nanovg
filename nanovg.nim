@@ -68,17 +68,10 @@ export wrapper.rotate
 export wrapper.skewX
 export wrapper.skewY
 export wrapper.scale
-export wrapper.currentTransform
-export wrapper.transformIdentity
-export wrapper.transformTranslate
-export wrapper.transformScale
-export wrapper.transformRotate
-export wrapper.transformSkewX
-export wrapper.transformSkewY
-export wrapper.transformMultiply
-export wrapper.transformPremultiply
-export wrapper.transformInverse
-export wrapper.transformPoint
+export wrapper.identity
+export wrapper.multiply
+export wrapper.premultiply
+export wrapper.inverse
 
 # Images
 export wrapper.createImage
@@ -128,7 +121,6 @@ export wrapper.fontFace
 export wrapper.fontFace
 export wrapper.text
 export wrapper.textBox
-export wrapper.textGlyphPositions
 
 # Nim API
 var gladInitialized = false
@@ -187,13 +179,13 @@ proc textMetrics*(ctx: NVGContext):
 
 func clampToCuchar(i: int): cuchar = clamp(i, 0, 255).cuchar
 
-template rgb*(r, g, b: int): Color =
+func rgb*(r, g, b: int): Color =
   rgb(clampToCuchar(r), clampToCuchar(g), clampToCuchar(b))
 
-template rgba*(r, g, b, a: int): Color =
+func rgba*(r, g, b, a: int): Color =
   rgba(clampToCuchar(r), clampToCuchar(g), clampToCuchar(b), clampToCuchar(a))
 
-proc hsla*(h: float, s: float, l: float, a: float): Color =
+func hsla*(h: float, s: float, l: float, a: float): Color =
   hsla(h.cfloat, s.cfloat, l.cfloat, clamp(a * 255, 0, 255).cuchar)
 
 template gray*(g: int,   a: int = 255): Color   = rgba(g, g, g, a)
@@ -219,6 +211,17 @@ proc createFontMem*(ctx: NVGContext, name: cstring,
                 freeData=0)
 
 
+proc currentTransform*(ctx: NVGContext): TransformMatrix =
+  currentTransform(ctx, result)
+
+
+proc transform*(xform: TransformMatrix, x: cfloat,
+                y: cfloat): tuple[x: float, y: float] =
+  var destX, destY: cfloat
+  transformPoint(destX.addr, destY.addr, xform, x, y)
+  result = (destX.float, destY.float)
+
+
 proc textBreakLines*(ctx: NVGContext, string: cstring, `end`: cstring,
                      breakRowWidth: float,
                      rows: var openArray[TextRow]): cint =
@@ -226,19 +229,27 @@ proc textBreakLines*(ctx: NVGContext, string: cstring, `end`: cstring,
 
 
 proc horizontalAdvance*(ctx: NVGContext, x: float, y: float,
-                        string: string): float =
-  textBounds(ctx, x, y, string, `end`=nil, bounds=nil)
+                        string: cstring, `end`: cstring = nil): float =
+  textBounds(ctx, x, y, string, `end`, bounds=nil)
 
 
 proc textBounds*(ctx: NVGContext, x: float, y: float,
-                 string: string): tuple[bounds: Bounds, horizAdvance: float] =
+             string: cstring,
+             `end`: cstring = nil): tuple[bounds: Bounds, horizAdvance: float] =
+
   var b: Bounds
-  let adv = textBounds(ctx, x, y, string, `end`=nil, bounds=b.b[0].addr)
+  let adv = textBounds(ctx, x, y, string, `end`, bounds=b.b[0].addr)
   result = (b, adv.float)
 
 
 proc textBoxBounds*(ctx: NVGContext, x: float, y: float,
-                    breakRowWidth: float, string: string): Bounds =
-  textBoxBounds(ctx, x, y, breakRowWidth, string, nil, result.b[0].addr)
+                    breakRowWidth: float, string: cstring,
+                    `end`: cstring = nil): Bounds =
+  textBoxBounds(ctx, x, y, breakRowWidth, string, `end`, result.b[0].addr)
 
 
+proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
+                         string: cstring, `end`: cstring,
+                         positions: var openArray[GlyphPosition]): int = 
+  textGlyphPositions(ctx, x, y, string, `end`,
+                     positions[0].addr, positions.len.cint)
