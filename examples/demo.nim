@@ -10,9 +10,6 @@ const
   ICON_LOGIN = 0xe740
   ICON_TRASH = 0xe729
 
-proc isBlack(col: Color): bool =
-  return col == rgba(0, 0, 0, 0)
-
 
 proc drawWindow(vg: NVGcontext, title: string, x, y, w, h: float) =
   const cornerRadius = 3.0
@@ -27,7 +24,7 @@ proc drawWindow(vg: NVGcontext, title: string, x, y, w, h: float) =
 
   # Drop shadow
   let shadowPaint = vg.boxGradient(x, y+2, w, h, cornerRadius * 2, 10,
-                                   rgba(0, 0, 0, 128), rgba(0, 0, 0, 0))
+                                   black(128), black(0))
   vg.beginPath()
   vg.rect(x-10, y-10, w+20, h+30)
   vg.roundedRect(x, y, w, h, cornerRadius)
@@ -36,9 +33,7 @@ proc drawWindow(vg: NVGcontext, title: string, x, y, w, h: float) =
   vg.fill()
 
   # Header
-  let headerPaint = vg.linearGradient(x, y, x, y+15,
-                                      rgba(255, 255, 255, 8),
-                                      rgba(0, 0, 0, 16))
+  let headerPaint = vg.linearGradient(x, y, x, y+15, white(8), black(16))
   vg.beginPath()
   vg.roundedRect(x+1, y+1, w-2, 30, cornerRadius-1)
   vg.fillPaint(headerPaint)
@@ -46,7 +41,7 @@ proc drawWindow(vg: NVGcontext, title: string, x, y, w, h: float) =
   vg.beginPath()
   vg.moveTo(x+0.5, y+0.5+30)
   vg.lineTo(x+0.5+w-1, y+0.5+30)
-  vg.strokeColor(gray(0, 32))
+  vg.strokeColor(black(32))
   vg.stroke()
 
   vg.fontSize(18.0)
@@ -54,7 +49,7 @@ proc drawWindow(vg: NVGcontext, title: string, x, y, w, h: float) =
   vg.textAlign(haCenter, vaMiddle)
 
   vg.fontBlur(2)
-  vg.fillColor(gray(0, 128))
+  vg.fillColor(black(128))
   discard vg.text(x+w/2, y+16+1, title)
 
   vg.fontBlur(0)
@@ -68,7 +63,7 @@ proc drawSearchBox(vg: NVGcontext, text: string, x, y, w, h: float) =
   let cornerRadius = h/2-1
 
   # Edit
-  let bg = vg.boxGradient(x, y+1.5, w, h, h/2, 5, gray(0, 16), gray(0, 92))
+  let bg = vg.boxGradient(x, y+1.5, w, h, h/2, 5, black(16), black(92))
   vg.beginPath()
   vg.roundedRect(x, y, w, h, cornerRadius)
   vg.fillPaint(bg)
@@ -76,20 +71,20 @@ proc drawSearchBox(vg: NVGcontext, text: string, x, y, w, h: float) =
 
   vg.fontSize(h*1.3)
   vg.fontFace("icons")
-  vg.fillColor(gray(255, 64))
+  vg.fillColor(white(64))
   vg.textAlign(haCenter, vaMiddle)
   discard vg.text(x+h*0.55, y+h*0.55, toUTF8(Rune(ICON_SEARCH)))
 
   vg.fontSize(20.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 32))
+  vg.fillColor(white(32))
 
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x+h*1.05, y+h*0.5, text)
 
   vg.fontSize(h*1.3)
   vg.fontFace("icons")
-  vg.fillColor(gray(255, 32))
+  vg.fillColor(white(32))
   vg.textAlign(haCenter, vaMiddle)
   discard vg.text(x+w-h*0.55, y+h*0.55, toUTF8(Rune(ICON_CIRCLED_CROSS)))
 
@@ -97,7 +92,7 @@ proc drawSearchBox(vg: NVGcontext, text: string, x, y, w, h: float) =
 proc drawDropDown(vg: NVGcontext, text: string, x, y, w, h: float) =
   let
     cornerRadius = 4.0
-    bg = vg.linearGradient(x, y, x, y+h, gray(255, 16), gray(0, 16))
+    bg = vg.linearGradient(x, y, x, y+h, white(16), black(16))
   vg.beginPath()
   vg.roundedRect(x+1, y+1, w-2, h-2, cornerRadius-1)
   vg.fillPaint(bg)
@@ -105,18 +100,18 @@ proc drawDropDown(vg: NVGcontext, text: string, x, y, w, h: float) =
 
   vg.beginPath()
   vg.roundedRect(x+0.5, y+0.5, w-1, h-1, cornerRadius-0.5)
-  vg.strokeColor(gray(0, 48))
+  vg.strokeColor(black(48))
   vg.stroke()
 
   vg.fontSize(20.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 160))
+  vg.fillColor(white(160))
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x+h*0.3, y+h*0.5, text)
 
   vg.fontSize(h*1.3)
   vg.fontFace("icons")
-  vg.fillColor(gray(255, 64))
+  vg.fillColor(white(64))
   vg.textAlign(haCenter, vaMiddle)
   discard vg.text(x+w - h*0.5, y + h*0.5, toUTF8(Rune(ICON_CHEVRON_RIGHT)))
 
@@ -124,7 +119,7 @@ proc drawDropDown(vg: NVGcontext, text: string, x, y, w, h: float) =
 proc drawLabel(vg: NVGcontext, text: string, x, y, w, h: float) =
   vg.fontSize(18.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 128))
+  vg.fillColor(white(128))
 
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x, y+h*0.5, text)
@@ -132,8 +127,7 @@ proc drawLabel(vg: NVGcontext, text: string, x, y, w, h: float) =
 
 proc drawEditBoxBase(vg: NVGcontext, x, y, w, h: float) =
   # Edit
-  let bg = vg.boxGradient(x+1, y+1+1.5, w-2, h-2, 3,4,
-                          gray(255, 32), gray(32, 32))
+  let bg = vg.boxGradient(x+1, y+1+1.5, w-2, h-2, 3,4, white(32), gray(32, 32))
   vg.beginPath
   vg.roundedRect(x+1, y+1, w-2, h-2, 4-1)
   vg.fillPaint(bg)
@@ -141,7 +135,7 @@ proc drawEditBoxBase(vg: NVGcontext, x, y, w, h: float) =
 
   vg.beginPath()
   vg.roundedRect(x+0.5, y+0.5, w-1, h-1, 4-0.5)
-  vg.strokeColor(gray(0, 48))
+  vg.strokeColor(black(48))
   vg.stroke()
 
 
@@ -150,7 +144,7 @@ proc drawEditBox(vg: NVGcontext, text: string, x, y, w, h: float) =
 
   vg.fontSize(20.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 64))
+  vg.fillColor(white(64))
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x+h*0.3, y+h*0.5, text)
 
@@ -160,17 +154,17 @@ proc drawEditBoxNum(vg: NVGcontext, text: string, units: string,
 
   drawEditBoxBase(vg, x,y, w,h)
 
-  let uw = vg.textBounds(0,0, units, nil, nil)
+  let uw = vg.horizontalAdvance(0,0, units)
 
   vg.fontSize(18.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 64))
+  vg.fillColor(white(64))
   vg.textAlign(haRight, vaMiddle)
   discard vg.text(x+w-h*0.3, y+h*0.5, units)
 
   vg.fontSize(20.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 128))
+  vg.fillColor(white(128))
   vg.textAlign(haRight, vaMiddle)
   discard vg.text(x+w-uw-h*0.5, y+h*0.5, text)
 
@@ -178,13 +172,13 @@ proc drawEditBoxNum(vg: NVGcontext, text: string, units: string,
 proc drawCheckBox(vg: NVGcontext, text: string, x, y, w, h: float) =
   vg.fontSize(18.0)
   vg.fontFace("sans")
-  vg.fillColor(gray(255, 160))
+  vg.fillColor(white(160))
 
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x+28, y+h*0.5, text)
 
   let bg = vg.boxGradient(x+1, y + floor(h*0.5)-9+1, 18, 18, 3, 3,
-                          gray(0, 32), gray(0, 92))
+                          black(32), black(92))
   vg.beginPath()
   vg.roundedRect(x+1, y + floor(h*0.5)-9, 18, 18, 3)
   vg.fillPaint(bg)
@@ -192,7 +186,7 @@ proc drawCheckBox(vg: NVGcontext, text: string, x, y, w, h: float) =
 
   vg.fontSize(40)
   vg.fontFace("icons")
-  vg.fillColor(gray(255, 128))
+  vg.fillColor(white(128))
   vg.textAlign(haCenter, vaMiddle)
   discard vg.text(x+9+2, y+h*0.5, toUTF8(Rune(ICON_CHECK)))
 
@@ -202,13 +196,12 @@ proc drawButton(vg: NVGcontext, preicon: int, text: string,
 
   const cornerRadius = 4.0
 
-  let a = if isBlack(col): 16 else: 32
-  let bg = vg.linearGradient(x,y,x,y+h, gray(255, a),
-                                        gray(0, a))
+  let a = if col == black(): 16 else: 32
+  let bg = vg.linearGradient(x,y,x,y+h, white(a), black(a))
   vg.beginPath()
   vg.roundedRect(x+1,y+1, w-2,h-2, cornerRadius-1)
 
-  if not isBlack(col):
+  if not (col == black()):
     vg.fillColor(col)
     vg.fill()
 
@@ -217,33 +210,33 @@ proc drawButton(vg: NVGcontext, preicon: int, text: string,
 
   vg.beginPath()
   vg.roundedRect(x+0.5, y+0.5, w-1,h-1, cornerRadius-0.5)
-  vg.strokeColor(gray(0, 48))
+  vg.strokeColor(black(48))
   vg.stroke()
 
   vg.fontSize(20.0)
   vg.fontFace("sans-bold")
-  let tw = vg.textBounds(0,0, text, nil, nil)
+  let tw = vg.horizontalAdvance(0,0, text)
 
   var iw = 0.0
 
   if preicon != 0:
     vg.fontSize(h*1.3)
     vg.fontFace("icons")
-    iw = vg.textBounds(0,0, toUTF8(Rune(preicon)), nil, nil)
+    iw = vg.horizontalAdvance(0,0, toUTF8(Rune(preicon)))
     iw += h*0.15
 
     vg.fontSize(h*1.3)
     vg.fontFace("icons")
-    vg.fillColor(gray(255, 96))
+    vg.fillColor(white(96))
     vg.textAlign(haLeft, vaMiddle)
     discard vg.text(x+w*0.5 - tw*0.5 - iw*0.75, y+h*0.5, toUTF8(Rune(preicon)))
 
   vg.fontSize(20.0)
   vg.fontFace("sans-bold")
   vg.textAlign(haLeft, vaMiddle)
-  vg.fillColor(gray(0, 160))
+  vg.fillColor(black(160))
   discard vg.text(x+w*0.5 - tw*0.5 + iw*0.25, y+h*0.5 - 1, text)
-  vg.fillColor(gray(255, 160))
+  vg.fillColor(white(160))
   discard vg.text(x+w*0.5 - tw*0.5 + iw*0.25, y+h*0.5, text)
 
 
@@ -255,7 +248,7 @@ proc drawSlider(vg: NVGcontext, pos, x, y, w, h: float) =
   vg.save()
 
   # Slot
-  var bg = vg.boxGradient(x, cy-2+1, w,4, 2, 2, gray(0, 32), gray(0, 128))
+  var bg = vg.boxGradient(x, cy-2+1, w,4, 2, 2, black(32), black(128))
   vg.beginPath()
   vg.roundedRect(x, cy-2, w, 4, 2)
   vg.fillPaint(bg)
@@ -263,7 +256,7 @@ proc drawSlider(vg: NVGcontext, pos, x, y, w, h: float) =
 
   # Knob Shadow
   bg = vg.radialGradient(x + floor(pos*w), cy+1, kr-3, kr+3,
-                         gray(0, 64), gray(0, 0))
+                         black(64), black(0))
   vg.beginPath()
   vg.rect(x + floor(pos*w)-kr-5, cy-kr-5, kr*2+5+5, kr*2+5+5+3)
   vg.circle(x + floor(pos*w), cy, kr)
@@ -272,8 +265,7 @@ proc drawSlider(vg: NVGcontext, pos, x, y, w, h: float) =
   vg.fill()
 
   # Knob
-  let knob = vg.linearGradient(x, cy-kr, x, cy+kr,
-                               gray(255, 16), gray(0, 16))
+  let knob = vg.linearGradient(x, cy-kr, x, cy+kr, white(16), black(16))
   vg.beginPath()
   vg.circle(x + floor(pos*w), cy, kr-1)
   vg.fillColor(rgb(40, 43, 48))
@@ -283,7 +275,7 @@ proc drawSlider(vg: NVGcontext, pos, x, y, w, h: float) =
 
   vg.beginPath()
   vg.circle(x + floor(pos*w), cy, kr-0.5)
-  vg.strokeColor(gray(0, 92))
+  vg.strokeColor(black(92))
   vg.stroke()
 
   vg.restore()
@@ -301,7 +293,7 @@ proc drawEyes(vg: NVGcontext, x, y, w, h, mx, my, t: float) =
     blink = 1 - pow(sin(t*0.5),200)*0.8
 
   var
-    bg = vg.linearGradient(x, y+h*0.5, x+w*0.1, y+h, gray(0, 32), gray(0 ,16))
+    bg = vg.linearGradient(x, y+h*0.5, x+w*0.1, y+h, black(32), black(16))
 
   vg.beginPath()
   vg.ellipse(lx+3.0, ly+16.0, ex, ey)
@@ -350,15 +342,14 @@ proc drawEyes(vg: NVGcontext, x, y, w, h, mx, my, t: float) =
   vg.fill()
 
   var gloss = vg.radialGradient(lx-ex*0.25, ly-ey*0.5, ex*0.1, ex*0.75,
-                                gray(255, 128),
-                                gray(255, 0))
+                                white(128), white(0))
   vg.beginPath()
   vg.ellipse(lx, ly, ex, ey)
   vg.fillPaint(gloss)
   vg.fill()
 
   gloss = vg.radialGradient(rx-ex*0.25, ry-ey*0.5, ex*0.1, ex*0.75,
-                            gray(255, 128), gray(255, 0))
+                            white(128), white(0))
   vg.beginPath()
   vg.ellipse(rx, ry, ex, ey)
   vg.fillPaint(gloss)
@@ -407,7 +398,7 @@ proc drawGraph(vg: NVGcontext, x, y, w, h, t: float) =
     vg.bezierTo(sx[i-1]+dx*0.5, sy[i-1]+2, sx[i]-dx*0.5, sy[i]+2,
                 sx[i], sy[i]+2)
 
-  vg.strokeColor(gray(0, 32))
+  vg.strokeColor(black(32))
   vg.strokeWidth(3.0)
   vg.stroke()
 
@@ -423,8 +414,7 @@ proc drawGraph(vg: NVGcontext, x, y, w, h, t: float) =
 
   # Graph sample pos
   for i in 0..5:
-    bg = vg.radialGradient(sx[i], sy[i]+2, 3.0, 8.0,
-                           gray(0, 32), gray(0, 0))
+    bg = vg.radialGradient(sx[i], sy[i]+2, 3.0, 8.0, black(32), black(0))
     vg.beginPath()
     vg.rect(sx[i]-10, sy[i]-10+2, 20, 20)
     vg.fillPaint(bg)
@@ -465,8 +455,7 @@ proc drawSpinner(vg: NVGcontext, cx, cy, r, t: float) =
     bx = cx + cos(a1) * (r0+r1) * 0.5
     by = cy + sin(a1) * (r0+r1) * 0.5
 
-  let paint = vg.linearGradient(ax, ay, bx, by,
-                                gray(0, 0), gray(0, 128))
+  let paint = vg.linearGradient(ax, ay, bx, by, black(0), black(128))
 
   vg.fillPaint(paint)
   vg.fill()
@@ -488,7 +477,7 @@ proc drawThumbnails(vg: NVGcontext, x, y, w, h: float,
 
   # Drop shadow
   var shadowPaint = vg.boxGradient(x, y+4, w, h, cornerRadius*2, 20,
-                                   gray(0, 128), gray(0, 0))
+                                   black(128), black(0))
   vg.beginPath()
   vg.rect(x-10, y-10, w+20, h+30)
   vg.roundedRect(x, y, w, h, cornerRadius)
@@ -545,7 +534,7 @@ proc drawThumbnails(vg: NVGcontext, x, y, w, h: float,
     vg.fill()
 
     shadowPaint = vg.boxGradient(tx-1, ty, thumb+2, thumb+2, 5, 3,
-                                 gray(0, 128), gray(0, 0))
+                                 black(128), black(0))
     vg.beginPath()
     vg.rect(tx-5, ty-5, thumb+10, thumb+10)
     vg.roundedRect(tx, ty, thumb, thumb, 6)
@@ -556,7 +545,7 @@ proc drawThumbnails(vg: NVGcontext, x, y, w, h: float,
     vg.beginPath()
     vg.roundedRect(tx+0.5, ty+0.5, thumb-1, thumb-1, 4-0.5)
     vg.strokeWidth(1.0)
-    vg.strokeColor(gray(255, 192))
+    vg.strokeColor(white(192))
     vg.stroke()
 
   vg.restore()
@@ -576,7 +565,7 @@ proc drawThumbnails(vg: NVGcontext, x, y, w, h: float,
 
   # Scroll bar
   shadowPaint = vg.boxGradient(x+w-12+1, y+4+1, 8, h-8, 3, 4,
-                               gray(0, 32), gray(0, 92))
+                               black(32), black(92))
   vg.beginPath()
   vg.roundedRect(x+w-12, y+4, 8, h-8, 3)
   vg.fillPaint(shadowPaint)
@@ -584,9 +573,7 @@ proc drawThumbnails(vg: NVGcontext, x, y, w, h: float,
 
   let scrollh = (h/stackh) * (h-8)
   shadowPaint = vg.boxGradient(x+w-12-1, y+4+(h-8-scrollh)*u-1,
-                               8, scrollh, 3, 4,
-                               gray(220),
-                               gray(128))
+                               8, scrollh, 3, 4, gray(220), gray(128))
   vg.beginPath()
   vg.roundedRect(x+w-12+1, y+4+1 + (h-8-scrollh)*u, 8-2, scrollh-2, 2)
   vg.fillPaint(shadowPaint)
@@ -623,15 +610,15 @@ proc drawColorwheel(vg: NVGcontext, x, y, w, h, t: float) =
       by = cy + sin(a1) * (r0+r1) * 0.5
 
       paint = vg.linearGradient(ax, ay, bx, by,
-                                hsla(a0 / (PI * 2), 1.0, 0.55, cuchar(255)),
-                                hsla(a1 / (PI * 2), 1.0, 0.55, cuchar(255)))
+                                hsla(a0 / (PI*2), 1.0, 0.55, 1.0),
+                                hsla(a1 / (PI*2), 1.0, 0.55, 1.0))
     vg.fillPaint(paint)
     vg.fill()
 
   vg.beginPath()
   vg.circle(cx, cy, r0-0.5)
   vg.circle(cx, cy, r1+0.5)
-  vg.strokeColor(gray(0, 64))
+  vg.strokeColor(black(64))
   vg.strokeWidth(1.0)
   vg.stroke()
 
@@ -644,11 +631,10 @@ proc drawColorwheel(vg: NVGcontext, x, y, w, h, t: float) =
   vg.strokeWidth(2.0)
   vg.beginPath()
   vg.rect(r0-1, -3, r1-r0+2, 6)
-  vg.strokeColor(gray(255, 192))
+  vg.strokeColor(white(192))
   vg.stroke()
 
-  var paint = vg.boxGradient(r0-3, -5, r1-r0+6, 10, 2,4,
-                             gray(0, 128), gray(0, 0))
+  var paint = vg.boxGradient(r0-3, -5, r1-r0+6, 10, 2,4, black(128), black(0))
   vg.beginPath()
   vg.rect(r0-2-10, -4-10, r1-r0+4+20, 8+20)
   vg.rect(r0-2, -4, r1-r0+4, 8)
@@ -670,15 +656,13 @@ proc drawColorwheel(vg: NVGcontext, x, y, w, h, t: float) =
   vg.lineTo(bx, by)
   vg.closePath()
 
-  paint = vg.linearGradient(r, 0, ax, ay,
-                            hsla(hue, 1.0 ,0.5, cuchar(255)), gray(255))
+  paint = vg.linearGradient(r, 0, ax, ay, hsla(hue, 1.0 ,0.5, 1.0), white())
   vg.fillPaint(paint)
   vg.fill()
-  paint = vg.linearGradient((r+ax)*0.5, (0+ay)*0.5, bx, by,
-                            gray(0, 0), gray(0))
+  paint = vg.linearGradient((r+ax)*0.5, (0+ay)*0.5, bx, by, black(0), black())
   vg.fillPaint(paint)
   vg.fill()
-  vg.strokeColor(gray(0, 64))
+  vg.strokeColor(black(64))
   vg.stroke()
 
   # Select circle on triangle
@@ -688,10 +672,10 @@ proc drawColorwheel(vg: NVGcontext, x, y, w, h, t: float) =
   vg.strokeWidth(2.0)
   vg.beginPath()
   vg.circle(ax, ay, 5)
-  vg.strokeColor(gray(255, 192))
+  vg.strokeColor(white(192))
   vg.stroke()
 
-  paint = vg.radialGradient(ax,ay, 7,9, gray(0, 64), gray(0, 0))
+  paint = vg.radialGradient(ax,ay, 7,9, black(64), black(0))
   vg.beginPath()
   vg.rect(ax-20, ay-20, 40, 40)
   vg.circle(ax, ay, 7)
@@ -735,7 +719,7 @@ proc drawLines(vg: NVGcontext, x, y, w, h, t: float) =
       vg.lineJoin(joins[j])
 
       vg.strokeWidth(s*0.3)
-      vg.strokeColor(gray(0, 160))
+      vg.strokeColor(black(160))
       vg.beginPath()
       vg.moveTo(fx+pts[0], fy+pts[1])
       vg.lineTo(fx+pts[2], fy+pts[3])
@@ -825,17 +809,15 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   var
     text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉"
 
-    rows: array[3, TextRow]
-
     textStart: cstring = text[0].addr
     textEnd: cstring = cast[cstring](cast[int](textStart) + len(text))
 
-    numRows = vg.textBreakLines(textStart, textEnd, width,
-                                rows[0].addr, rows.len.cint)
+    rows: array[3, TextRow]
+    numRows = vg.textBreakLines(textStart, textEnd, width, rows)
 
     glyphs: array[100, GlyphPosition]
     lineNum = 0
-    px: cfloat
+    px: float
     gx, gy: float
     gutter = 0
     yy = y
@@ -848,11 +830,11 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
               my >= yy and my < (yy + lineHeight)
 
       vg.beginPath()
-      vg.fillColor(gray(255, if hit: 64 else: 16))
+      vg.fillColor(white(if hit: 64 else: 16))
       vg.rect(x, yy, row.width, lineHeight)
       vg.fill()
 
-      vg.fillColor(gray(255))
+      vg.fillColor(white())
       discard vg.text(x, yy, row.start, row.end)
 
       if hit:
@@ -886,26 +868,23 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
 
     # Keep going...
     textStart = rows[numRows-1].next
-    numRows = vg.textBreakLines(textStart, textEnd, width, rows[0].addr,
-                                rows.len.cint)
+    numRows = vg.textBreakLines(textStart, textEnd, width, rows)
 
   # Draw gutter
-  var bounds: array[4, cfloat]
-
   if gutter > 0:
     let txt = $gutter
     vg.fontSize(13.0)
     vg.textAlign(haRight, vaMiddle)
-    discard vg.textBounds(gx, gy, txt, nil, bounds[0].addr)
+    let (bounds, _) = vg.textBounds(gx, gy, txt)
 
     vg.beginPath()
     vg.fillColor(rgb(255, 192, 0))
     vg.roundedRect(
-      floor(bounds[0]-4),
-      floor(bounds[1]-2),
-      floor(bounds[2]-bounds[0])+8,
-      floor(bounds[3]-bounds[1])+4,
-      (floor(bounds[3]-bounds[1])+4) / 2 - 1
+      floor(bounds.b[0] - 4),
+      floor(bounds.b[1] - 2),
+      floor(bounds.b[2] - bounds.b[0])+8,
+      floor(bounds.b[3] - bounds.b[1])+4,
+      (floor(bounds.b[3] - bounds.b[1])+4) / 2 - 1
     )
     vg.fill()
 
@@ -920,25 +899,27 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   vg.textLineHeight(1.2)
 
   let tooltipText = "Hover your mouse over the text to see calculated caret position."
-  vg.textBoxBounds(x, yy, 150, tooltipText, nil, bounds[0].addr)
+  let bounds = vg.textBoxBounds(x, yy, 150, tooltipText)
 
   # Fade the tooltip out when close to it.
-  gx = abs((mx - (bounds[0]+bounds[2])*0.5) / (bounds[0] - bounds[2]))
-  gy = abs((my - (bounds[1]+bounds[3])*0.5) / (bounds[1] - bounds[3]))
+  gx = abs((mx - (bounds.b[0]+bounds.b[2])*0.5) / (bounds.b[0] - bounds.b[2]))
+  gy = abs((my - (bounds.b[1]+bounds.b[3])*0.5) / (bounds.b[1] - bounds.b[3]))
 
   vg.globalAlpha(clamp(max(gx, gy) - 0.5, 0, 1))
 
   vg.beginPath()
   vg.fillColor(gray(220))
-  vg.roundedRect(bounds[0]-2, bounds[1]-2,
-                 floor(bounds[2]-bounds[0])+4, floor(bounds[3]-bounds[1])+4, 3)
-  px = floor((bounds[2]+bounds[0])/2)
-  vg.moveTo(px,bounds[1] - 10)
-  vg.lineTo(px+7,bounds[1]+1)
-  vg.lineTo(px-7,bounds[1]+1)
+  vg.roundedRect(bounds.b[0]-2,
+                 bounds.b[1]-2,
+                 floor(bounds.b[2] - bounds.b[0])+4,
+                 floor(bounds.b[3] - bounds.b[1])+4, 3)
+  px = floor((bounds.b[2] + bounds.b[0])/2)
+  vg.moveTo(px,bounds.b[1] - 10)
+  vg.lineTo(px+7, bounds.b[1] + 1)
+  vg.lineTo(px-7, bounds.b[1] + 1)
   vg.fill()
 
-  vg.fillColor(gray(0, 220))
+  vg.fillColor(black(220))
   vg.textBox(x, yy, 150, tooltipText)
 
   vg.restore()
@@ -947,7 +928,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
 proc drawWidths(vg: NVGcontext, x, y, width: float) =
   vg.save()
 
-  vg.strokeColor(gray(0))
+  vg.strokeColor(black(0))
 
   var yy = y
   for i in 0..19:
@@ -971,19 +952,19 @@ proc drawCaps(vg: NVGcontext, x, y, width: float) =
 
   vg.beginPath()
   vg.rect(x-lineWidth/2, y, width+lineWidth, 40)
-  vg.fillColor(gray(255, 32))
+  vg.fillColor(white(32))
   vg.fill()
 
   vg.beginPath()
   vg.rect(x, y, width, 40)
-  vg.fillColor(gray(255, 32))
+  vg.fillColor(white(32))
   vg.fill()
 
   vg.strokeWidth(lineWidth)
 
   for i in 0..2:
     vg.lineCap(caps[i])
-    vg.strokeColor(gray(0))
+    vg.strokeColor(black())
     vg.beginPath()
     vg.moveTo(x, y + float(i)*10 + 5)
     vg.lineTo(x+width, y + float(i)*10 + 5)
@@ -1084,7 +1065,7 @@ proc renderDemo*(vg: NVGcontext, mx, my, width, height, t: float,
   y += 55
 
   drawButton(vg, ICON_TRASH, "Delete", x, y, 160, 28, rgb(128, 16, 8))
-  drawButton(vg, 0, "Cancel", x+170, y, 110, 28, gray(0, 0))
+  drawButton(vg, 0, "Cancel", x+170, y, 110, 28, black(0))
 
   # Thumbnails box
   drawThumbnails(vg, 365, popy-30, 160, 300, data.images, t)

@@ -20,6 +20,8 @@ export wrapper.BlendFactor
 export wrapper.CompositeOperation
 export wrapper.ImageFlags
 export wrapper.CompositeOperationState
+export wrapper.TransformMatrix
+export wrapper.Bounds
 export wrapper.GlyphPosition
 export wrapper.TextRow
 export wrapper.NvgInitFlag
@@ -80,7 +82,6 @@ export wrapper.transformPoint
 
 # Images
 export wrapper.createImage
-export wrapper.createImageMem
 export wrapper.createImageRGBA
 export wrapper.updateImage
 export wrapper.deleteImage
@@ -116,7 +117,6 @@ export wrapper.stroke
 
 # Text
 export wrapper.createFont
-export wrapper.createFontMem
 export wrapper.findFont
 export wrapper.addFallbackFont
 export wrapper.addFallbackFont
@@ -128,15 +128,12 @@ export wrapper.fontFace
 export wrapper.fontFace
 export wrapper.text
 export wrapper.textBox
-export wrapper.textBounds
-export wrapper.textBoxBounds
 export wrapper.textGlyphPositions
-export wrapper.textBreakLines
 
 # Nim API
 var gladInitialized = false
 
-proc gladLoadGLLoader*(a: pointer): cint {.importc.}
+proc gladLoadGLLoader*(a: pointer): int {.importc.}
 
 
 proc nvgInit*(getProcAddress: pointer,
@@ -174,10 +171,10 @@ proc imageSize*(ctx: NVGContext, image: Image): tuple[w, h: int] =
   result = (w.int, h.int)
 
 template text*(ctx: NVGContext, x, y: float, string: string): float =
-  text(ctx, x.cfloat, y.cfloat, string, nil)
+  text(ctx, x, y, string, nil)
 
 template textBox*(ctx: NVGContext, x, y, breakRowWidth: float, string: string) =
-  textBox(ctx, x.cfloat, y.cfloat, breakRowWidth.cfloat, string, nil)
+  textBox(ctx, x, y, breakRowWidth, string, nil)
 
 
 proc textMetrics*(ctx: NVGContext):
@@ -196,14 +193,52 @@ template rgb*(r, g, b: int): Color =
 template rgba*(r, g, b, a: int): Color =
   rgba(clampToCuchar(r), clampToCuchar(g), clampToCuchar(b), clampToCuchar(a))
 
-proc hsla*(h: cfloat, s: cfloat, l: cfloat, a: cfloat): Color =
-  hsla(h, s, l, clamp(a * 255, 0.0, 1.0))
+proc hsla*(h: float, s: float, l: float, a: float): Color =
+  hsla(h.cfloat, s.cfloat, l.cfloat, clamp(a * 255, 0, 255).cuchar)
 
-template gray*(g: int): Color             = rgb(g, g, g)
-template gray*(g: int, a: int): Color     = rgba(g, g, g, a)
-template gray*(g: float): Color           = rgb(g, g, g)
-template gray*(g: float, a: float): Color = rgba(g, g, g, a)
+template gray*(g: int,   a: int = 255): Color   = rgba(g, g, g, a)
+template gray*(g: float, a: float = 1.0): Color = rgba(g, g, g, a)
+
+template black*(a: int): Color         = gray(0, a)
+template black*(a: float = 1.0): Color = gray(0.0, a)
+template white*(a: int): Color         = gray(255, a)
+template white*(a: float = 1.0): Color = gray(1.0, a)
 
 template withAlpha*(c: Color, a: int): Color =
   withAlpha(c, clampToCuchar(a))
+
+
+proc createImageMem*(ctx: NVGContext, imageFlags: set[ImageFlags] = {},
+                     data: var openArray[byte]): Image =
+  createImageMem(ctx, imageFlags, cast[ptr cuchar](data[0].addr), data.len.cint)
+
+
+proc createFontMem*(ctx: NVGContext, name: cstring,
+                    data: var openArray[byte]): Font =
+  createFontMem(ctx, name, cast[ptr cuchar](data[0].addr), data.len.cint,
+                freeData=0)
+
+
+proc textBreakLines*(ctx: NVGContext, string: cstring, `end`: cstring,
+                     breakRowWidth: float,
+                     rows: var openArray[TextRow]): cint =
+  textBreakLines(ctx, string, `end`, breakRowWidth, rows[0].addr, rows.len.cint)
+
+
+proc horizontalAdvance*(ctx: NVGContext, x: float, y: float,
+                        string: string): float =
+  textBounds(ctx, x, y, string, `end`=nil, bounds=nil)
+
+
+proc textBounds*(ctx: NVGContext, x: float, y: float,
+                 string: string): tuple[bounds: Bounds, horizAdvance: float] =
+  var b: Bounds
+  let adv = textBounds(ctx, x, y, string, `end`=nil, bounds=b.b[0].addr)
+  result = (b, adv.float)
+
+
+proc textBoxBounds*(ctx: NVGContext, x: float, y: float,
+                    breakRowWidth: float, string: string): Bounds =
+  textBoxBounds(ctx, x, y, breakRowWidth, string, nil, result.b[0].addr)
+
 
