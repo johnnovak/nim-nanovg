@@ -6,7 +6,6 @@ export wrapper.Image
 export wrapper.NoFont
 export wrapper.NoImage
 export wrapper.`==`
-export wrapper.`==`
 
 export wrapper.NVGContext
 export wrapper.Color

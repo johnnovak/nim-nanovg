@@ -1,4 +1,3 @@
-import glad/gl
 import glfw
 import nanovg
 
