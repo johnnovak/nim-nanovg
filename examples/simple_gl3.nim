@@ -1,5 +1,5 @@
+import glad/gl
 import glfw
-from glfw/wrapper import getProcAddress
 import nanovg
 
 
@@ -25,6 +25,6 @@ while not win.shouldClose:
   glfw.swapBuffers(win)
   glfw.pollEvents()
 
-nvgDelete(vg)
+nvgDeinit(vg)
 glfw.terminate()
 
