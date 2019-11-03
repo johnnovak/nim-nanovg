@@ -4,7 +4,6 @@ version       = "0.1.0"
 author        = "John Novak <john@johnnovak.net>"
 description   = "Nim wrapper for the NanoVG graphics library"
 license       = "WTFPL"
-srcDir        = "src"
 
 skipDirs = @["doc", "examples", "img"]
 
