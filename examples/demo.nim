@@ -794,6 +794,10 @@ proc freeDemoData*(vg: NVGcontext, data: DemoData) =
     vg.deleteImage(data.images[i])
 
 
+template ptrAdd[A](a: ptr A, offset: int): ptr A =
+  cast[ptr A](cast[int](a) + offset)
+
+
 proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   vg.save()
 
@@ -809,7 +813,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
     text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉"
 
     textStart: cstring = text[0].addr
-    textEnd: cstring = text[text.high].addr
+    textEnd: cstring = ptrAdd(text[text.high].addr, 1)
 
     rows: array[3, TextRow]
     numRows = vg.textBreakLines(textStart, textEnd, width, rows)

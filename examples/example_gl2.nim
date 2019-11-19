@@ -34,7 +34,7 @@ proc createWindow(): Window =
   cfg.bits = (r: 8, g: 8, b: 8, a: 8, stencil: 8, depth: 16)
   cfg.debugContext = true
 
-  when defined(macosx):
+  when not defined(windows):
     cfg.version = glv20
     cfg.forwardCompat = true
     cfg.profile = opCoreProfile

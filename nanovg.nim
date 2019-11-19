@@ -187,12 +187,12 @@ func rgba*(r, g, b, a: int): Color =
 func hsla*(h: float, s: float, l: float, a: float): Color =
   hsla(h.cfloat, s.cfloat, l.cfloat, clamp(a * 255, 0, 255).cuchar)
 
-template gray*(g: int,   a: int = 255): Color   = rgba(g, g, g, a)
+template gray*(g: int,   a: int = 255):   Color = rgba(g, g, g, a)
 template gray*(g: float, a: float = 1.0): Color = rgba(g, g, g, a)
 
-template black*(a: int): Color         = gray(0, a)
+template black*(a: int):         Color = gray(0, a)
 template black*(a: float = 1.0): Color = gray(0.0, a)
-template white*(a: int): Color         = gray(255, a)
+template white*(a: int):         Color = gray(255, a)
 template white*(a: float = 1.0): Color = gray(1.0, a)
 
 template withAlpha*(c: Color, a: int): Color =
@@ -249,6 +249,13 @@ proc textBoxBounds*(ctx: NVGContext, x: float, y: float,
 
 proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
                          string: cstring, `end`: cstring,
-                         positions: var openArray[GlyphPosition]): int = 
+                         positions: var openArray[GlyphPosition]): int =
   textGlyphPositions(ctx, x, y, string, `end`,
                      positions[0].addr, positions.len.cint)
+
+proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
+                         string: string,
+                         positions: var openArray[GlyphPosition]): int =
+  textGlyphPositions(ctx, x, y, string, nil,
+                     positions[0].addr, positions.len.cint)
+

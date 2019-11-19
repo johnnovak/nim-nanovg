@@ -1,22 +1,27 @@
 import os, strformat
 
 #{{{ Docs -------------------------------------------------------------------
-
+## 
+## *This is a slightly edited version of the documentation provided in the
+## original NanoVG C header file. While it's usable as it is, most of it
+## should be revisited and reworded in better English.*
+##
 ## # Drawing
 ##
-## Calls to nanovg drawing API should be wrapped in beginFrame() & endFrame().
-## beginFrame() defines the size of the window to render to in relation
-## currently set viewport (i.e. glViewport on GL backends).  Device pixel
-## ration allows to control the rendering on Hi-DPI devices.  For example,
-## GLFW returns two dimension for an opened window: window size and frame
-## buffer size. In that case you would set windowWidth/Height to the window
-## size devicePixelRatio to: frameBufferWidth / windowWidth.
+## Calls to the NanoVG drawing API should be wrapped in `beginFrame()`
+## & `endFrame()`. `beginFrame()` defines the size of the window to render to
+## in relation to the currently set viewport (i.e. `glViewport` on GL
+## backends). Device pixel ratio allows to control the rendering on Hi-DPI
+## devices. For example, GLFW returns two dimensions for an opened window:
+## window size and frame buffer size. In that case you would set the window
+## size to `windowWidth` &  `windowHeight` and `devicePixelRatio` to
+## `frameBufferWidth / windowWidth`.
 ##
 ## # Composite operations
 ##
 ## The composite operations in NanoVG are modeled after HTML Canvas API, and
-## the blend func is based on OpenGL (see corresponding manuals for more
-## info).  The colors in the blending state have premultiplied alpha.
+## the blend function is based on OpenGL (see corresponding manuals for more
+## info). The colors in the blending state have premultiplied alpha.
 ##
 ## # Color
 ##
@@ -24,9 +29,9 @@ import os, strformat
 ##
 ## # State
 ##
-## NanoVG contains state which represents how paths will be rendered.  The
-## state contains transform, fill and stroke styles, text and font styles, and
-## scissor clipping.
+## NanoVG contains state which represents how paths will be rendered. The
+## state contains transforms, fill and stroke styles, text and font styles,
+## and scissor clipping.
 ##
 ## # Render styles
 ##
@@ -35,15 +40,15 @@ import os, strformat
 ## value, different kinds of paints can be created using `linearGradient()`,
 ## `boxGradient()`, `radialGradient()` and `imagePattern()`.
 ##
-## Current render style can be saved and restored using nvgSave() and
+## Current render style can be saved and restored using `save()` and
 ## `restore()`.
 ##
 ## # Transforms
 ##
-## The paths, gradients, patterns and scissor region are transformed by an
-## transformation matrix at the time when they are passed to the API.
+## Paths, gradients, patterns and the scissor region are transformed by
+## a transformation matrix at the time when they are passed to the API.
 ##
-## The current transformation matrix is a affine matrix:
+## The current transformation matrix is an affine matrix:
 ##
 ## ```
 ##   [sx kx tx]
@@ -51,12 +56,12 @@ import os, strformat
 ##   [ 0  0  1]
 ## ```
 ##
-## Where: `sx`,`sy` define scaling, `kx`,`ky` skewing, and `tx`,`ty`
+## Where: `sx` & `sy` define scaling, `kx` & `ky` skewing, and `tx` & `ty`
 ## translation.
-## The last row is assumed to be `0,0,1` and is not stored.
+## The last row is assumed to be `0, 0, 1` and is not stored.
 ##
 ## Apart from `resetTransform()`, each transformation function first creates
-## specific transformation matrix and pre-multiplies the current
+## a specific transformation matrix and pre-multiplies the current
 ## transformation by it.
 ##
 ## Current coordinate system (transformation) can be saved and restored using
@@ -64,9 +69,8 @@ import os, strformat
 ##
 ## # Images
 ##
-## NanoVG allows you to load jpg, png, psd, tga, pic and gif files to be used
-## for rendering.  In addition you can upload your own image. The image
-## loading is provided by stb_image.
+## NanoVG allows the loading of JPG, PNG, PSD, TGA, PIC and GIF files to be
+## used for rendering. The image loading is provided by `stb_image`.
 ##
 ## # Paints
 ##
@@ -77,30 +81,30 @@ import os, strformat
 ## # Scissoring
 ##
 ## Scissoring allows you to clip the rendering into a rectangle. This is
-## useful for various user interface cases like rendering a text edit or
+## useful for various user interface cases like rendering a text edit box or
 ## a timeline.
 ##
 ## # Paths
 ##
-## Drawing a new shape starts with nvgBeginPath(), it clears all the currently
-## defined paths.  Then you define one or more paths and sub-paths which
-## describe the shape. The are functions to draw common shapes like rectangles
-## and circles, and lower level step-by-step functions, which allow to define
-## a path curve by curve.
+## Drawing a new shape starts with `beginPath()` which clears all the
+## currently defined paths. Then you need to define one or more paths and
+## sub-paths which describe the shape. There are functions to draw common
+## shapes like rectangles and circles, and lower level step-by-step functions,
+## which allow you to define a path curve by curve.
 ##
 ## NanoVG uses even-odd fill rule to draw the shapes. Solid shapes should have
-## counter clockwise winding and holes should have counter clockwise order. To
-## specify winding of a path you can call nvgPathWinding(). This is useful
-## especially for the common shapes, which are drawn CCW.
+## counter-clockwise winding and holes should have counter clockwise order. To
+## specify winding of a path you can call `pathWinding()`. This is useful
+## especially for the common shapes, which are drawn counter-clockwise.
 ##
 ## Finally you can fill the path using current fill style by calling
-## nvgFill(), and stroke it with current stroke style by calling nvgStroke().
+## `fill()` and stroke it with current stroke style by calling `stroke()`.
 ##
 ## The curve segments and sub-paths are transformed by the current transform.
 ##
 ## # Text
 ##
-## NanoVG allows you to load .ttf files and use the font to render text.
+## NanoVG allows you to load TrueType fonts (.TTF) to render text.
 ##
 ## The appearance of the text can be defined by setting the current text style
 ## and by specifying the fill color. Common text and font settings such as
@@ -109,11 +113,12 @@ import os, strformat
 ##
 ## At render time the font face can be set based on the font handles or name.
 ##
-## Font measure functions return values in local space, the calculations are
-## carried in the same resolution as the final rendering. This is done because
-## the text glyph positions are snapped to the nearest pixels sharp rendering.
+## Font measuring functions return values in local space, the calculations are
+## carried out in the same resolution as the final rendering. This is done
+## because the text glyph positions are snapped to the nearest pixels sharp
+## rendering.
 ##
-## The local space means that values are not rotated or scale as per the
+## The local space means that values are not rotated or scaled as per the
 ## current transformation. For example if you set font size to 12, which would
 ## mean that line height is 16, then regardless of the current scaling and
 ## rotation, the returned line height is always 16. Some measures may vary
@@ -124,15 +129,15 @@ import os, strformat
 ## scaling:
 ##
 ## ```
-##		const char* txt = "Text me up.",
-##		nvgTextBounds(vg, x,y, txt, NULL, bounds),
-##		nvgBeginPath(vg),
-##		nvgRoundedRect(vg, bounds[0],bounds[1], bounds[2]-bounds[0], bounds[3]-bounds[1]),
-##		nvgFill(vg),
+## val txt = "Text me up."
+## val b = nvg.textBounds(x, y, txt)
+## nvg.beginPath()
+## nvg.roundedRect(b.b[0], b.b[1], b.b[2] - b.b[0], b.b[3] - b.b[1])
+## nvg.fill()
 ## ```
 ##
 ## Note: currently only solid color fill is supported for text.
-
+##
 #}}}
 
 const
@@ -293,8 +298,8 @@ type
     x*:    cfloat
     ##  The x-coordinate of the logical glyph position.
 
-    minx*: cfloat
-    maxx*: cfloat
+    minX*: cfloat
+    maxX*: cfloat
     ##  The bounds of the glyph shape.
 
   TransformMatrix* = object
@@ -317,8 +322,8 @@ type
     width*: cfloat
     ## Logical width of the row.
 
-    minx*:  cfloat
-    maxx*:  cfloat
+    minX*:  cfloat
+    maxX*:  cfloat
     ## Actual bounds of the row. Logical with and bounds can differ because of
     ## kerning and some parts over extending.
 
@@ -627,11 +632,11 @@ proc updateImage*(ctx: NVGContext, image: Image, data: ptr cuchar)
 
 proc imageSize*(ctx: NVGContext, image: Image,
                 w: ptr cint, h: ptr cint) {.cdecl, importc: "nvgImageSize".}
-  ## Returns the dimensions of a created image.
+  ## Returns the dimensions of an image.
 
 proc deleteImage*(ctx: NVGContext, image: Image) {.cdecl,
     importc: "nvgDeleteImage".}
-  ## Deletes created image.
+  ## Deletes an image.
 
 #}}}
 #{{{ Paints -----------------------------------------------------------------
@@ -645,22 +650,22 @@ proc linearGradient*(ctx: NVGContext, sx: cfloat, sy: cfloat,
   ## start color and ocol the end color.
   ##
   ## The gradient is transformed by the current transform when it is passed to
-  ## nvgFillPaint() or nvgStrokePaint().
+  ## `fillPaint()` or `strokePaint()`.
 
 proc boxGradient*(ctx: NVGContext, x: cfloat, y: cfloat,
-                     w: cfloat, h: cfloat, r: cfloat, f: cfloat,
-                     inCol: Color, outCol: Color): Paint
+                  w: cfloat, h: cfloat, r: cfloat, f: cfloat,
+                  inCol: Color, outCol: Color): Paint
     {.cdecl, importc: "nvgBoxGradient".}
   ## Creates and returns a box gradient. Box gradient is a feathered rounded
   ## rectangle, it is useful for rendering drop shadows or highlights for
-  ## boxes. Parameters (x,y) define the top-left corner of the rectangle, (w,h)
-  ## define the size of the rectangle, r defines the corner radius, and
-  ## f feather. Feather defines how blurry the border of the rectangle is.
-  ## Parameter icol specifies the inner color and ocol the outer color of the
-  ## gradient.
+  ## boxes. Parameters `x` and `y` define the top-left corner of the
+  ## rectangle, `w` and `h` the size of the rectangle, `r` the corner radius,
+  ## and `f` the feather. Feather controls the blurriness of the border of the
+  ## rectangle. `inCol` specifies the inner color and `outCol` the outer color
+  ## of the gradient.
   ##
   ## The gradient is transformed by the current transform when it is passed to
-  ## nvgFillPaint() or nvgStrokePaint().
+  ## `fillPaint()` or `strokePaint()`.
 
 proc radialGradient*(ctx: NVGContext, cx: cfloat, cy: cfloat,
                      inr: cfloat, outr: cfloat,
@@ -671,7 +676,7 @@ proc radialGradient*(ctx: NVGContext, cx: cfloat, cy: cfloat,
   ## icol specifies the start color and ocol the end color.
   ##
   ## The gradient is transformed by the current transform when it is passed to
-  ## nvgFillPaint() or nvgStrokePaint().
+  ## `fillPaint()` or `strokePaint()`.
 
 proc imagePattern*(ctx: NVGContext, ox: cfloat, oy: cfloat,
                    ex: cfloat, ey: cfloat, angle: cfloat, image: Image,
@@ -681,8 +686,8 @@ proc imagePattern*(ctx: NVGContext, ox: cfloat, oy: cfloat,
   ## angle rotation around the top-left corner, image is handle to the image to
   ## render.
   ##
-  ## The pattern is transformed by the current transform when it is passed to
-  ## nvgFillPaint() or nvgStrokePaint().
+  ## The gradient is transformed by the current transform when it is passed to
+  ## `fillPaint()` or `strokePaint()`.
 
 #}}}
 #{{{ Scissoring -------------------------------------------------------------
@@ -744,9 +749,9 @@ proc pathWinding*(ctx: NVGContext, dir: PathWinding | Solidity)
 proc arc*(ctx: NVGContext, cx: cfloat, cy: cfloat, r: cfloat,
           a0: cfloat, a1: cfloat,
           dir: PathWinding | Solidity) {.cdecl, importc: "nvgArc".}
-  ## Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc
-  ## radius is r, and the arc is drawn from angle a0 to a1, and swept in
-  ## direction dir (NVG_CCW, or NVG_CW). Angles are specified in radians.
+  ## Creates new circle arc shaped sub-path. The arc center is at `cx`,`cy`,
+  ## the arc radius is `r`, and the arc is drawn from angle `a0` to `a1`, and
+  ## swept in direction `dir`. Angles are specified in radians.
 
 proc rect*(ctx: NVGContext, x: cfloat, y: cfloat,
            w: cfloat, h: cfloat) {.cdecl, importc: "nvgRect".}

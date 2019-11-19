@@ -918,8 +918,8 @@ function main() {
     title="GlyphPosition {.bycopy.} = object
   str*: cstring                ## Position of the glyph in the input string.
   x*: cfloat                   ## The x-coordinate of the logical glyph position.
-  minx*: cfloat
-  maxx*: cfloat                ## The bounds of the glyph shape."><wbr />Glyph<wbr />Position<span class="attachedType"></span></a></li>
+  minX*: cfloat
+  maxX*: cfloat                ## The bounds of the glyph shape."><wbr />Glyph<wbr />Position<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#TransformMatrix"
     title="TransformMatrix = object
   m*: array[6, cfloat]"><wbr />Transform<wbr />Matrix<span class="attachedType"></span></a></li>
@@ -933,8 +933,8 @@ function main() {
                 ## character).
   next*: cstring               ## Pointer to the beginning of the next row.
   width*: cfloat               ## Logical width of the row.
-  minx*: cfloat
-  maxx*: cfloat ## Actual bounds of the row. Logical with and bounds can differ because of
+  minX*: cfloat
+  maxX*: cfloat ## Actual bounds of the row. Logical with and bounds can differ because of
               ## kerning and some parts over extending."><wbr />Text<wbr />Row<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#NvgInitFlag"
     title="NvgInitFlag {.size: 4.} = enum
@@ -1199,54 +1199,54 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc">
-<h1><a class="toc-backref" id="drawing" href="#drawing">Drawing</a></h1><p>Calls to nanovg drawing API should be wrapped in beginFrame() &amp; endFrame(). beginFrame() defines the size of the window to render to in relation currently set viewport (i.e. glViewport on GL backends).  Device pixel ration allows to control the rendering on Hi-DPI devices.  For example, GLFW returns two dimension for an opened window: window size and frame buffer size. In that case you would set windowWidth/Height to the window size devicePixelRatio to: frameBufferWidth / windowWidth.</p>
+  <p class="module-desc"><em>This is a slightly edited version of the documentation provided in the original NanoVG C header file. While it's usable as it is, most of it should be revisited and reworded in better English.</em>
+<h1><a class="toc-backref" id="drawing" href="#drawing">Drawing</a></h1><p>Calls to the NanoVG drawing API should be wrapped in <tt class="docutils literal"><span class="pre">beginFrame()</span></tt> &amp; <tt class="docutils literal"><span class="pre">endFrame()</span></tt>. <tt class="docutils literal"><span class="pre">beginFrame()</span></tt> defines the size of the window to render to in relation to the currently set viewport (i.e. <tt class="docutils literal"><span class="pre">glViewport</span></tt> on GL backends). Device pixel ratio allows to control the rendering on Hi-DPI devices. For example, GLFW returns two dimensions for an opened window: window size and frame buffer size. In that case you would set the window size to <tt class="docutils literal"><span class="pre">windowWidth</span></tt> &amp;  <tt class="docutils literal"><span class="pre">windowHeight</span></tt> and <tt class="docutils literal"><span class="pre">devicePixelRatio</span></tt> to <tt class="docutils literal"><span class="pre">frameBufferWidth / windowWidth</span></tt>.</p>
 
-<h1><a class="toc-backref" id="composite-operations" href="#composite-operations">Composite operations</a></h1><p>The composite operations in NanoVG are modeled after HTML Canvas API, and the blend func is based on OpenGL (see corresponding manuals for more info).  The colors in the blending state have premultiplied alpha.</p>
+<h1><a class="toc-backref" id="composite-operations" href="#composite-operations">Composite operations</a></h1><p>The composite operations in NanoVG are modeled after HTML Canvas API, and the blend function is based on OpenGL (see corresponding manuals for more info). The colors in the blending state have premultiplied alpha.</p>
 
 <h1><a class="toc-backref" id="color" href="#color">Color</a></h1><p>Colors in NanoVG are stored as unsigned ints in ABGR format.</p>
 
-<h1><a class="toc-backref" id="state" href="#state">State</a></h1><p>NanoVG contains state which represents how paths will be rendered.  The state contains transform, fill and stroke styles, text and font styles, and scissor clipping.</p>
+<h1><a class="toc-backref" id="state" href="#state">State</a></h1><p>NanoVG contains state which represents how paths will be rendered. The state contains transforms, fill and stroke styles, text and font styles, and scissor clipping.</p>
 
 <h1><a class="toc-backref" id="render-styles" href="#render-styles">Render styles</a></h1><p>Fill and stroke render style can be either a solid color or a paint which is a gradient or a pattern.  Solid color is simply defined as a color value, different kinds of paints can be created using <tt class="docutils literal"><span class="pre">linearGradient()</span></tt>, <tt class="docutils literal"><span class="pre">boxGradient()</span></tt>, <tt class="docutils literal"><span class="pre">radialGradient()</span></tt> and <tt class="docutils literal"><span class="pre">imagePattern()</span></tt>.</p>
-<p>Current render style can be saved and restored using nvgSave() and <tt class="docutils literal"><span class="pre">restore()</span></tt>.</p>
+<p>Current render style can be saved and restored using <tt class="docutils literal"><span class="pre">save()</span></tt> and <tt class="docutils literal"><span class="pre">restore()</span></tt>.</p>
 
-<h1><a class="toc-backref" id="transforms" href="#transforms">Transforms</a></h1><p>The paths, gradients, patterns and scissor region are transformed by an transformation matrix at the time when they are passed to the API.</p>
-<p>The current transformation matrix is a affine matrix:</p>
+<h1><a class="toc-backref" id="transforms" href="#transforms">Transforms</a></h1><p>Paths, gradients, patterns and the scissor region are transformed by a transformation matrix at the time when they are passed to the API.</p>
+<p>The current transformation matrix is an affine matrix:</p>
 <p><pre class="listing">
   [sx kx tx]
   [ky sy ty]
   [ 0  0  1]
 </pre></p>
-<p>Where: <tt class="docutils literal"><span class="pre">sx</span></tt>,`sy` define scaling, <tt class="docutils literal"><span class="pre">kx</span></tt>,`ky` skewing, and <tt class="docutils literal"><span class="pre">tx</span></tt>,`ty` translation. The last row is assumed to be <tt class="docutils literal"><span class="pre">0,0,1</span></tt> and is not stored.</p>
-<p>Apart from <tt class="docutils literal"><span class="pre">resetTransform()</span></tt>, each transformation function first creates specific transformation matrix and pre-multiplies the current transformation by it.</p>
+<p>Where: <tt class="docutils literal"><span class="pre">sx</span></tt> &amp; <tt class="docutils literal"><span class="pre">sy</span></tt> define scaling, <tt class="docutils literal"><span class="pre">kx</span></tt> &amp; <tt class="docutils literal"><span class="pre">ky</span></tt> skewing, and <tt class="docutils literal"><span class="pre">tx</span></tt> &amp; <tt class="docutils literal"><span class="pre">ty</span></tt> translation. The last row is assumed to be <tt class="docutils literal"><span class="pre">0, 0, 1</span></tt> and is not stored.</p>
+<p>Apart from <tt class="docutils literal"><span class="pre">resetTransform()</span></tt>, each transformation function first creates a specific transformation matrix and pre-multiplies the current transformation by it.</p>
 <p>Current coordinate system (transformation) can be saved and restored using <tt class="docutils literal"><span class="pre">save()</span></tt> and <tt class="docutils literal"><span class="pre">restore()</span></tt>.</p>
 
-<h1><a class="toc-backref" id="images" href="#images">Images</a></h1><p>NanoVG allows you to load jpg, png, psd, tga, pic and gif files to be used for rendering.  In addition you can upload your own image. The image loading is provided by stb_image.</p>
+<h1><a class="toc-backref" id="images" href="#images">Images</a></h1><p>NanoVG allows the loading of JPG, PNG, PSD, TGA, PIC and GIF files to be used for rendering. The image loading is provided by <tt class="docutils literal"><span class="pre">stb_image</span></tt>.</p>
 
 <h1><a class="toc-backref" id="paints" href="#paints">Paints</a></h1><p>NanoVG supports four types of paints: linear gradient, box gradient, radial gradient and image pattern.  These can be used as paints for strokes and fills.</p>
 
-<h1><a class="toc-backref" id="scissoring" href="#scissoring">Scissoring</a></h1><p>Scissoring allows you to clip the rendering into a rectangle. This is useful for various user interface cases like rendering a text edit or a timeline.</p>
+<h1><a class="toc-backref" id="scissoring" href="#scissoring">Scissoring</a></h1><p>Scissoring allows you to clip the rendering into a rectangle. This is useful for various user interface cases like rendering a text edit box or a timeline.</p>
 
-<h1><a class="toc-backref" id="paths" href="#paths">Paths</a></h1><p>Drawing a new shape starts with nvgBeginPath(), it clears all the currently defined paths.  Then you define one or more paths and sub-paths which describe the shape. The are functions to draw common shapes like rectangles and circles, and lower level step-by-step functions, which allow to define a path curve by curve.</p>
-<p>NanoVG uses even-odd fill rule to draw the shapes. Solid shapes should have counter clockwise winding and holes should have counter clockwise order. To specify winding of a path you can call nvgPathWinding(). This is useful especially for the common shapes, which are drawn CCW.</p>
-<p>Finally you can fill the path using current fill style by calling nvgFill(), and stroke it with current stroke style by calling nvgStroke().</p>
+<h1><a class="toc-backref" id="paths" href="#paths">Paths</a></h1><p>Drawing a new shape starts with <tt class="docutils literal"><span class="pre">beginPath()</span></tt> which clears all the currently defined paths. Then you need to define one or more paths and sub-paths which describe the shape. There are functions to draw common shapes like rectangles and circles, and lower level step-by-step functions, which allow you to define a path curve by curve.</p>
+<p>NanoVG uses even-odd fill rule to draw the shapes. Solid shapes should have counter-clockwise winding and holes should have counter clockwise order. To specify winding of a path you can call <tt class="docutils literal"><span class="pre">pathWinding()</span></tt>. This is useful especially for the common shapes, which are drawn counter-clockwise.</p>
+<p>Finally you can fill the path using current fill style by calling <tt class="docutils literal"><span class="pre">fill()</span></tt> and stroke it with current stroke style by calling <tt class="docutils literal"><span class="pre">stroke()</span></tt>.</p>
 <p>The curve segments and sub-paths are transformed by the current transform.</p>
 
-<h1><a class="toc-backref" id="text" href="#text">Text</a></h1><p>NanoVG allows you to load .ttf files and use the font to render text.</p>
+<h1><a class="toc-backref" id="text" href="#text">Text</a></h1><p>NanoVG allows you to load TrueType fonts (.TTF) to render text.</p>
 <p>The appearance of the text can be defined by setting the current text style and by specifying the fill color. Common text and font settings such as font size, letter spacing and text align are supported. Font blur allows you to create simple text effects such as drop shadows.</p>
 <p>At render time the font face can be set based on the font handles or name.</p>
-<p>Font measure functions return values in local space, the calculations are carried in the same resolution as the final rendering. This is done because the text glyph positions are snapped to the nearest pixels sharp rendering.</p>
-<p>The local space means that values are not rotated or scale as per the current transformation. For example if you set font size to 12, which would mean that line height is 16, then regardless of the current scaling and rotation, the returned line height is always 16. Some measures may vary because of the scaling since aforementioned pixel snapping.</p>
+<p>Font measuring functions return values in local space, the calculations are carried out in the same resolution as the final rendering. This is done because the text glyph positions are snapped to the nearest pixels sharp rendering.</p>
+<p>The local space means that values are not rotated or scaled as per the current transformation. For example if you set font size to 12, which would mean that line height is 16, then regardless of the current scaling and rotation, the returned line height is always 16. Some measures may vary because of the scaling since aforementioned pixel snapping.</p>
 <p>While this may sound a little odd, the setup allows you to always render the same way regardless of scaling. I.e. following works regardless of scaling:</p>
 <p><pre class="listing">
-                const char* txt = &quot;Text me up.&quot;,
-                nvgTextBounds(vg, x,y, txt, NULL, bounds),
-                nvgBeginPath(vg),
-                nvgRoundedRect(vg, bounds[0],bounds[1], bounds[2]-bounds[0], bounds[3]-bounds[1]),
-                nvgFill(vg),
+val txt = &quot;Text me up.&quot;
+val b = nvg.textBounds(x, y, txt)
+nvg.beginPath()
+nvg.roundedRect(b.b[0], b.b[1], b.b[2] - b.b[0], b.b[3] - b.b[1])
+nvg.fill()
 </pre></p>
-<p>Note: currently only solid color fill is supported for text.</p>
+<p>Note: currently only solid color fill is supported for text. </p>
 </p>
   <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
@@ -1410,8 +1410,8 @@ function main() {
 <dt><pre><a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">bycopy</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">str</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cstring</span>                <span class="Comment">## Position of the glyph in the input string.</span>
   <span class="Identifier">x</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>                   <span class="Comment">## The x-coordinate of the logical glyph position.</span>
-  <span class="Identifier">minx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>
-  <span class="Identifier">maxx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>                <span class="Comment">## The bounds of the glyph shape.</span>
+  <span class="Identifier">minX</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>
+  <span class="Identifier">maxX</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>                <span class="Comment">## The bounds of the glyph shape.</span>
   </pre></dt>
 <dd>
 
@@ -1443,8 +1443,8 @@ function main() {
                 <span class="Comment">## character).</span>
   <span class="Identifier">next</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cstring</span>               <span class="Comment">## Pointer to the beginning of the next row.</span>
   <span class="Identifier">width</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>               <span class="Comment">## Logical width of the row.</span>
-  <span class="Identifier">minx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>
-  <span class="Identifier">maxx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span> <span class="Comment">## Actual bounds of the row. Logical with and bounds can differ because of</span>
+  <span class="Identifier">minX</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span>
+  <span class="Identifier">maxX</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cfloat</span> <span class="Comment">## Actual bounds of the row. Logical with and bounds can differ because of</span>
               <span class="Comment">## kerning and some parts over extending.</span>
   </pre></dt>
 <dd>
@@ -1934,14 +1934,14 @@ Updates image data specified by image handle.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgImageSize&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Returns the dimensions of a created image.
+Returns the dimensions of an image.
 
 </dd>
 <a id="deleteImage,NVGContext,Image"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#deleteImage%2CNVGContext%2CImage"><span class="Identifier">deleteImage</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgDeleteImage&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Deletes created image.
+Deletes an image.
 
 </dd>
 <a id="linearGradient,NVGContext,cfloat,cfloat,cfloat,cfloat,Color,Color"></a>
@@ -1951,7 +1951,7 @@ Deletes created image.
 <dd>
 
 <p>Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates of the linear gradient, icol specifies the start color and ocol the end color.</p>
-<p>The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().</p>
+<p>The gradient is transformed by the current transform when it is passed to <tt class="docutils literal"><span class="pre">fillPaint()</span></tt> or <tt class="docutils literal"><span class="pre">strokePaint()</span></tt>.</p>
 
 
 </dd>
@@ -1961,8 +1961,8 @@ Deletes created image.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgBoxGradient&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p>Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle, (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.</p>
-<p>The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().</p>
+<p>Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering drop shadows or highlights for boxes. Parameters <tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt> define the top-left corner of the rectangle, <tt class="docutils literal"><span class="pre">w</span></tt> and <tt class="docutils literal"><span class="pre">h</span></tt> the size of the rectangle, <tt class="docutils literal"><span class="pre">r</span></tt> the corner radius, and <tt class="docutils literal"><span class="pre">f</span></tt> the feather. Feather controls the blurriness of the border of the rectangle. <tt class="docutils literal"><span class="pre">inCol</span></tt> specifies the inner color and <tt class="docutils literal"><span class="pre">outCol</span></tt> the outer color of the gradient.</p>
+<p>The gradient is transformed by the current transform when it is passed to <tt class="docutils literal"><span class="pre">fillPaint()</span></tt> or <tt class="docutils literal"><span class="pre">strokePaint()</span></tt>.</p>
 
 
 </dd>
@@ -1973,7 +1973,7 @@ Deletes created image.
 <dd>
 
 <p>Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.</p>
-<p>The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().</p>
+<p>The gradient is transformed by the current transform when it is passed to <tt class="docutils literal"><span class="pre">fillPaint()</span></tt> or <tt class="docutils literal"><span class="pre">strokePaint()</span></tt>.</p>
 
 
 </dd>
@@ -1984,7 +1984,7 @@ Deletes created image.
 <dd>
 
 <p>Creates and returns an image pattern. Parameters (ox,oy) specify the left-top location of the image pattern, (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.</p>
-<p>The pattern is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().</p>
+<p>The gradient is transformed by the current transform when it is passed to <tt class="docutils literal"><span class="pre">fillPaint()</span></tt> or <tt class="docutils literal"><span class="pre">strokePaint()</span></tt>.</p>
 
 
 </dd>
@@ -2076,7 +2076,7 @@ Sets the current sub-path winding, see NVGwinding and NVGsolidity.
         <span class="Identifier">dir</span><span class="Other">:</span> <a href="wrapper.html#PathWinding"><span class="Identifier">PathWinding</span></a> <span class="Operator">|</span> <a href="wrapper.html#Solidity"><span class="Identifier">Solidity</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;nvgArc&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r, and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW). Angles are specified in radians.
+Creates new circle arc shaped sub-path. The arc center is at <tt class="docutils literal"><span class="pre">cx</span></tt>,`cy`, the arc radius is <tt class="docutils literal"><span class="pre">r</span></tt>, and the arc is drawn from angle <tt class="docutils literal"><span class="pre">a0</span></tt> to <tt class="docutils literal"><span class="pre">a1</span></tt>, and swept in direction <tt class="docutils literal"><span class="pre">dir</span></tt>. Angles are specified in radians.
 
 </dd>
 <a id="rect,NVGContext,cfloat,cfloat,cfloat,cfloat"></a>
@@ -2308,7 +2308,7 @@ Returns the vertical metrics based on the current text style. Measured values ar
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-11-03 05:18:33 UTC</small>
+        <small>Made with Nim. Generated: 2019-11-19 09:53:11 UTC</small>
       </div>
     </div>
   </div>

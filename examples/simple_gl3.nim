@@ -6,10 +6,15 @@ glfw.initialize()
 
 var cfg = DefaultOpenglWindowConfig
 cfg.size = (w: 400, h: 400)
-cfg.title = "NanoVG Simple GL2"
+cfg.title = "NanoVG Simple GL3"
 cfg.resizable = true
 cfg.bits = (r: 8, g: 8, b: 8, a: 8, stencil: 8, depth: 16)
-cfg.version = glv30
+
+when not defined(windows):
+  cfg.version = glv32
+  cfg.forwardCompat = true
+  cfg.profile = opCoreProfile
+
 var win = newWindow(cfg)
 
 glfw.makeContextCurrent(win)
