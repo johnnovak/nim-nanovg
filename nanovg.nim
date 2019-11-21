@@ -254,7 +254,7 @@ proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
                      positions[0].addr, positions.len.cint)
 
 proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
-                         string: string,
+                         string: cstring,
                          positions: var openArray[GlyphPosition]): int =
   textGlyphPositions(ctx, x, y, string, nil,
                      positions[0].addr, positions.len.cint)
