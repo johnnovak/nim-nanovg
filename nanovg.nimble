@@ -2,10 +2,10 @@
 
 version       = "0.1.0"
 author        = "John Novak <john@johnnovak.net>"
-description   = "Nim wrapper for the NanoVG graphics library"
-license       = "WTFPL"
+description   = "Nim wrapper for the NanoVG antialiased vector graphics rendering library for OpenGL"
+license       = "BSD"
 
-skipDirs = @["doc", "examples", "img"]
+skipDirs = @["doc", "examples"]
 
 
 # Dependencies
