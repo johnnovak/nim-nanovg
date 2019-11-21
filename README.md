@@ -23,6 +23,6 @@ The examples require [nim-glfw](https://github.com/ephja/nim-glfw).
 The [API documentation](/doc) is in-progress, currently it's a slightly edited
 version of the original NanoVG source comments.
 
-You can also check the [NanoVG README](https://github.com/memononen/nanovg)
+You can also check out the [NanoVG README](https://github.com/memononen/nanovg)
 for further info.
 
