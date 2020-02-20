@@ -3,6 +3,9 @@ import nanovg
 
 
 const
+  FONT_SIZE_FACTOR = 0.8
+
+const
   ICON_SEARCH = 0x1f50d
   ICON_CIRCLED_CROSS = 0x2716
   ICON_CHEVRON_RIGHT = 0xe75e
@@ -44,7 +47,7 @@ proc drawWindow(vg: NVGcontext, title: string, x, y, w, h: float) =
   vg.strokeColor(black(32))
   vg.stroke()
 
-  vg.fontSize(18.0)
+  vg.fontSize(18.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans-bold")
   vg.textAlign(haCenter, vaMiddle)
 
@@ -69,20 +72,20 @@ proc drawSearchBox(vg: NVGcontext, text: string, x, y, w, h: float) =
   vg.fillPaint(bg)
   vg.fill()
 
-  vg.fontSize(h*1.3)
+  vg.fontSize(h*1.3 * FONT_SIZE_FACTOR)
   vg.fontFace("icons")
   vg.fillColor(white(64))
   vg.textAlign(haCenter, vaMiddle)
   discard vg.text(x+h*0.55, y+h*0.55, toUTF8(Rune(ICON_SEARCH)))
 
-  vg.fontSize(20.0)
+  vg.fontSize(20.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(32))
 
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x+h*1.05, y+h*0.5, text)
 
-  vg.fontSize(h*1.3)
+  vg.fontSize(h*1.3 * FONT_SIZE_FACTOR)
   vg.fontFace("icons")
   vg.fillColor(white(32))
   vg.textAlign(haCenter, vaMiddle)
@@ -103,13 +106,13 @@ proc drawDropDown(vg: NVGcontext, text: string, x, y, w, h: float) =
   vg.strokeColor(black(48))
   vg.stroke()
 
-  vg.fontSize(20.0)
+  vg.fontSize(20.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(160))
   vg.textAlign(haLeft, vaMiddle)
   discard vg.text(x+h*0.3, y+h*0.5, text)
 
-  vg.fontSize(h*1.3)
+  vg.fontSize(h*1.3 * FONT_SIZE_FACTOR)
   vg.fontFace("icons")
   vg.fillColor(white(64))
   vg.textAlign(haCenter, vaMiddle)
@@ -117,7 +120,7 @@ proc drawDropDown(vg: NVGcontext, text: string, x, y, w, h: float) =
 
 
 proc drawLabel(vg: NVGcontext, text: string, x, y, w, h: float) =
-  vg.fontSize(18.0)
+  vg.fontSize(18.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(128))
 
@@ -142,7 +145,7 @@ proc drawEditBoxBase(vg: NVGcontext, x, y, w, h: float) =
 proc drawEditBox(vg: NVGcontext, text: string, x, y, w, h: float) =
   drawEditBoxBase(vg, x, y, w, h)
 
-  vg.fontSize(20.0)
+  vg.fontSize(20.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(64))
   vg.textAlign(haLeft, vaMiddle)
@@ -156,13 +159,13 @@ proc drawEditBoxNum(vg: NVGcontext, text: string, units: string,
 
   let uw = vg.horizontalAdvance(0,0, units)
 
-  vg.fontSize(18.0)
+  vg.fontSize(18.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(64))
   vg.textAlign(haRight, vaMiddle)
   discard vg.text(x+w-h*0.3, y+h*0.5, units)
 
-  vg.fontSize(20.0)
+  vg.fontSize(20.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(128))
   vg.textAlign(haRight, vaMiddle)
@@ -170,7 +173,7 @@ proc drawEditBoxNum(vg: NVGcontext, text: string, units: string,
 
 
 proc drawCheckBox(vg: NVGcontext, text: string, x, y, w, h: float) =
-  vg.fontSize(18.0)
+  vg.fontSize(18.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.fillColor(white(160))
 
@@ -184,7 +187,7 @@ proc drawCheckBox(vg: NVGcontext, text: string, x, y, w, h: float) =
   vg.fillPaint(bg)
   vg.fill()
 
-  vg.fontSize(40)
+  vg.fontSize(40 * FONT_SIZE_FACTOR)
   vg.fontFace("icons")
   vg.fillColor(white(128))
   vg.textAlign(haCenter, vaMiddle)
@@ -213,25 +216,25 @@ proc drawButton(vg: NVGcontext, preicon: int, text: string,
   vg.strokeColor(black(48))
   vg.stroke()
 
-  vg.fontSize(20.0)
+  vg.fontSize(20.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans-bold")
   let tw = vg.horizontalAdvance(0,0, text)
 
   var iw = 0.0
 
   if preicon != 0:
-    vg.fontSize(h*1.3)
+    vg.fontSize(h*1.3 * FONT_SIZE_FACTOR)
     vg.fontFace("icons")
     iw = vg.horizontalAdvance(0,0, toUTF8(Rune(preicon)))
     iw += h*0.15
 
-    vg.fontSize(h*1.3)
+    vg.fontSize(h*1.3 * FONT_SIZE_FACTOR)
     vg.fontFace("icons")
     vg.fillColor(white(96))
     vg.textAlign(haLeft, vaMiddle)
     discard vg.text(x+w*0.5 - tw*0.5 - iw*0.75, y+h*0.5, toUTF8(Rune(preicon)))
 
-  vg.fontSize(20.0)
+  vg.fontSize(20.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans-bold")
   vg.textAlign(haLeft, vaMiddle)
   vg.fillColor(black(160))
@@ -801,7 +804,7 @@ template ptrAdd[A](a: ptr A, offset: int): ptr A =
 proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   vg.save()
 
-  vg.fontSize(18.0)
+  vg.fontSize(18.0 * FONT_SIZE_FACTOR)
   vg.fontFace("sans")
   vg.textAlign(haLeft, vaTop)
   var (_, _, lineHeight) = vg.textMetrics()
@@ -875,7 +878,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   # Draw gutter
   if gutter > 0:
     let txt = $gutter
-    vg.fontSize(13.0)
+    vg.fontSize(13.0 * FONT_SIZE_FACTOR)
     vg.textAlign(haRight, vaMiddle)
     let (bounds, _) = vg.textBounds(gx, gy, txt)
 
@@ -896,7 +899,7 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   # Draw tooltip
   yy += 20.0
 
-  vg.fontSize(13.0)
+  vg.fontSize(13.0 * FONT_SIZE_FACTOR)
   vg.textAlign(haLeft, vaTop)
   vg.textLineHeight(1.2)
 

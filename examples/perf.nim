@@ -5,6 +5,7 @@ import nanovg
 
 
 const
+  FONT_SIZE_FACTOR = 0.8
   GRAPH_HISTORY_COUNT = 100
   GPU_QUERY_COUNT = 5
 
@@ -115,30 +116,30 @@ proc renderGraph*(vg: NVGContext, x, y: float, pg: PerfGraph) =
   vg.fontFace("sans")
 
   if pg.name != "":
-    vg.fontSize(14.0)
+    vg.fontSize(14.0 * FontSizeFactor)
     vg.textAlign(haLeft, vaTop)
     vg.fillColor(gray(240, 192))
     discard vg.text(x+3, y+1, pg.name)
 
   if pg.style == grsFramesPerSec:
-    vg.fontSize(18.0)
+    vg.fontSize(18.0 * FontSizeFactor)
     vg.textAlign(haRight, vaTop)
     vg.fillColor(gray(240))
     discard vg.text(x+w-3, y+1, fmt"{(1.0 / avg):.2f} FPS")
 
-    vg.fontSize(15.0)
+    vg.fontSize(15.0 * FontSizeFactor)
     vg.textAlign(haRight, vaBottom)
     vg.fillColor(gray(240, 160))
     discard vg.text(x+w-3, y+h-1, fmt"{(avg * 1000.0):.2f} ms")
 
   elif pg.style == grsPercent:
-    vg.fontSize(18.0)
+    vg.fontSize(18.0 * FontSizeFactor)
     vg.textAlign(haRight, vaTop)
     vg.fillColor(gray(240))
     discard vg.text(x+w-3, y+1, fmt"{avg:.1f} %")
 
   else:
-    vg.fontSize(18.0)
+    vg.fontSize(18.0 * FontSizeFactor)
     vg.textAlign(haRight, vaTop)
     vg.fillColor(gray(240))
     discard vg.text(x+w-3, y+1, fmt"{(avg * 1000.0):.2f} ms")

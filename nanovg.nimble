@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.1"
+version       = "0.2.2"
 author        = "John Novak <john@johnnovak.net>"
 description   = "Nim wrapper for the NanoVG antialiased vector graphics rendering library for OpenGL"
 license       = "MIT"
