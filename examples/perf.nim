@@ -13,24 +13,24 @@ type
     grsFramesPerSec, grsPercent, grsMilliseconds
 
   PerfGraph* = object
-    style: GraphRenderStyle
-    name: string
+    style:  GraphRenderStyle
+    name:   string
     values: array[GRAPH_HISTORY_COUNT, float]
-    head: int
+    head:   int
 
-  GPUtimer* = object
+  GpuTimer* = object
     supported*: bool
-    cur, ret: int
-    queries: array[GPU_QUERY_COUNT, GLuint]
+    cur, ret:   int
+    queries:    array[GPU_QUERY_COUNT, GLuint]
 
 
-proc startGPUTimer*(timer: var GPUtimer) =
+proc startGPUTimer*(timer: var GpuTimer) =
   if not timer.supported: return
   glBeginQuery(GL_TIME_ELAPSED, timer.queries[timer.cur mod GPU_QUERY_COUNT])
-  inc timer.cur
+  inc(timer.cur)
 
 
-proc stopGPUTimer*(timer: GPUtimer): int =
+proc stopGPUTimer*(timer: GpuTimer): int =
   var available: GLint = 1
   let n = 0
   if not timer.supported: return 0

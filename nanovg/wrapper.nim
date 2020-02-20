@@ -1,7 +1,7 @@
 import os, strformat
 
 #{{{ Docs -------------------------------------------------------------------
-## 
+##
 ## *This is a slightly edited version of the documentation provided in the
 ## original NanoVG C header file. While it's usable as it is, most of it
 ## should be revisited and reworded in better English.*
@@ -240,17 +240,17 @@ type
 
 
   BlendFactor* {.size: cint.sizeof.} = enum
-    bfZero                     = (1 shl 0, "Zero")
-    bfOne                      = (1 shl 1, "One")
-    bfSourceColor              = (1 shl 2, "SourceColor")
-    bfOneMinusSourceColor      = (1 shl 3, "OneMinusSourceColor")
-    bfDestinationColor         = (1 shl 4, "DestinationColor")
-    bfOneMinusDestinationColor = (1 shl 5, "OneMinusDestinationColor")
-    bfSourceAlpha              = (1 shl 6, "SourceAlpha")
-    bfOneMinusSourceAlpha      = (1 shl 7, "OneMinusSourceAlpha")
-    bfDestinationAlpha         = (1 shl 8, "DestinationAlpha")
-    bfOneMinusDestinationAlpha = (1 shl 9, "OneMinusDestinationAlpha")
-    bfSourceAlphaSaturate      = (1 shl 10, "SourceAlphaSaturate")
+    bfZero                     = (0, "Zero")
+    bfOne                      = (1, "One")
+    bfSourceColor              = (2, "SourceColor")
+    bfOneMinusSourceColor      = (3, "OneMinusSourceColor")
+    bfDestinationColor         = (4, "DestinationColor")
+    bfOneMinusDestinationColor = (5, "OneMinusDestinationColor")
+    bfSourceAlpha              = (6, "SourceAlpha")
+    bfOneMinusSourceAlpha      = (7, "OneMinusSourceAlpha")
+    bfDestinationAlpha         = (8, "DestinationAlpha")
+    bfOneMinusDestinationAlpha = (9, "OneMinusDestinationAlpha")
+    bfSourceAlphaSaturate      = (10, "SourceAlphaSaturate")
 
   CompositeOperation* {.size: cint.sizeof.} = enum
     coSourceOver      = (0, "SourceOver")
@@ -266,22 +266,22 @@ type
     coXor             = (10, "Xor")
 
   ImageFlags* {.size: cint.sizeof.} = enum
-    ifGenerateMipmaps = (1 shl 0, "GenerateMipmaps")
+    ifGenerateMipmaps = (0, "GenerateMipmaps")
     ## Generate mipmaps during creation of the image.
 
-    ifRepeatX         = (1 shl 1, "RepeatX")
+    ifRepeatX         = (1, "RepeatX")
     ## Repeat image in X direction.
 
-    ifRepeatY         = (1 shl 2, "RepeatY")
+    ifRepeatY         = (2, "RepeatY")
     ## Repeat image in Y direction.
 
-    ifFlipY           = (1 shl 3, "FlipY")
+    ifFlipY           = (3, "FlipY")
     ## Flips (inverses) image in Y direction when rendered.
 
-    ifPremultiplied   = (1 shl 4, "Premultiplied")
+    ifPremultiplied   = (4, "Premultiplied")
     ## Image data has premultiplied alpha.
 
-    ifNearest         = (1 shl 5, "Nearest")
+    ifNearest         = (5, "Nearest")
     ## Image interpolation is Nearest instead Linear
 
 
@@ -329,19 +329,22 @@ type
 
 
   NvgInitFlag* {.size: cint.sizeof.} = enum
-    nifAntialias      = (1 shl 0, "Antialias")
+    nifAntialias      = (0, "Antialias")
     ## Flag indicating if geometry based anti-aliasing is used
     ## (may not be needed when using MSAA).
 
-    nifStencilStrokes = (1 shl 1, "StencilStrokes")
+    nifStencilStrokes = (1, "StencilStrokes")
     ## Flag indicating if strokes should be drawn using stencil buffer.
     ## The rendering will be a little slower, but path overlaps (i.e.
     ## self-intersecting or sharp turns) will be drawn just once.
 
-    nifDebug          = (1 shl 2, "Debug")
+    nifDebug          = (2, "Debug")
     ## Flag indicating that additional debug checks are done.
 
 #}}}
+
+using ctx: NVGContext
+
 #{{{ Context ----------------------------------------------------------------
 
 # Creates NanoVG contexts for different OpenGL (ES) versions.
@@ -374,7 +377,7 @@ when defined(nvgGLES3):
 #}}}
 #{{{ Drawing ----------------------------------------------------------------
 
-proc beginFrame*(ctx: NVGContext, windowWidth: cfloat, windowHeight: cfloat,
+proc beginFrame*(ctx; windowWidth: cfloat, windowHeight: cfloat,
                  devicePixelRatio: cfloat) {.cdecl, importc: "nvgBeginFrame".}
   ## Begin drawing a new frame.
 
@@ -387,11 +390,11 @@ proc endFrame*(ctx: NVGContext) {.cdecl, importc: "nvgEndFrame".}
 #}}}
 #{{{ Composite operations ---------------------------------------------------
 
-proc globalCompositeOperation*(ctx: NVGContext, op: CompositeOperation)
+proc globalCompositeOperation*(ctx; op: CompositeOperation)
     {.cdecl, importc: "nvgGlobalCompositeOperation".}
   ## Set the composite operation.
 
-proc globalCompositeBlendFunc*(ctx: NVGContext, srcFactor: set[BlendFactor],
+proc globalCompositeBlendFunc*(ctx; srcFactor: set[BlendFactor],
                                destFactor: set[BlendFactor])
     {.cdecl, importc: "nvgGlobalCompositeBlendFunc".}
   ## Set the composite operation with custom pixel arithmetic.
@@ -459,46 +462,46 @@ proc reset*(ctx: NVGContext) {.cdecl, importc: "nvgReset".}
 #}}}
 #{{{ Render styles ----------------------------------------------------------
 
-proc shapeAntiAlias*(ctx: NVGContext, enabled: cint)
+proc shapeAntiAlias*(ctx; enabled: cint)
     {.cdecl, importc: "nvgShapeAntiAlias".}
   ## Sets whether to draw antialias for nvgStroke() and nvgFill().
 
-proc strokeColor*(ctx: NVGContext, color: Color)
+proc strokeColor*(ctx; color: Color)
     {.cdecl, importc: "nvgStrokeColor".}
   ## Sets current stroke style to a solid color.
 
-proc strokePaint*(ctx: NVGContext, paint: Paint)
+proc strokePaint*(ctx; paint: Paint)
     {.cdecl, importc: "nvgStrokePaint".}
   ## Sets current stroke style to a paint, which can be a one of the gradients
   ## or a pattern.
 
-proc fillColor*(ctx: NVGContext, color: Color)
+proc fillColor*(ctx; color: Color)
     {.cdecl, importc: "nvgFillColor".}
   ## Sets current fill style to a solid color.
 
-proc fillPaint*(ctx: NVGContext, paint: Paint)
+proc fillPaint*(ctx; paint: Paint)
     {.cdecl, importc: "nvgFillPaint".}
   ## Sets current fill style to a paint, which can be a one of the gradients or
   ## a pattern.
 
-proc miterLimit*(ctx: NVGContext, limit: cfloat)
+proc miterLimit*(ctx; limit: cfloat)
   {.cdecl, importc: "nvgMiterLimit".}
   ## Sets the miter limit of the stroke style.
   ## Miter limit controls when a sharp corner is beveled.
 
-proc strokeWidth*(ctx: NVGContext, size: cfloat)
+proc strokeWidth*(ctx; size: cfloat)
     {.cdecl, importc: "nvgStrokeWidth".}
   ## Sets the stroke width of the stroke style.
 
-proc lineCap*(ctx: NVGContext, cap: LineCapJoin)
+proc lineCap*(ctx; cap: LineCapJoin)
     {.cdecl, importc: "nvgLineCap".}
   ## Sets how the end of the line (cap) is drawn.
 
-proc lineJoin*(ctx: NVGContext, join: LineCapJoin)
+proc lineJoin*(ctx; join: LineCapJoin)
     {.cdecl, importc: "nvgLineJoin".}
   ## Sets how sharp path corners are drawn.
 
-proc globalAlpha*(ctx: NVGContext, alpha: cfloat)
+proc globalAlpha*(ctx; alpha: cfloat)
     {.cdecl, importc: "nvgGlobalAlpha".}
   ## Sets the transparency applied to all rendered shapes.  Already
   ## transparent paths will get proportionally more transparent as well.
@@ -522,26 +525,26 @@ proc transform*(ctx: NVGContext,
   ##   [0 0 1]
   ## ```
 
-proc translate*(ctx: NVGContext, tx: cfloat, ty: cfloat)
+proc translate*(ctx; tx: cfloat, ty: cfloat)
     {.cdecl, importc: "nvgTranslate".}
   ## Translates current coordinate system.
 
-proc rotate*(ctx: NVGContext, angle: cfloat) {.cdecl, importc: "nvgRotate".}
+proc rotate*(ctx; angle: cfloat) {.cdecl, importc: "nvgRotate".}
   ## Rotates current coordinate system. Angle is specified in radians.
 
-proc skewX*(ctx: NVGContext, angle: cfloat) {.cdecl, importc: "nvgSkewX".}
+proc skewX*(ctx; angle: cfloat) {.cdecl, importc: "nvgSkewX".}
   ## Skews the current coordinate system along X axis. Angle is specified in
   ## radians.
 
-proc skewY*(ctx: NVGContext, angle: cfloat) {.cdecl, importc: "nvgSkewY".}
+proc skewY*(ctx; angle: cfloat) {.cdecl, importc: "nvgSkewY".}
   ## Skews the current coordinate system along Y axis. Angle is specified in
   ## radians.
 
-proc scale*(ctx: NVGContext, sx: cfloat, sy: cfloat)
+proc scale*(ctx; sx: cfloat, sy: cfloat)
   {.cdecl, importc: "nvgScale".}
   ## Scales the current coordinate system.
 
-proc currentTransform*(ctx: NVGContext, xform: TransformMatrix)
+proc currentTransform*(ctx; xform: TransformMatrix)
   {.cdecl, importc: "nvgCurrentTransform".}
   ## Stores the top part (a-f) of the current transformation matrix in to the
   ## specified buffer.
@@ -607,41 +610,41 @@ proc radToDeg*(rad: cfloat): cfloat {.cdecl, importc: "nvgRadToDeg".}
 #}}}
 #{{{ Images -----------------------------------------------------------------
 
-proc createImage*(ctx: NVGContext, filename: cstring,
+proc createImage*(ctx; filename: cstring,
                   imageFlags: set[ImageFlags] = {}): Image
     {.cdecl, importc: "nvgCreateImage".}
   ## Creates image by loading it from the disk from specified file name.
   ## Returns handle to the image.
 
-proc createImageMem*(ctx: NVGContext, imageFlags: set[ImageFlags] = {},
+proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
                      data: ptr cuchar, ndata: cint): Image
     {.cdecl, importc: "nvgCreateImageMem".}
   ## Creates image by loading it from the specified chunk of memory.
   ## Returns handle to the image.
 
-proc createImageRGBA*(ctx: NVGContext, w: cint, h: cint,
+proc createImageRGBA*(ctx; w: cint, h: cint,
                       imageFlags: set[ImageFlags] = {},
                       data: ptr cuchar): Image
     {.cdecl, importc: "nvgCreateImageRGBA".}
   ## Creates image from specified image data.
   ## Returns handle to the image.
 
-proc updateImage*(ctx: NVGContext, image: Image, data: ptr cuchar)
+proc updateImage*(ctx; image: Image, data: ptr cuchar)
     {.cdecl, importc: "nvgUpdateImage".}
   ## Updates image data specified by image handle.
 
-proc imageSize*(ctx: NVGContext, image: Image,
+proc imageSize*(ctx; image: Image,
                 w: ptr cint, h: ptr cint) {.cdecl, importc: "nvgImageSize".}
   ## Returns the dimensions of an image.
 
-proc deleteImage*(ctx: NVGContext, image: Image) {.cdecl,
+proc deleteImage*(ctx; image: Image) {.cdecl,
     importc: "nvgDeleteImage".}
   ## Deletes an image.
 
 #}}}
 #{{{ Paints -----------------------------------------------------------------
 
-proc linearGradient*(ctx: NVGContext, sx: cfloat, sy: cfloat,
+proc linearGradient*(ctx; sx: cfloat, sy: cfloat,
                      ex: cfloat, ey: cfloat,
                      inCol: Color, outCol: Color): Paint
     {.cdecl, importc: "nvgLinearGradient" .}
@@ -652,7 +655,7 @@ proc linearGradient*(ctx: NVGContext, sx: cfloat, sy: cfloat,
   ## The gradient is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
-proc boxGradient*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc boxGradient*(ctx; x: cfloat, y: cfloat,
                   w: cfloat, h: cfloat, r: cfloat, f: cfloat,
                   inCol: Color, outCol: Color): Paint
     {.cdecl, importc: "nvgBoxGradient".}
@@ -667,7 +670,7 @@ proc boxGradient*(ctx: NVGContext, x: cfloat, y: cfloat,
   ## The gradient is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
-proc radialGradient*(ctx: NVGContext, cx: cfloat, cy: cfloat,
+proc radialGradient*(ctx; cx: cfloat, cy: cfloat,
                      inr: cfloat, outr: cfloat,
                      inCol: Color, outCol: Color): Paint
     {.cdecl, importc: "nvgRadialGradient".}
@@ -678,7 +681,7 @@ proc radialGradient*(ctx: NVGContext, cx: cfloat, cy: cfloat,
   ## The gradient is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
-proc imagePattern*(ctx: NVGContext, ox: cfloat, oy: cfloat,
+proc imagePattern*(ctx; ox: cfloat, oy: cfloat,
                    ex: cfloat, ey: cfloat, angle: cfloat, image: Image,
                    alpha: cfloat): Paint {.cdecl, importc: "nvgImagePattern".}
   ## Creates and returns an image pattern. Parameters (ox,oy) specify the
@@ -692,12 +695,12 @@ proc imagePattern*(ctx: NVGContext, ox: cfloat, oy: cfloat,
 #}}}
 #{{{ Scissoring -------------------------------------------------------------
 
-proc scissor*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc scissor*(ctx; x: cfloat, y: cfloat,
               w: cfloat, h: cfloat) {.cdecl, importc: "nvgScissor".}
   ## Sets the current scissor rectangle.
   ## The scissor rectangle is transformed by the current transform.
 
-proc intersectScissor*(ctx: NVGContext, x: cfloat, y: cfloat, w: cfloat,
+proc intersectScissor*(ctx; x: cfloat, y: cfloat, w: cfloat,
                        h: cfloat) {.cdecl, importc: "nvgIntersectScissor".}
   ## Intersects current scissor rectangle with the specified rectangle.  The
   ## scissor rectangle is transformed by the current transform.  Note: in case
@@ -723,18 +726,18 @@ proc lineTo*(ctx: NVGContext,
              x: cfloat, y: cfloat) {.cdecl, importc: "nvgLineTo".}
   ## Adds line segment from the last point in the path to the specified point.
 
-proc bezierTo*(ctx: NVGContext, c1x: cfloat, c1y: cfloat,
+proc bezierTo*(ctx; c1x: cfloat, c1y: cfloat,
                c2x: cfloat, c2y: cfloat,
                x: cfloat, y: cfloat) {.cdecl, importc: "nvgBezierTo".}
   ## Adds cubic bezier segment from last point in the path via two control
   ## points to the specified point.
 
-proc quadTo*(ctx: NVGContext, cx: cfloat, cy: cfloat,
+proc quadTo*(ctx; cx: cfloat, cy: cfloat,
              x: cfloat, y: cfloat) {.cdecl, importc: "nvgQuadTo".}
   ## Adds quadratic bezier segment from last point in the path via a control
   ## point to the specified point.
 
-proc arcTo*(ctx: NVGContext, x1: cfloat, y1: cfloat, x2: cfloat, y2: cfloat,
+proc arcTo*(ctx; x1: cfloat, y1: cfloat, x2: cfloat, y2: cfloat,
             radius: cfloat) {.cdecl, importc: "nvgArcTo".}
   ## Adds an arc segment at the corner defined by the last path point, and two
   ## specified points.
@@ -742,26 +745,26 @@ proc arcTo*(ctx: NVGContext, x1: cfloat, y1: cfloat, x2: cfloat, y2: cfloat,
 proc closePath*(ctx: NVGContext) {.cdecl, importc: "nvgClosePath".}
   ## Closes current sub-path with a line segment.
 
-proc pathWinding*(ctx: NVGContext, dir: PathWinding | Solidity)
+proc pathWinding*(ctx; dir: PathWinding | Solidity)
     {.cdecl, importc: "nvgPathWinding".}
   ## Sets the current sub-path winding, see NVGwinding and NVGsolidity.
 
-proc arc*(ctx: NVGContext, cx: cfloat, cy: cfloat, r: cfloat,
+proc arc*(ctx; cx: cfloat, cy: cfloat, r: cfloat,
           a0: cfloat, a1: cfloat,
           dir: PathWinding | Solidity) {.cdecl, importc: "nvgArc".}
   ## Creates new circle arc shaped sub-path. The arc center is at `cx`,`cy`,
   ## the arc radius is `r`, and the arc is drawn from angle `a0` to `a1`, and
   ## swept in direction `dir`. Angles are specified in radians.
 
-proc rect*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc rect*(ctx; x: cfloat, y: cfloat,
            w: cfloat, h: cfloat) {.cdecl, importc: "nvgRect".}
   ## Creates new rectangle shaped sub-path.
 
-proc roundedRect*(ctx: NVGContext, x: cfloat, y: cfloat, w: cfloat,
+proc roundedRect*(ctx; x: cfloat, y: cfloat, w: cfloat,
                   h: cfloat, r: cfloat) {.cdecl, importc: "nvgRoundedRect".}
   ## Creates new rounded rectangle shaped sub-path.
 
-proc roundedRectVarying*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc roundedRectVarying*(ctx; x: cfloat, y: cfloat,
                          w: cfloat, h: cfloat, radTopLeft: cfloat,
                          radTopRight: cfloat, radBottomRight: cfloat,
                          radBottomLeft: cfloat)
@@ -769,11 +772,11 @@ proc roundedRectVarying*(ctx: NVGContext, x: cfloat, y: cfloat,
   ## Creates new rounded rectangle shaped sub-path with varying radii for each
   ## corner.
 
-proc ellipse*(ctx: NVGContext, cx: cfloat, cy: cfloat,
+proc ellipse*(ctx; cx: cfloat, cy: cfloat,
               rx: cfloat, ry: cfloat) {.cdecl, importc: "nvgEllipse".}
   ## Creates new ellipse shaped sub-path.
 
-proc circle*(ctx: NVGContext, cx: cfloat, cy: cfloat,
+proc circle*(ctx; cx: cfloat, cy: cfloat,
              r: cfloat) {.cdecl, importc: "nvgCircle".}
   ## Creates new circle shaped sub-path.
 
@@ -786,38 +789,38 @@ proc stroke*(ctx: NVGContext) {.cdecl, importc: "nvgStroke".}
 #}}}
 #{{{ Text -------------------------------------------------------------------
 
-proc createFont*(ctx: NVGContext, name: cstring,
+proc createFont*(ctx; name: cstring,
                  filename: cstring): Font {.cdecl, importc: "nvgCreateFont".}
   ## Creates font by loading it from the disk from specified file name.
   ## Returns handle to the font.
 
-proc createFontMem*(ctx: NVGContext, name: cstring,
+proc createFontMem*(ctx; name: cstring,
                     data: ptr cuchar, ndata: cint,
                     freeData: cint): Font {.cdecl, importc: "nvgCreateFontMem".}
   ## Creates font by loading it from the specified memory chunk.
   ## Returns handle to the font.
 
-proc findFont*(ctx: NVGContext, name: cstring): Font
+proc findFont*(ctx; name: cstring): Font
     {.cdecl, importc: "nvgFindFont".}
   ## Finds a loaded font of specified name, and returns handle to it, or -1 if
   ## the font is not found.
 
-proc addFallbackFont*(ctx: NVGContext, baseFont: Font, fallbackFont: Font): cint
+proc addFallbackFont*(ctx; baseFont: Font, fallbackFont: Font): cint
     {.cdecl, importc: "nvgAddFallbackFontId".}
   ## Adds a fallback font by handle.
 
-proc addFallbackFont*(ctx: NVGContext, baseFontName: cstring,
+proc addFallbackFont*(ctx; baseFontName: cstring,
                       fallbackFontName: cstring): cint
     {.cdecl, importc: "nvgAddFallbackFont".}
   ## Adds a fallback font by name.
 
-proc fontSize*(ctx: NVGContext, size: cfloat) {.cdecl, importc: "nvgFontSize".}
+proc fontSize*(ctx; size: cfloat) {.cdecl, importc: "nvgFontSize".}
   ## Sets the font size of current text style.
 
-proc fontBlur*(ctx: NVGContext, blur: cfloat) {.cdecl, importc: "nvgFontBlur".}
+proc fontBlur*(ctx; blur: cfloat) {.cdecl, importc: "nvgFontBlur".}
   ## Sets the blur of current text style.
 
-proc textLetterSpacing*(ctx: NVGContext, spacing: cfloat)
+proc textLetterSpacing*(ctx; spacing: cfloat)
     {.cdecl, importc: "nvgTextLetterSpacing".}
   ## Sets the letter spacing of current text style.
 
@@ -826,10 +829,10 @@ proc textLineHeight*(ctx: NVGContext,
   ## Sets the proportional line height of current text style. The line height
   ## is specified as multiple of font size.
 
-proc textAlign*(ctx: NVGContext, align: cint) {.cdecl, importc: "nvgTextAlign".}
+proc textAlign*(ctx; align: cint) {.cdecl, importc: "nvgTextAlign".}
   ## Sets the text align of current text style, see NVGalign for options.
 
-proc fontFace*(ctx: NVGContext, font: Font)
+proc fontFace*(ctx; font: Font)
     {.cdecl, importc: "nvgFontFaceId".}
   ## Sets the font face based on specified id of current text style.
 
@@ -837,12 +840,12 @@ proc fontFace*(ctx: NVGContext,
                fontName: cstring) {.cdecl, importc: "nvgFontFace".}
   ## Sets the font face based on specified name of current text style.
 
-proc text*(ctx: NVGContext, x: cfloat, y: cfloat, string: cstring,
+proc text*(ctx; x: cfloat, y: cfloat, string: cstring,
            `end`: cstring): cfloat {.cdecl, importc: "nvgText".}
   ## Draws text string at specified location. If end is specified only the
   ## sub-string up to the end is drawn.
 
-proc textBox*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc textBox*(ctx; x: cfloat, y: cfloat,
               breakRowWidth: cfloat,
               string: cstring, `end`: cstring) {.cdecl, importc: "nvgTextBox".}
   ## Draws multi-line text string at specified location wrapped at the
@@ -855,7 +858,7 @@ proc textBox*(ctx: NVGContext, x: cfloat, y: cfloat,
   ## Words longer than the max width are slit at nearest character (i.e. no
   ## hyphenation).
 
-proc textBounds*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc textBounds*(ctx; x: cfloat, y: cfloat,
                  string: cstring, `end`: cstring,
                  bounds: ptr cfloat): cfloat {.cdecl, importc: "nvgTextBounds".}
   ## Measures the specified text string. Parameter bounds should be a pointer
@@ -867,7 +870,7 @@ proc textBounds*(ctx: NVGContext, x: cfloat, y: cfloat,
   ##
   ## Measured values are returned in local coordinate space.
 
-proc textBoxBounds*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc textBoxBounds*(ctx; x: cfloat, y: cfloat,
                     breakRowWidth: cfloat, string: cstring, `end`: cstring,
                     bounds: ptr cfloat) {.cdecl, importc: "nvgTextBoxBounds".}
   ## Measures the specified multi-text string. Parameter bounds should be
@@ -876,7 +879,7 @@ proc textBoxBounds*(ctx: NVGContext, x: cfloat, y: cfloat,
   ##
   ## Measured values are returned in local coordinate space.
 
-proc textGlyphPositions*(ctx: NVGContext, x: cfloat, y: cfloat,
+proc textGlyphPositions*(ctx; x: cfloat, y: cfloat,
                          string: cstring, `end`: cstring,
                          positions: ptr GlyphPosition, maxPositions: cint): cint
   {.cdecl, importc: "nvgTextGlyphPositions".}
@@ -885,13 +888,12 @@ proc textGlyphPositions*(ctx: NVGContext, x: cfloat, y: cfloat,
   ##
   ## Measured values are returned in local coordinate space.
 
-proc textMetrics*(ctx: NVGContext, ascender: ptr cfloat,
-                  descender: ptr cfloat,
+proc textMetrics*(ctx; ascender: ptr cfloat, descender: ptr cfloat,
                   lineh: ptr cfloat) {.cdecl, importc: "nvgTextMetrics".}
   ## Returns the vertical metrics based on the current text style.
   ## Measured values are returned in local coordinate space.
 
-proc textBreakLines*(ctx: NVGContext, string: cstring, `end`: cstring,
+proc textBreakLines*(ctx; string: cstring, `end`: cstring,
                      breakRowWidth: cfloat, rows: ptr TextRow,
                      maxRows: cint): cint
     {.cdecl, importc: "nvgTextBreakLines".}
@@ -903,5 +905,29 @@ proc textBreakLines*(ctx: NVGContext, string: cstring, `end`: cstring,
   ## than the max width are slit at nearest character (i.e. no hyphenation).
 
 #}}}
+#{{{ Framebuffer ------------------------------------------------------------
+
+type
+  GLuint = uint32
+
+  NVGLUFramebufferObj {.bycopy.} = object
+    ctx*:    NVGcontext
+    fbo:     GLuint
+    rbo:     GLuint
+    texture: GLuint
+    image*:  Image
+
+  NVGLUFramebuffer* = ptr NVGLUFramebufferObj
+
+
+proc nvgluBindFramebuffer*(fb: NVGLUFramebuffer) {.cdecl, importc.}
+
+proc nvgluCreateFramebuffer*(ctx; w: cint, h: cint,
+                             imageFlags: cint): NVGLUFramebuffer
+    {.cdecl, importc.}
+
+proc nvgluDeleteFramebuffer*(fb: NVGLUFramebuffer) {.cdecl, importc.}
+
+# }}}
 
 # vim: et:ts=2:sw=2:fdm=marker

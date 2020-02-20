@@ -25,6 +25,8 @@ export wrapper.GlyphPosition
 export wrapper.TextRow
 export wrapper.NvgInitFlag
 
+export wrapper.NVGLUFramebuffer
+
 # Global
 export wrapper.beginFrame
 export wrapper.cancelFrame
@@ -121,6 +123,17 @@ export wrapper.fontFace
 export wrapper.text
 export wrapper.textBox
 
+# Framebuffer
+export wrapper.nvgluBindFramebuffer
+export wrapper.nvgluDeleteFramebuffer
+
+using ctx: NVGContext
+
+proc nvgluCreateFramebuffer*(ctx; width: int, height: int,
+                             imageFlags: set[ImageFlags]): NVGLUFramebuffer =
+  nvgluCreateFramebuffer(ctx, width.cint, height.cint, cast[cint](imageFlags))
+
+
 # Nim API
 var gladInitialized = false
 
@@ -145,30 +158,30 @@ proc nvgInit*(getProcAddress: pointer,
   result = vg
 
 
-proc nvgDeinit*(ctx: NVGContext) =
+proc nvgDeinit*(ctx) =
   nvgDeleteContext(ctx)
 
 
-template shapeAntiAlias*(ctx: NVGContext, enabled: bool) =
+template shapeAntiAlias*(ctx; enabled: bool) =
   shapeAntiAlias(bool.cint)
 
-template textAlign*(ctx: NVGContext, halign: HorizontalAlign = haLeft,
+template textAlign*(ctx; halign: HorizontalAlign = haLeft,
                     valign: VerticalAlign = vaBaseline) =
   textAlign(ctx, halign.cint or valign.cint)
 
-proc imageSize*(ctx: NVGContext, image: Image): tuple[w, h: int] =
+proc imageSize*(ctx; image: Image): tuple[w, h: int] =
   var w, h: cint
   imageSize(ctx, image, w.addr, h.addr)
   result = (w.int, h.int)
 
-template text*(ctx: NVGContext, x, y: float, string: string): float =
+template text*(ctx; x, y: float, string: string): float =
   text(ctx, x, y, string, nil)
 
-template textBox*(ctx: NVGContext, x, y, breakRowWidth: float, string: string) =
+template textBox*(ctx; x, y, breakRowWidth: float, string: string) =
   textBox(ctx, x, y, breakRowWidth, string, nil)
 
 
-proc textMetrics*(ctx: NVGContext):
+proc textMetrics*(ctx):
   tuple[ascender: float, descender: float, lineHeight: float] =
 
   var ascender, descender, lineHeight: cfloat
@@ -199,18 +212,18 @@ template withAlpha*(c: Color, a: int): Color =
   withAlpha(c, clampToCuchar(a))
 
 
-proc createImageMem*(ctx: NVGContext, imageFlags: set[ImageFlags] = {},
+proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
                      data: var openArray[byte]): Image =
   createImageMem(ctx, imageFlags, cast[ptr cuchar](data[0].addr), data.len.cint)
 
 
-proc createFontMem*(ctx: NVGContext, name: cstring,
+proc createFontMem*(ctx; name: cstring,
                     data: var openArray[byte]): Font =
   createFontMem(ctx, name, cast[ptr cuchar](data[0].addr), data.len.cint,
                 freeData=0)
 
 
-proc currentTransform*(ctx: NVGContext): TransformMatrix =
+proc currentTransform*(ctx): TransformMatrix =
   currentTransform(ctx, result)
 
 
@@ -221,18 +234,18 @@ proc transform*(xform: TransformMatrix, x: cfloat,
   result = (destX.float, destY.float)
 
 
-proc textBreakLines*(ctx: NVGContext, string: cstring, `end`: cstring,
+proc textBreakLines*(ctx; string: cstring, `end`: cstring,
                      breakRowWidth: float,
                      rows: var openArray[TextRow]): cint =
   textBreakLines(ctx, string, `end`, breakRowWidth, rows[0].addr, rows.len.cint)
 
 
-proc horizontalAdvance*(ctx: NVGContext, x: float, y: float,
+proc horizontalAdvance*(ctx; x: float, y: float,
                         string: cstring, `end`: cstring = nil): float =
   textBounds(ctx, x, y, string, `end`, bounds=nil)
 
 
-proc textBounds*(ctx: NVGContext, x: float, y: float,
+proc textBounds*(ctx; x: float, y: float,
              string: cstring,
              `end`: cstring = nil): tuple[bounds: Bounds, horizAdvance: float] =
 
@@ -241,19 +254,19 @@ proc textBounds*(ctx: NVGContext, x: float, y: float,
   result = (b, adv.float)
 
 
-proc textBoxBounds*(ctx: NVGContext, x: float, y: float,
+proc textBoxBounds*(ctx; x: float, y: float,
                     breakRowWidth: float, string: cstring,
                     `end`: cstring = nil): Bounds =
   textBoxBounds(ctx, x, y, breakRowWidth, string, `end`, result.b[0].addr)
 
 
-proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
+proc textGlyphPositions*(ctx; x: float, y: float,
                          string: cstring, `end`: cstring,
                          positions: var openArray[GlyphPosition]): int =
   textGlyphPositions(ctx, x, y, string, `end`,
                      positions[0].addr, positions.len.cint)
 
-proc textGlyphPositions*(ctx: NVGContext, x: float, y: float,
+proc textGlyphPositions*(ctx; x: float, y: float,
                          string: string,
                          positions: var openArray[GlyphPosition]): int =
   textGlyphPositions(ctx, x, y, string, nil,
