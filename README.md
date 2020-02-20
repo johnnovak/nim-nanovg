@@ -26,3 +26,9 @@ version of the original NanoVG source comments.
 You can also check out the [NanoVG README](https://github.com/memononen/nanovg)
 for further info.
 
+## Notes
+
+Attempting to compile the library on **Mac OS X 10.14.5 Mojave** / ** XCode
+11.3.1** with the GL2 backend results in compilation errors. I can't be
+bothered fixing this as GL3 works fine.
+
