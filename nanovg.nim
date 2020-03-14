@@ -245,6 +245,11 @@ proc horizontalAdvance*(ctx; x: float, y: float,
   textBounds(ctx, x, y, string, `end`, bounds=nil)
 
 
+proc horizontalAdvance*(ctx;
+                        string: cstring, `end`: cstring = nil): float =
+  textBounds(ctx, 0, 0, string, `end`, bounds=nil)
+
+
 proc textBounds*(ctx; x: float, y: float,
              string: cstring,
              `end`: cstring = nil): tuple[bounds: Bounds, horizAdvance: float] =
