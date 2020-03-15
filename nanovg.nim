@@ -245,8 +245,7 @@ proc horizontalAdvance*(ctx; x: float, y: float,
   textBounds(ctx, x, y, string, `end`, bounds=nil)
 
 
-proc horizontalAdvance*(ctx;
-                        string: cstring, `end`: cstring = nil): float =
+proc textWidth*(ctx; string: cstring, `end`: cstring = nil): float =
   textBounds(ctx, 0, 0, string, `end`, bounds=nil)
 
 

@@ -689,7 +689,7 @@ proc imagePattern*(ctx; ox: cfloat, oy: cfloat,
   ## angle rotation around the top-left corner, image is handle to the image to
   ## render.
   ##
-  ## The gradient is transformed by the current transform when it is passed to
+  ## The image is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
 #}}}
