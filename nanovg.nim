@@ -163,7 +163,7 @@ proc nvgDeinit*(ctx) =
 
 
 template shapeAntiAlias*(ctx; enabled: bool) =
-  shapeAntiAlias(bool.cint)
+  shapeAntiAlias(ctx, enabled.cint)
 
 template textAlign*(ctx; halign: HorizontalAlign = haLeft,
                     valign: VerticalAlign = vaBaseline) =

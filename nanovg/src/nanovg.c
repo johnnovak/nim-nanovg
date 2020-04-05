@@ -2287,14 +2287,24 @@ void nvgStroke(NVGcontext* ctx)
 }
 
 // Add fonts
-int nvgCreateFont(NVGcontext* ctx, const char* name, const char* path)
+int nvgCreateFont(NVGcontext* ctx, const char* name, const char* filename)
 {
-	return fonsAddFont(ctx->fs, name, path);
+	return fonsAddFont(ctx->fs, name, filename, 0);
+}
+
+int nvgCreateFontAtIndex(NVGcontext* ctx, const char* name, const char* filename, const int fontIndex)
+{
+	return fonsAddFont(ctx->fs, name, filename, fontIndex);
 }
 
 int nvgCreateFontMem(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData)
 {
-	return fonsAddFontMem(ctx->fs, name, data, ndata, freeData);
+	return fonsAddFontMem(ctx->fs, name, data, ndata, freeData, 0);
+}
+
+int nvgCreateFontMemAtIndex(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData, const int fontIndex)
+{
+	return fonsAddFontMem(ctx->fs, name, data, ndata, freeData, fontIndex);
 }
 
 int nvgFindFont(NVGcontext* ctx, const char* name)
@@ -2313,6 +2323,16 @@ int nvgAddFallbackFontId(NVGcontext* ctx, int baseFont, int fallbackFont)
 int nvgAddFallbackFont(NVGcontext* ctx, const char* baseFont, const char* fallbackFont)
 {
 	return nvgAddFallbackFontId(ctx, nvgFindFont(ctx, baseFont), nvgFindFont(ctx, fallbackFont));
+}
+
+void nvgResetFallbackFontsId(NVGcontext* ctx, int baseFont)
+{
+	fonsResetFallbackFont(ctx->fs, baseFont);
+}
+
+void nvgResetFallbackFonts(NVGcontext* ctx, const char* baseFont)
+{
+	nvgResetFallbackFontsId(ctx, nvgFindFont(ctx, baseFont));
 }
 
 // State setting
@@ -2423,7 +2443,7 @@ static void nvg__renderText(NVGcontext* ctx, NVGvertex* verts, int nverts)
 	paint.innerColor.a *= state->alpha;
 	paint.outerColor.a *= state->alpha;
 
-	ctx->params.renderTriangles(ctx->params.userPtr, &paint, state->compositeOperation, &state->scissor, verts, nverts);
+	ctx->params.renderTriangles(ctx->params.userPtr, &paint, state->compositeOperation, &state->scissor, verts, nverts, ctx->fringeWidth);
 
 	ctx->drawCallCount++;
 	ctx->textTriCount += nverts/3;
@@ -2684,7 +2704,7 @@ int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, floa
 					rowStartX = iter.x;
 					rowStart = iter.str;
 					rowEnd = iter.next;
-					rowWidth = iter.nextx - rowStartX; // q.x1 - rowStartX;
+					rowWidth = iter.nextx - rowStartX;
 					rowMinX = q.x0 - rowStartX;
 					rowMaxX = q.x1 - rowStartX;
 					wordStart = iter.str;
@@ -2714,7 +2734,7 @@ int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, floa
 				if ((ptype == NVG_SPACE && (type == NVG_CHAR || type == NVG_CJK_CHAR)) || type == NVG_CJK_CHAR) {
 					wordStart = iter.str;
 					wordStartX = iter.x;
-					wordMinX = q.x0 - rowStartX;
+					wordMinX = q.x0;
 				}
 
 				// Break to new line when a character is beyond break width.
@@ -2751,13 +2771,13 @@ int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, floa
 						nrows++;
 						if (nrows >= maxRows)
 							return nrows;
+						// Update row
 						rowStartX = wordStartX;
 						rowStart = wordStart;
 						rowEnd = iter.next;
 						rowWidth = iter.nextx - rowStartX;
-						rowMinX = wordMinX;
+						rowMinX = wordMinX - rowStartX;
 						rowMaxX = q.x1 - rowStartX;
-						// No change to the word start
 					}
 					// Set null break point
 					breakEnd = rowStart;

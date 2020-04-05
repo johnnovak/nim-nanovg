@@ -174,6 +174,7 @@ type
 
 # TODO probably not the greatest idea for error handling... use exceptions
 # instead when font loading fails?
+# TODO this is probably broken
 proc `==`*(x, y: Font): bool {.borrow.}
 proc `==`*(x, y: Image): bool {.borrow.}
 
