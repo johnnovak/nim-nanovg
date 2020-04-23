@@ -159,12 +159,25 @@ else:
   {.error:
    "define nvgGL2, nvgGL3, nvgGLES2, or nvgGLES3 (pass -d:... to compile)".}
 
-{.compile: "deps/glad.c".}
-
 {.passC: fmt" -I{currentDir}/deps/stb -DNANOVG_{GLVersion}_IMPLEMENTATION",
   compile: "src/nanovg.c".}
 
-{.compile: "nanovg_gl_stub.c".}
+when defined(android) or defined(ios):
+  # TODO: iOS is not yet tested, includes might be different.
+  when defined(nvgGLES2):
+    {.emit: fmt"#include <GLES2/gl2.h>".}
+
+  elif defined(nvgGLES3):
+    {.emit: fmt"#include <GLES3/gl3.h>".}
+else:
+  {.compile: "deps/glad.c".}
+  {.emit: fmt"""#include "{currentDir}/deps/glad/glad.h" """.}
+
+{.emit: fmt"""
+#include "{currentDir}/src/nanovg.h"
+#include "{currentDir}/src/nanovg_gl.h"
+#include "{currentDir}/src/nanovg_gl_utils.h"
+""".}
 
 #{{{ Types ------------------------------------------------------------------
 
