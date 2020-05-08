@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.2"
+version       = "0.3.0"
 author        = "John Novak <john@johnnovak.net>"
 description   = "Nim wrapper for the NanoVG antialiased vector graphics rendering library for OpenGL"
 license       = "MIT"
@@ -10,7 +10,7 @@ skipDirs = @["doc", "examples"]
 
 # Dependencies
 
-requires "nim >= 1.0.6"
+requires "nim >= 1.2.0"
 
 task examplesGL2, "Compiles the examples":
   exec "nim c -d:release -D:glfwStaticLib -D:demoMSAA -D:nvgGL2 examples/example_gl2.nim"
