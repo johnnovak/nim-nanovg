@@ -143,28 +143,33 @@ import os, strformat
 const
   currentDir = splitPath(currentSourcePath).head
 
-when defined(nvgGL2):
-  const GLVersion* = "GL2"
-
-elif defined(nvgGL3):
-  const GLVersion* = "GL3"
-
-elif defined(nvgGLES2):
-  const GLVersion* = "GLES2"
-
-elif defined(nvgGLES3):
-  const GLVersion* = "GLES3"
-
-else:
-  {.error:
-   "define nvgGL2, nvgGL3, nvgGLES2, or nvgGLES3 (pass -d:... to compile)".}
-
-{.compile: "deps/glad.c".}
+const GLVersion* =
+  when defined(nvgGL2): "GL2"
+  elif defined(nvgGL3): "GL3"
+  elif defined(nvgGLES2): "GLES2"
+  elif defined(nvgGLES3): "GLES3"
+  elif defined(ios) or defined(android): "GLES3"
+  else: "GL3"
 
 {.passC: fmt" -I{currentDir}/deps/stb -DNANOVG_{GLVersion}_IMPLEMENTATION",
   compile: "src/nanovg.c".}
 
-{.compile: "nanovg_gl_stub.c".}
+when defined(android) or defined(ios):
+  # TODO: iOS is not yet tested, includes might be different.
+  when defined(nvgGLES2):
+    {.emit: fmt"#include <GLES2/gl2.h>".}
+
+  elif defined(nvgGLES3):
+    {.emit: fmt"#include <GLES3/gl3.h>".}
+else:
+  {.compile: "deps/glad.c".}
+  {.emit: fmt"""#include "{currentDir}/deps/glad/glad.h" """.}
+
+{.emit: fmt"""
+#include "{currentDir}/src/nanovg.h"
+#include "{currentDir}/src/nanovg_gl.h"
+#include "{currentDir}/src/nanovg_gl_utils.h"
+""".}
 
 #{{{ Types ------------------------------------------------------------------
 
@@ -351,25 +356,25 @@ using ctx: NVGContext
 # Creates NanoVG contexts for different OpenGL (ES) versions.
 # Flags should be combination of the create flags above.
 
-when defined(nvgGL2):
+when GLVersion == "GL2":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
       {.importc: "nvgCreateGL2".}
 
   proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGL2".}
 
-when defined(nvgGL3):
+elif GLVersion == "GL3":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
       {.importc: "nvgCreateGL3".}
 
   proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGL3".}
 
-when defined(nvgGLES2):
+elif GLVersion == "GLES2":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
       {.importc: "nvgCreateGLES2".}
 
   proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGLES2".}
 
-when defined(nvgGLES3):
+elif GLVersion == "GLES3":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
       {.importc: "nvgCreateGLES3".}
 
