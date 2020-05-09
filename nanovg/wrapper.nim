@@ -307,13 +307,13 @@ type
     m*: array[6, cfloat]
 
   Bounds* = object
-    b*: array[4, cfloat]
+    x1*, y1*, x2*, y2*: cfloat
 
   TextRow* {.bycopy.} = object
-    start*: cstring
+    startPos*: cstring
     ## Pointer to the input text where the row starts.
 
-    `end`*: cstring
+    endPos*: cstring
     ## Pointer to the input text where the row ends (one past the last
     ## character).
 

@@ -254,14 +254,14 @@ proc textBounds*(ctx; x: float, y: float,
              `end`: cstring = nil): tuple[bounds: Bounds, horizAdvance: float] =
 
   var b: Bounds
-  let adv = textBounds(ctx, x, y, string, `end`, bounds=b.b[0].addr)
+  let adv = textBounds(ctx, x, y, string, `end`, bounds=b.x1.addr)
   result = (b, adv.float)
 
 
 proc textBoxBounds*(ctx; x: float, y: float,
                     breakRowWidth: float, string: cstring,
                     `end`: cstring = nil): Bounds =
-  textBoxBounds(ctx, x, y, breakRowWidth, string, `end`, result.b[0].addr)
+  textBoxBounds(ctx, x, y, breakRowWidth, string, `end`, result.x1.addr)
 
 
 proc textGlyphPositions*(ctx; x: float, y: float,
