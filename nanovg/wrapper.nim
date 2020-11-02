@@ -184,7 +184,7 @@ proc `==`*(x, y: Font): bool {.borrow.}
 proc `==`*(x, y: Image): bool {.borrow.}
 
 var NoFont* = Font(-1)
-var NoImage* = Image(-1)
+var NoImage* = Image(0)
 
 type
   NVGContextObj* = object
