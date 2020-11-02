@@ -1,7 +1,5 @@
 import os, strformat
 
-#{{{ Docs -------------------------------------------------------------------
-##
 ## *This is a slightly edited version of the documentation provided in the
 ## original NanoVG C header file. While it's usable as it is, most of it
 ## should be revisited and reworded in better English.*
@@ -137,8 +135,6 @@ import os, strformat
 ## ```
 ##
 ## Note: currently only solid color fill is supported for text.
-##
-#}}}
 
 const
   currentDir = splitPath(currentSourcePath).head

@@ -841,10 +841,11 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
       vg.fill()
 
       vg.fillColor(white())
-      discard vg.text(x, yy, row.start, row.end)
+      discard vg.text(x, yy, row.startPos, row.endPos)
 
       if hit:
-        let nglyphs = vg.textGlyphPositions(x, yy, row.start, row.end, glyphs)
+        let nglyphs = vg.textGlyphPositions(x, yy, row.startPos, row.endPos,
+                                            glyphs)
         var
           caretX = if (mx < x + row.width / 2): x else: x + row.width
           px = x
@@ -885,11 +886,11 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
     vg.beginPath()
     vg.fillColor(rgb(255, 192, 0))
     vg.roundedRect(
-      floor(bounds.b[0] - 4),
-      floor(bounds.b[1] - 2),
-      floor(bounds.b[2] - bounds.b[0])+8,
-      floor(bounds.b[3] - bounds.b[1])+4,
-      (floor(bounds.b[3] - bounds.b[1])+4) / 2 - 1
+      floor(bounds.x1 - 4),
+      floor(bounds.y1 - 2),
+      floor(bounds.x2 - bounds.x1)+8,
+      floor(bounds.y2 - bounds.y1)+4,
+      (floor(bounds.y2 - bounds.y1)+4) / 2 - 1
     )
     vg.fill()
 
@@ -907,21 +908,21 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   let bounds = vg.textBoxBounds(x, yy, 150, tooltipText)
 
   # Fade the tooltip out when close to it.
-  gx = abs((mx - (bounds.b[0]+bounds.b[2])*0.5) / (bounds.b[0] - bounds.b[2]))
-  gy = abs((my - (bounds.b[1]+bounds.b[3])*0.5) / (bounds.b[1] - bounds.b[3]))
+  gx = abs((mx - (bounds.x1+bounds.x2)*0.5) / (bounds.x1 - bounds.x2))
+  gy = abs((my - (bounds.y1+bounds.y2)*0.5) / (bounds.y1 - bounds.y2))
 
   vg.globalAlpha(clamp(max(gx, gy) - 0.5, 0, 1))
 
   vg.beginPath()
   vg.fillColor(gray(220))
-  vg.roundedRect(bounds.b[0]-2,
-                 bounds.b[1]-2,
-                 floor(bounds.b[2] - bounds.b[0])+4,
-                 floor(bounds.b[3] - bounds.b[1])+4, 3)
-  px = floor((bounds.b[2] + bounds.b[0])/2)
-  vg.moveTo(px,bounds.b[1] - 10)
-  vg.lineTo(px+7, bounds.b[1] + 1)
-  vg.lineTo(px-7, bounds.b[1] + 1)
+  vg.roundedRect(bounds.x1-2,
+                 bounds.y1-2,
+                 floor(bounds.x2 - bounds.x1)+4,
+                 floor(bounds.y2 - bounds.y1)+4, 3)
+  px = floor((bounds.x2 + bounds.x1)/2)
+  vg.moveTo(px,bounds.y1 - 10)
+  vg.lineTo(px+7, bounds.y1 + 1)
+  vg.lineTo(px-7, bounds.y1 + 1)
   vg.fill()
 
   vg.fillColor(black(220))

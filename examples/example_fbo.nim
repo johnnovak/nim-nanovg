@@ -5,7 +5,7 @@ import glad/gl
 import glfw
 
 import nanovg
-import demo, perf
+import perf
 
 
 proc renderPattern(vg: NVGContext, fb: NVGLUFramebuffer, t, pxRatio: float) =
@@ -83,9 +83,6 @@ proc createWindow(): Window =
     cfg.forwardCompat = true
     cfg.profile = opCoreProfile
 
-  when defined(demoMSAA):
-    cfg.nMultiSamples = 4
-
   newWindow(cfg)
 
 
@@ -97,8 +94,7 @@ proc main() =
 
   glfw.makeContextCurrent(win)
 
-  var flags = {nifStencilStrokes, nifDebug}
-  when not defined(demoMSAA): flags = flags + {nifAntialias}
+  var flags = {nifStencilStrokes, nifDebug, nifAntialias}
 
   var vg = nvgInit(getProcAddress, flags) # TODO exception like glfw?
   if vg == nil:
@@ -108,8 +104,8 @@ proc main() =
     quit "Error initialising OpenGL"
 
   let
-    (winWidth, winHeight) = win.size
-    (fbWidth, fbHeight) = win.framebufferSize
+    (winWidth, _) = win.size
+    (fbWidth, _) = win.framebufferSize
     pxRatio = fbWidth / winWidth
 
   var fb = vg.nvgluCreateFramebuffer(
