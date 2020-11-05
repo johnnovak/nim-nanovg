@@ -19,7 +19,7 @@ task examplesGL2, "Compiles the examples":
 task examplesGL3, "Compiles the examples":
   exec "nim c -d:release -D:glfwStaticLib -D:demoMSAA -D:nvgGL3 examples/example_gl3.nim"
   exec "nim c -d:release -D:glfwStaticLib -D:demoMSAA -D:nvgGL3 examples/simple_gl3.nim"
-  exec "nim c -d:release -D:glfwStaticLib -D:demoMSAA -D:nvgGL3 examples/example_fbo.nim"
+  exec "nim c -d:release -D:glfwStaticLib -D:nvgGL3 examples/example_fbo.nim"
 
 task docgen, "Generate HTML documentation":
   exec "nim doc -D:nvgGL3 -o:doc/nanovg.html nanovg"

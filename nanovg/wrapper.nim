@@ -311,14 +311,14 @@ type
     x1*, y1*, x2*, y2*: cfloat
 
   TextRow* {.bycopy.} = object
-    startPos*: cstring
+    startPtr*: cstring
     ## Pointer to the input text where the row starts.
 
-    endPos*: cstring
+    endPtr*: cstring
     ## Pointer to the input text where the row ends (one past the last
     ## character).
 
-    next*:  cstring
+    nextPtr*:  cstring
     ## Pointer to the beginning of the next row.
 
     width*: cfloat

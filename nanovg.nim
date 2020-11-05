@@ -22,7 +22,6 @@ export wrapper.CompositeOperationState
 export wrapper.TransformMatrix
 export wrapper.Bounds
 export wrapper.GlyphPosition
-export wrapper.TextRow
 export wrapper.NvgInitFlag
 
 export wrapper.NVGLUFramebuffer
@@ -123,6 +122,13 @@ export wrapper.fontFace
 export wrapper.text
 export wrapper.textBox
 
+
+template `++`[A](a: ptr A, offset: int): ptr A =
+  cast[ptr A](cast[int](a) + offset)
+
+template `--`[A](a, b: ptr A): int =
+  cast[int](a) - cast[int](b)
+
 # Framebuffer
 export wrapper.nvgluBindFramebuffer
 export wrapper.nvgluDeleteFramebuffer
@@ -165,29 +171,183 @@ proc nvgDeinit*(ctx) =
 template shapeAntiAlias*(ctx; enabled: bool) =
   shapeAntiAlias(ctx, enabled.cint)
 
-template textAlign*(ctx; halign: HorizontalAlign = haLeft,
-                    valign: VerticalAlign = vaBaseline) =
-  textAlign(ctx, halign.cint or valign.cint)
-
 proc imageSize*(ctx; image: Image): tuple[w, h: int] =
   var w, h: cint
   imageSize(ctx, image, w.addr, h.addr)
   result = (w.int, h.int)
 
-template text*(ctx; x, y: float, string: string): float =
-  text(ctx, x, y, string, nil)
 
-template textBox*(ctx; x, y, breakRowWidth: float, string: string) =
-  textBox(ctx, x, y, breakRowWidth, string, nil)
+proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
+                     data: var openArray[byte]): Image =
+  createImageMem(ctx, imageFlags, cast[ptr cuchar](data[0].addr), data.len.cint)
 
 
-proc textMetrics*(ctx):
-  tuple[ascender: float, descender: float, lineHeight: float] =
+proc createFontMem*(ctx; name: string,
+                    data: var openArray[byte]): Font =
+  createFontMem(ctx, name, cast[ptr cuchar](data[0].addr), data.len.cint,
+                freeData=0)
+
+
+# {{{ Transform functions
+
+proc currentTransform*(ctx): TransformMatrix =
+  currentTransform(ctx, result)
+
+
+proc transform*(xform: TransformMatrix, x: cfloat,
+                y: cfloat): tuple[x: float, y: float] =
+  var destX, destY: cfloat
+  transformPoint(destX.addr, destY.addr, xform, x, y)
+  result = (destX.float, destY.float)
+
+# }}}
+# {{{ Text functions
+
+template getStartPtr(s: string, startPos: Natural): cstring =
+  s[0].unsafeAddr ++ startPos
+
+template getEndPtr(s: string, endPos: int): cstring =
+  if endPos < 0: nil else: s[0].unsafeAddr ++ endPos ++ 1
+
+
+proc textAlign*(ctx; halign: HorizontalAlign = haLeft,
+                    valign: VerticalAlign = vaBaseline) {.inline.} =
+  textAlign(ctx, halign.cint or valign.cint)
+
+proc text*(ctx; x, y: float, s: string,
+               startPos: Natural = 0, endPos: int = -1,): float {.inline.} =
+  text(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos))
+
+proc textBox*(ctx; x, y, breakRowWidth: float, s: string,
+                  startPos: Natural = 0, endPos: int = -1,) {.inline.} =
+  textBox(ctx, x, y, breakRowWidth,
+          getStartPtr(s, startPos), getEndPtr(s, endPos))
+
+
+template textMetrics*(ctx): tuple[ascender: float, descender: float,
+                                  lineHeight: float] =
 
   var ascender, descender, lineHeight: cfloat
   textMetrics(ctx, ascender.addr, descender.addr, lineHeight.addr)
-  result = (ascender.float, descender.float, lineHeight.float)
+  (ascender.float, descender.float, lineHeight.float)
 
+
+type
+  TextRow* = object
+    startPos*: Natural
+    endPos*:   Natural
+    nextPos*:  Natural
+    width*:    float
+    minX*:     float
+    maxX*:     float
+
+proc textBreakLines*(ctx; s: string, startPos: Natural = 0, endPos: int = -1,
+                     breakRowWidth: float, maxRows: int = -1): seq[TextRow] =
+
+  result = newSeq[TextRow]()
+
+  if s == "" or maxRows == 0: return
+
+  var
+    rows: array[64, wrapper.TextRow]
+    rowsLeft = if maxRows >= 0: maxRows else: rows.len
+    startPtr = getStartPtr(s, startPos)
+    endPtr   = getEndPtr(s, endPos)
+
+  while rowsLeft > 0:
+    let numRows = wrapper.textBreakLines(ctx, startPtr, endPtr,
+                                         breakRowWidth.cfloat, rows[0].addr,
+                                         min(rowsLeft, rows.len).cint)
+    for i in 0..<numRows:
+      let row = rows[i]
+      let sPtr = s[0].unsafeAddr
+
+      let tr = TextRow(
+        startPos: row.startPtr[0].unsafeAddr -- sPtr,
+        # endPtr points to the char after the last character in the line
+        endPos:   row.endPtr[0].unsafeAddr -- sPtr - 1,
+        nextPos:  row.nextPtr[0].unsafeAddr -- sPtr,
+        width:    row.width,
+        minX:     row.minX,
+        maxX:     row.maxX
+      )
+      result.add(tr)
+
+    if numRows == 0:
+      rowsLeft = 0
+    else:
+      startPtr = rows[numRows-1].nextPtr
+      rowsLeft -= numRows
+
+
+template textBreakLines*(ctx; s: string, startPos: Natural = 0,
+                         breakRowWidth: float,
+                         maxRows: int = -1): seq[TextRow] =
+
+  textBreakLines(ctx, s, startPos, endPos = -1, breakRowWidth, maxRows)
+
+
+template textBreakLines*(ctx; s: string, breakRowWidth: float,
+                         maxRows: int = -1): seq[TextRow] =
+
+  textBreakLines(ctx, s, startPos=0, endPos = -1, breakRowWidth, maxRows)
+
+
+proc horizontalAdvance*(ctx; x: float, y: float, s: string,
+                        startPos: Natural = 0,
+                        endPos: int = -1): float {.inline.} =
+
+  textBounds(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos),
+             bounds=nil)
+
+
+proc textWidth*(ctx; s: string, startPos: Natural = 0,
+                    endPos: int = -1): float {.inline.} =
+
+  textBounds(ctx, 0, 0, getStartPtr(s, startPos), getEndPtr(s, endPos),
+             bounds=nil)
+
+
+proc textBounds*(ctx; x: float, y: float, s: string, startPos: Natural = 0,
+                 endPos: int = -1): tuple[bounds: Bounds,
+                                          horizAdvance: float] {.inline.} =
+
+  var b: Bounds
+  let adv = textBounds(ctx, x, y,
+                       getStartPtr(s, startPos), getEndPtr(s, endPos),
+                       bounds=b.x1.addr)
+  result = (b, adv.float)
+
+
+proc textBoxBounds*(ctx; x: float, y: float,
+                    breakRowWidth: float, s: string,
+                    startPos: Natural = 0, endPos: int = -1): Bounds {.inline.} =
+
+  textBoxBounds(ctx, x, y, breakRowWidth,
+                getStartPtr(s, startPos), getEndPtr(s, endPos), result.x1.addr)
+
+
+proc textGlyphPositions*(ctx; x: float, y: float,
+                         s: string, startPos: Natural = 0, endPos: int = -1,
+                         positions: var openArray[GlyphPosition]): int {.inline.} =
+
+  textGlyphPositions(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos),
+                     positions[0].addr, positions.len.cint)
+
+
+template textGlyphPositions*(ctx; x: float, y: float,
+                             s: string, startPos: Natural = 0,
+                             positions: var openArray[GlyphPosition]): int =
+  textGlyphPositions(ctx, x, y, s, startPos, endPos = -1, positions)
+
+
+template textGlyphPositions*(ctx; x: float, y: float, s: string,
+                             positions: var openArray[GlyphPosition]): int =
+  textGlyphPositions(ctx, x, y, s, startPos=0, endPos = -1, positions)
+
+
+# }}}
+# {{{ Color functions
 
 func clampToCuchar(i: int): cuchar = clamp(i, 0, 255).cuchar
 
@@ -209,70 +369,11 @@ template white*(a: int):         Color = gray(255, a)
 template white*(a: float = 1.0): Color = gray(1.0, a)
 
 template withAlpha*(c: Color, a: int): Color =
-  withAlpha(c, clampToCuchar(a))
+  wrapper.withAlpha(c, clampToCuchar(a))
 
+template withAlpha*(c: Color, a: float): Color =
+  wrapper.withAlpha(c, a)
 
-proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
-                     data: var openArray[byte]): Image =
-  createImageMem(ctx, imageFlags, cast[ptr cuchar](data[0].addr), data.len.cint)
+# }}}
 
-
-proc createFontMem*(ctx; name: cstring,
-                    data: var openArray[byte]): Font =
-  createFontMem(ctx, name, cast[ptr cuchar](data[0].addr), data.len.cint,
-                freeData=0)
-
-
-proc currentTransform*(ctx): TransformMatrix =
-  currentTransform(ctx, result)
-
-
-proc transform*(xform: TransformMatrix, x: cfloat,
-                y: cfloat): tuple[x: float, y: float] =
-  var destX, destY: cfloat
-  transformPoint(destX.addr, destY.addr, xform, x, y)
-  result = (destX.float, destY.float)
-
-
-proc textBreakLines*(ctx; string: cstring, `end`: cstring,
-                     breakRowWidth: float,
-                     rows: var openArray[TextRow]): cint =
-  textBreakLines(ctx, string, `end`, breakRowWidth, rows[0].addr, rows.len.cint)
-
-
-proc horizontalAdvance*(ctx; x: float, y: float,
-                        string: cstring, `end`: cstring = nil): float =
-  textBounds(ctx, x, y, string, `end`, bounds=nil)
-
-
-proc textWidth*(ctx; string: cstring, `end`: cstring = nil): float =
-  textBounds(ctx, 0, 0, string, `end`, bounds=nil)
-
-
-proc textBounds*(ctx; x: float, y: float,
-             string: cstring,
-             `end`: cstring = nil): tuple[bounds: Bounds, horizAdvance: float] =
-
-  var b: Bounds
-  let adv = textBounds(ctx, x, y, string, `end`, bounds=b.x1.addr)
-  result = (b, adv.float)
-
-
-proc textBoxBounds*(ctx; x: float, y: float,
-                    breakRowWidth: float, string: cstring,
-                    `end`: cstring = nil): Bounds =
-  textBoxBounds(ctx, x, y, breakRowWidth, string, `end`, result.x1.addr)
-
-
-proc textGlyphPositions*(ctx; x: float, y: float,
-                         string: cstring, `end`: cstring,
-                         positions: var openArray[GlyphPosition]): int =
-  textGlyphPositions(ctx, x, y, string, `end`,
-                     positions[0].addr, positions.len.cint)
-
-proc textGlyphPositions*(ctx; x: float, y: float,
-                         string: string,
-                         positions: var openArray[GlyphPosition]): int =
-  textGlyphPositions(ctx, x, y, string, nil,
-                     positions[0].addr, positions.len.cint)
-
+# vim: et:ts=2:sw=2:fdm=marker

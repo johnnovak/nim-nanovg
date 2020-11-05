@@ -812,14 +812,15 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   # The text break API can be used to fill a large buffer of rows,
   # or to iterate over the text just few lines (or just one) at a time.
   # The "next" variable of the last returned item tells where to continue.
+  let maxRows = 3
+
   var
     text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉"
 
-    textStart: cstring = text[0].addr
-    textEnd: cstring = ptrAdd(text[text.high].addr, 1)
+    textStart = 0
+    textEnd = text.high
 
-    rows: array[3, TextRow]
-    numRows = vg.textBreakLines(textStart, textEnd, width, rows)
+    rows = vg.textBreakLines(text, textStart, textEnd, width, maxRows)
 
     glyphs: array[100, GlyphPosition]
     lineNum = 0
@@ -828,10 +829,10 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
     gutter = 0
     yy = y
 
-  while numRows > 0:
-    for i in 0..<numRows:
+
+  while rows.len > 0:
+    for row in rows:
       let
-        row = rows[i]
         hit = mx > x and mx < (x + width) and
               my >= yy and my < (yy + lineHeight)
 
@@ -841,11 +842,11 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
       vg.fill()
 
       vg.fillColor(white())
-      discard vg.text(x, yy, row.startPos, row.endPos)
+      discard vg.text(x, yy, text, row.startPos, row.endPos)
 
       if hit:
-        let nglyphs = vg.textGlyphPositions(x, yy, row.startPos, row.endPos,
-                                            glyphs)
+        let nglyphs = vg.textGlyphPositions(x, yy, text,
+                                            row.startPos, row.endPos, glyphs)
         var
           caretX = if (mx < x + row.width / 2): x else: x + row.width
           px = x
@@ -873,8 +874,8 @@ proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
       yy += lineHeight
 
     # Keep going...
-    textStart = rows[numRows-1].next
-    numRows = vg.textBreakLines(textStart, textEnd, width, rows)
+    textStart = rows[^1].nextPos
+    rows = vg.textBreakLines(text, textStart, textEnd, width, maxRows)
 
   # Draw gutter
   if gutter > 0:
