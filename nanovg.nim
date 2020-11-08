@@ -214,12 +214,16 @@ proc textAlign*(ctx; halign: HorizontalAlign = haLeft,
                     valign: VerticalAlign = vaBaseline) {.inline.} =
   textAlign(ctx, halign.cint or valign.cint)
 
+
 proc text*(ctx; x, y: float, s: string,
                startPos: Natural = 0, endPos: int = -1,): float {.inline.} =
+  if s == "": return
   text(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos))
+
 
 proc textBox*(ctx; x, y, breakRowWidth: float, s: string,
                   startPos: Natural = 0, endPos: int = -1,) {.inline.} =
+  if s == "": return
   textBox(ctx, x, y, breakRowWidth,
           getStartPtr(s, startPos), getEndPtr(s, endPos))
 
@@ -297,6 +301,7 @@ proc horizontalAdvance*(ctx; x: float, y: float, s: string,
                         startPos: Natural = 0,
                         endPos: int = -1): float {.inline.} =
 
+  if s == "": return
   textBounds(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos),
              bounds=nil)
 
@@ -304,6 +309,7 @@ proc horizontalAdvance*(ctx; x: float, y: float, s: string,
 proc textWidth*(ctx; s: string, startPos: Natural = 0,
                     endPos: int = -1): float {.inline.} =
 
+  if s == "": return
   textBounds(ctx, 0, 0, getStartPtr(s, startPos), getEndPtr(s, endPos),
              bounds=nil)
 
@@ -311,6 +317,8 @@ proc textWidth*(ctx; s: string, startPos: Natural = 0,
 proc textBounds*(ctx; x: float, y: float, s: string, startPos: Natural = 0,
                  endPos: int = -1): tuple[bounds: Bounds,
                                           horizAdvance: float] {.inline.} =
+
+  if s == "": return
 
   var b: Bounds
   let adv = textBounds(ctx, x, y,
@@ -323,6 +331,7 @@ proc textBoxBounds*(ctx; x: float, y: float,
                     breakRowWidth: float, s: string,
                     startPos: Natural = 0, endPos: int = -1): Bounds {.inline.} =
 
+  if s == "": return
   textBoxBounds(ctx, x, y, breakRowWidth,
                 getStartPtr(s, startPos), getEndPtr(s, endPos), result.x1.addr)
 
@@ -331,6 +340,7 @@ proc textGlyphPositions*(ctx; x: float, y: float,
                          s: string, startPos: Natural = 0, endPos: int = -1,
                          positions: var openArray[GlyphPosition]): int {.inline.} =
 
+  if s == "": return
   textGlyphPositions(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos),
                      positions[0].addr, positions.len.cint)
 
