@@ -766,10 +766,10 @@ proc roundedRect*(ctx; x: cfloat, y: cfloat, w: cfloat,
                   h: cfloat, r: cfloat) {.cdecl, importc: "nvgRoundedRect".}
   ## Creates new rounded rectangle shaped sub-path.
 
-proc roundedRectVarying*(ctx; x: cfloat, y: cfloat,
-                         w: cfloat, h: cfloat, radTopLeft: cfloat,
-                         radTopRight: cfloat, radBottomRight: cfloat,
-                         radBottomLeft: cfloat)
+proc roundedRect*(ctx; x: cfloat, y: cfloat,
+                  w: cfloat, h: cfloat, radTopLeft: cfloat,
+                  radTopRight: cfloat, radBottomRight: cfloat,
+                  radBottomLeft: cfloat)
     {.cdecl, importc: "nvgRoundedRectVarying".}
   ## Creates new rounded rectangle shaped sub-path with varying radii for each
   ## corner.

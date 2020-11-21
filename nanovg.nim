@@ -102,7 +102,6 @@ export wrapper.pathWinding
 export wrapper.arc
 export wrapper.rect
 export wrapper.roundedRect
-export wrapper.roundedRectVarying
 export wrapper.ellipse
 export wrapper.circle
 export wrapper.fill
