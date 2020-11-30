@@ -546,7 +546,7 @@ proc scale*(ctx; sx: cfloat, sy: cfloat)
   {.cdecl, importc: "nvgScale".}
   ## Scales the current coordinate system.
 
-proc currentTransform*(ctx; xform: TransformMatrix)
+proc nvgCurrentTransform*(ctx; xform: ptr cfloat)
   {.cdecl, importc: "nvgCurrentTransform".}
   ## Stores the top part (a-f) of the current transformation matrix in to the
   ## specified buffer.
@@ -559,48 +559,48 @@ proc currentTransform*(ctx; xform: TransformMatrix)
   ##
   ## There should be space for 6 floats in the return buffer for the values a-f.
 
-proc identity*(dst: TransformMatrix)
+proc nvgIdentity*(dst: ptr cfloat)
     {.cdecl, importc: "nvgTransformIdentity".}
   ## Sets the transform to identity matrix.
 
-proc translate*(dst: TransformMatrix, tx: cfloat, ty: cfloat)
+proc nvgTranslate*(dst: ptr cfloat, tx: cfloat, ty: cfloat)
     {.cdecl, importc: "nvgTransformTranslate".}
   ## Sets the transform to translation matrix matrix.
 
-proc scale*(dst: TransformMatrix, sx: cfloat, sy: cfloat)
+proc nvgScale*(dst: ptr cfloat, sx: cfloat, sy: cfloat)
     {.cdecl, importc: "nvgTransformScale".}
   ## Sets the transform to scale matrix.
 
-proc rotate*(dst: TransformMatrix, angle: cfloat)
+proc nvgRotate*(dst: ptr cfloat, angle: cfloat)
     {.cdecl, importc: "nvgTransformRotate".}
   ## Sets the transform to rotate matrix. Angle is specified in radians.
 
-proc skewX*(dst: TransformMatrix, angle: cfloat)
+proc nvgSkewX*(dst: ptr cfloat, angle: cfloat)
     {.cdecl, importc: "nvgTransformSkewX".}
   ## Sets the transform to skew-x matrix. Angle is specified in radians.
 
-proc skewY*(dst: TransformMatrix, angle: cfloat)
+proc nvgSkewY*(dst: ptr cfloat, angle: cfloat)
     {.cdecl, importc: "nvgTransformSkewY".}
   ## Sets the transform to skew-y matrix. Angle is specified in radians.
 
-proc multiply*(dst: TransformMatrix, src: TransformMatrix)
+proc nvgMultiply*(dst: ptr cfloat, src: ptr cfloat)
     {.cdecl, importc: "nvgTransformMultiply".}
   ## Sets the transform to the result of multiplication of two transforms, of
   ## A = A*B.
 
-proc premultiply*(dst: TransformMatrix, src: TransformMatrix)
+proc nvgPremultiply*(dst: ptr cfloat, src: ptr cfloat)
     {.cdecl, importc: "nvgTransformPremultiply".}
   ## Sets the transform to the result of multiplication of two transforms, of
   ## A = B*A.
 
-proc inverse*(dst: TransformMatrix, src: TransformMatrix): cint
+proc nvgInverse*(dst: ptr cfloat, src: ptr cfloat): cint
     {.cdecl, importc: "nvgTransformInverse".}
   ## Sets the destination to inverse of specified transform.
   ## Returns 1 if the inverse could be calculated, else 0.
 
-proc transformPoint*(destX: ptr cfloat, destY: ptr cfloat,
-                     xform: TransformMatrix, srcX: cfloat,
-                     srcY: cfloat) {.cdecl, importc: "nvgTransformPoint".}
+proc nvgTransformPoint*(destX: ptr cfloat, destY: ptr cfloat,
+                        xform: ptr cfloat, srcX: cfloat,
+                        srcY: cfloat) {.cdecl, importc: "nvgTransformPoint".}
   ## Transform a point by given transform.
 
 proc degToRad*(deg: cfloat): cfloat {.cdecl, importc: "nvgDegToRad".}
@@ -796,11 +796,22 @@ proc createFont*(ctx; name: cstring,
   ## Creates font by loading it from the disk from specified file name.
   ## Returns handle to the font.
 
+proc createFontAtIndex(ctx; name: cstring, filename: cstring,
+                       fontIndex: cint): Font
+  {.cdecl, importc: "nvgCreateFontAtIndex".}
+  ## fontIndex specifies which font face to load from a .ttf/.ttc file.
+
 proc createFontMem*(ctx; name: cstring,
                     data: ptr cuchar, ndata: cint,
                     freeData: cint): Font {.cdecl, importc: "nvgCreateFontMem".}
   ## Creates font by loading it from the specified memory chunk.
   ## Returns handle to the font.
+
+proc createFontMematIndex*(ctx; name: cstring,
+                           data: ptr cuchar, ndata: cint,
+                           freeData: cint, fontIndex: cint): Font
+    {.cdecl, importc: "nvgCreateFontMem".}
+  ## fontIndex specifies which font face to load from a .ttf/.ttc file.
 
 proc findFont*(ctx; name: cstring): Font
     {.cdecl, importc: "nvgFindFont".}
@@ -815,6 +826,14 @@ proc addFallbackFont*(ctx; baseFontName: cstring,
                       fallbackFontName: cstring): cint
     {.cdecl, importc: "nvgAddFallbackFont".}
   ## Adds a fallback font by name.
+
+proc resetFallbackFonts(ctx; baseFont: Font)
+    {.cdecl, importc: "nvgResetFallbackFontsId".}
+  # Resets fallback fonts by handle.
+
+proc resetFallbackFonts(ctx; baseFontName: cstring)
+    {.cdecl, importc: "nvgResetFallbackFonts".}
+  # Resets fallback fonts by name.
 
 proc fontSize*(ctx; size: cfloat) {.cdecl, importc: "nvgFontSize".}
   ## Sets the font size of current text style.
@@ -834,8 +853,7 @@ proc textLineHeight*(ctx: NVGContext,
 proc textAlign*(ctx; align: cint) {.cdecl, importc: "nvgTextAlign".}
   ## Sets the text align of current text style, see NVGalign for options.
 
-proc fontFace*(ctx; font: Font)
-    {.cdecl, importc: "nvgFontFaceId".}
+proc fontFace*(ctx; font: Font) {.cdecl, importc: "nvgFontFaceId".}
   ## Sets the font face based on specified id of current text style.
 
 proc fontFace*(ctx: NVGContext,

@@ -68,10 +68,6 @@ export wrapper.rotate
 export wrapper.skewX
 export wrapper.skewY
 export wrapper.scale
-export wrapper.identity
-export wrapper.multiply
-export wrapper.premultiply
-export wrapper.inverse
 
 # Images
 export wrapper.createImage
@@ -190,13 +186,42 @@ proc createFontMem*(ctx; name: string,
 # {{{ Transform functions
 
 proc currentTransform*(ctx): TransformMatrix =
-  currentTransform(ctx, result)
+  nvgCurrentTransform(ctx, result.m[0].addr)
 
+proc identity*(dst: var TransformMatrix) =
+  nvgIdentity(dst.m[0].addr)
 
-proc transform*(xform: TransformMatrix, x: cfloat,
-                y: cfloat): tuple[x: float, y: float] =
+proc translate*(dst: var TransformMatrix, tx: float, ty: float) =
+  nvgTranslate(dst.m[0].addr, tx.cfloat, ty.cfloat)
+
+proc scale*(dst: var TransformMatrix, sx: float, sy: float) =
+  nvgScale(dst.m[0].addr, sx.cfloat, sy.cfloat)
+
+proc rotate*(dst: var TransformMatrix, angle: float) =
+  nvgRotate(dst.m[0].addr, angle.cfloat)
+
+proc skewX*(dst: var TransformMatrix, angle: float) =
+  nvgSkewX(dst.m[0].addr, angle.cfloat)
+
+proc skewY*(dst: var TransformMatrix, angle: float) =
+  nvgSkewY(dst.m[0].addr, angle.cfloat)
+
+proc multiply*(dst: var TransformMatrix, src: TransformMatrix) =
+  nvgMultiply(dst.m[0].addr, src.m[0].unsafeAddr)
+
+proc premultiply*(dst: var TransformMatrix, src: TransformMatrix) =
+  nvgPremultiply(dst.m[0].addr, src.m[0].unsafeAddr)
+
+proc inverse*(src: TransformMatrix): (bool, TransformMatrix) =
+  var dst: TransformMatrix
+  let res = nvgInverse(dst.m[0].addr, src.m[0].unsafeAddr)
+  result = (res == 1, dst)
+
+proc transformPoint*(xform: TransformMatrix,
+                     x: float, y: float): (float, float) =
   var destX, destY: cfloat
-  transformPoint(destX.addr, destY.addr, xform, x, y)
+  nvgTransformPoint(destX.addr, destY.addr, xform.m[0].unsafeAddr,
+                    x.cfloat, y.cfloat)
   result = (destX.float, destY.float)
 
 # }}}
