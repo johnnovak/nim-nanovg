@@ -27,6 +27,9 @@ export wrapper.NvgInitFlag
 export wrapper.NVGLUFramebuffer
 
 # Global
+export wrapper.nvgCreateContext
+export wrapper.nvgDeleteContext
+
 export wrapper.beginFrame
 export wrapper.cancelFrame
 export wrapper.endFrame
@@ -140,27 +143,11 @@ var gladInitialized = false
 
 proc gladLoadGLLoader*(a: pointer): int {.importc.}
 
-
-proc nvgInit*(getProcAddress: pointer,
-              flags: set[NvgInitFlag] = {}): NVGContext =
-
+proc nvgInit*(getProcAddress: pointer): bool =
   if not gladInitialized:
     if gladLoadGLLoader(getProcAddress) > 0:
       gladInitialized = true
-    else:
-      echo "Error initialising GLAD C lib"
-      return nil
-
-  var vg = nvgCreateContext(flags)
-  if vg == nil:
-    echo "Error initialising NanoVG"
-    return nil
-
-  result = vg
-
-
-proc nvgDeinit*(ctx) =
-  nvgDeleteContext(ctx)
+  result = gladInitialized
 
 
 template shapeAntiAlias*(ctx; enabled: bool) =
