@@ -411,7 +411,7 @@ proc globalCompositeBlendFuncSeparate*(ctx: NVGContext,
 #}}}
 #{{{ Color utils ------------------------------------------------------------
 
-proc rgb*(r: cuchar, g: cuchar, b: cuchar): Color{.cdecl, importc: "nvgRGB".}
+proc rgb*(r: byte, g: byte, b: byte): Color{.cdecl, importc: "nvgRGB".}
   ## Return a color value from red, green, blue values. Alpha will be set to
   ## 255 (1.0f).
 
@@ -419,7 +419,7 @@ proc rgb*(r: cfloat, g: cfloat, b: cfloat): Color {.cdecl, importc: "nvgRGBf".}
   ## Return a color value from red, green, blue values. Alpha will be set to
   ## 1.0f.
 
-proc rgba*(r: cuchar, g: cuchar, b: cuchar, a: cuchar): Color
+proc rgba*(r: byte, g: byte, b: byte, a: byte): Color
     {.cdecl, importc: "nvgRGBA".}
   ## Returns a color value from red, green, blue and alpha values.
 
@@ -432,7 +432,7 @@ proc lerp*(c1: Color, c2: Color, f: cfloat): Color
   ## Linearly interpolates from color c0 to c1, and returns resulting color
   ## value.
 
-proc withAlpha*(c: Color, a: cuchar): Color {.cdecl, importc: "nvgTransRGBA".}
+proc withAlpha*(c: Color, a: byte): Color {.cdecl, importc: "nvgTransRGBA".}
   ## Sets transparency of a color value.
 
 proc withAlpha*(c: Color, a: cfloat): Color {.cdecl, importc: "nvgTransRGBAf".}
@@ -443,7 +443,7 @@ proc hsl*(h: cfloat, s: cfloat, l: cfloat): Color {.cdecl, importc: "nvgHSL".}
   ## HSL values are all in range [0..1], alpha will be set to 255.
 
 proc hsla*(h: cfloat, s: cfloat, l: cfloat,
-           a: cuchar): Color {.cdecl, importc: "nvgHSLA".}
+           a: byte): Color {.cdecl, importc: "nvgHSLA".}
   ## Returns color value specified by hue, saturation and lightness and alpha.
   ## HSL values are all in range [0..1], alpha in range [0..255]
 
@@ -619,19 +619,19 @@ proc createImage*(ctx; filename: cstring,
   ## Returns handle to the image.
 
 proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
-                     data: ptr cuchar, ndata: cint): Image
+                     data: ptr byte, ndata: cint): Image
     {.cdecl, importc: "nvgCreateImageMem".}
   ## Creates image by loading it from the specified chunk of memory.
   ## Returns handle to the image.
 
 proc createImageRGBA*(ctx; w: cint, h: cint,
                       imageFlags: set[ImageFlags] = {},
-                      data: ptr cuchar): Image
+                      data: ptr byte): Image
     {.cdecl, importc: "nvgCreateImageRGBA".}
   ## Creates image from specified image data.
   ## Returns handle to the image.
 
-proc updateImage*(ctx; image: Image, data: ptr cuchar)
+proc updateImage*(ctx; image: Image, data: ptr byte)
     {.cdecl, importc: "nvgUpdateImage".}
   ## Updates image data specified by image handle.
 
@@ -796,19 +796,19 @@ proc createFont*(ctx; name: cstring,
   ## Creates font by loading it from the disk from specified file name.
   ## Returns handle to the font.
 
-proc createFontAtIndex(ctx; name: cstring, filename: cstring,
-                       fontIndex: cint): Font
+proc createFontAtIndex*(ctx; name: cstring, filename: cstring,
+                        fontIndex: cint): Font
   {.cdecl, importc: "nvgCreateFontAtIndex".}
   ## fontIndex specifies which font face to load from a .ttf/.ttc file.
 
 proc createFontMem*(ctx; name: cstring,
-                    data: ptr cuchar, ndata: cint,
+                    data: ptr byte, ndata: cint,
                     freeData: cint): Font {.cdecl, importc: "nvgCreateFontMem".}
   ## Creates font by loading it from the specified memory chunk.
   ## Returns handle to the font.
 
 proc createFontMematIndex*(ctx; name: cstring,
-                           data: ptr cuchar, ndata: cint,
+                           data: ptr byte, ndata: cint,
                            freeData: cint, fontIndex: cint): Font
     {.cdecl, importc: "nvgCreateFontMem".}
   ## fontIndex specifies which font face to load from a .ttf/.ttc file.
@@ -827,11 +827,11 @@ proc addFallbackFont*(ctx; baseFontName: cstring,
     {.cdecl, importc: "nvgAddFallbackFont".}
   ## Adds a fallback font by name.
 
-proc resetFallbackFonts(ctx; baseFont: Font)
+proc resetFallbackFonts*(ctx; baseFont: Font)
     {.cdecl, importc: "nvgResetFallbackFontsId".}
   # Resets fallback fonts by handle.
 
-proc resetFallbackFonts(ctx; baseFontName: cstring)
+proc resetFallbackFonts*(ctx; baseFontName: cstring)
     {.cdecl, importc: "nvgResetFallbackFonts".}
   # Resets fallback fonts by name.
 

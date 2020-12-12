@@ -94,14 +94,12 @@ proc main() =
 
   glfw.makeContextCurrent(win)
 
-  var flags = {nifStencilStrokes, nifDebug, nifAntialias}
+  if not nvgInit(getProcAddress):
+    quit "Error initialising NanoVG"
 
-  var vg = nvgInit(getProcAddress, flags) # TODO exception like glfw?
+  var vg = nvgCreateContext({nifStencilStrokes, nifDebug, nifAntialias})
   if vg == nil:
     quit "Error creating NanoVG context"
-
-  if not gladLoadGL(getProcAddress):
-    quit "Error initialising OpenGL"
 
   let
     (winWidth, _) = win.size
@@ -113,6 +111,7 @@ proc main() =
     height = 100 * pxRatio.int,
     {ifRepeatX, ifRepeatY}
   )
+
   if fb == nil:
     quit "Could not create FBO"
 
@@ -208,7 +207,7 @@ proc main() =
 
   nvgluDeleteFramebuffer(fb)
 
-  nvgDeinit(vg)
+  nvgDeleteContext(vg)
 
   let
     frameTime = getGraphAverage(fps)      * 1000

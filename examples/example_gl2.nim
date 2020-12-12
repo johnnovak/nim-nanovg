@@ -54,7 +54,10 @@ proc main() =
   win.keyCb = keyCb
   glfw.makeContextCurrent(win)
 
-  var vg = nvgInit(getProcAddress)
+  if not nvgInit(getProcAddress):
+    quit "Error initialising NanoVG"
+
+  var vg = nvgCreateContext({})
   if vg == nil:
     quit "Error creating NanoVG context"
 
@@ -115,7 +118,7 @@ proc main() =
     glfw.pollEvents()
 
   freeDemoData(vg, data)
-  nvgDeinit(vg)
+  nvgDeleteContext(vg)
   glfw.terminate()
 
 

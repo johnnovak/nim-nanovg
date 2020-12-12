@@ -19,7 +19,10 @@ var win = newWindow(cfg)
 
 glfw.makeContextCurrent(win)
 
-var vg = nvgInit(getProcAddress)
+if not nvgInit(getProcAddress):
+  quit "Error initialising NanoVG"
+
+var vg = nvgCreateContext({})
 if vg == nil:
   quit "Error creating NanoVG context"
 
@@ -29,6 +32,6 @@ while not win.shouldClose:
   glfw.swapBuffers(win)
   glfw.pollEvents()
 
-nvgDeinit(vg)
+nvgDeleteContext(vg)
 glfw.terminate()
 

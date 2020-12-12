@@ -108,9 +108,10 @@ export wrapper.stroke
 
 # Text
 export wrapper.createFont
+export wrapper.createFontAtIndex
 export wrapper.findFont
 export wrapper.addFallbackFont
-export wrapper.addFallbackFont
+export wrapper.resetFallbackFonts
 export wrapper.fontSize
 export wrapper.fontBlur
 export wrapper.textLetterSpacing
@@ -161,12 +162,17 @@ proc imageSize*(ctx; image: Image): tuple[w, h: int] =
 
 proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
                      data: var openArray[byte]): Image =
-  createImageMem(ctx, imageFlags, cast[ptr cuchar](data[0].addr), data.len.cint)
+  createImageMem(ctx, imageFlags, cast[ptr byte](data[0].addr), data.len.cint)
 
+proc createImageRGBA*(ctx; w: Natural, h: Natural,
+                      imageFlags: set[ImageFlags] = {},
+                      data: var openArray[byte]): Image =
+  createImageRGBA(ctx, w.cint, h.cint, imageFlags,
+                  cast[ptr byte](data[0].addr))
 
 proc createFontMem*(ctx; name: string,
                     data: var openArray[byte]): Font =
-  createFontMem(ctx, name, cast[ptr cuchar](data[0].addr), data.len.cint,
+  createFontMem(ctx, name, cast[ptr byte](data[0].addr), data.len.cint,
                 freeData=0)
 
 
@@ -370,30 +376,46 @@ template textGlyphPositions*(ctx; x: float, y: float, s: string,
 # }}}
 # {{{ Color functions
 
-func clampToCuchar(i: int): cuchar = clamp(i, 0, 255).cuchar
+func clampToByte(i: int): byte = clamp(i, 0, 255).byte
 
 func rgb*(r, g, b: int): Color =
-  rgb(clampToCuchar(r), clampToCuchar(g), clampToCuchar(b))
+  rgb(clampToByte(r), clampToByte(g), clampToByte(b))
 
 func rgba*(r, g, b, a: int): Color =
-  rgba(clampToCuchar(r), clampToCuchar(g), clampToCuchar(b), clampToCuchar(a))
+  rgba(clampToByte(r), clampToByte(g), clampToByte(b), clampToByte(a))
 
 func hsla*(h: float, s: float, l: float, a: float): Color =
-  hsla(h.cfloat, s.cfloat, l.cfloat, clamp(a * 255, 0, 255).cuchar)
-
-template gray*(g: int,   a: int = 255):   Color = rgba(g, g, g, a)
-template gray*(g: float, a: float = 1.0): Color = rgba(g, g, g, a)
-
-template black*(a: int):         Color = gray(0, a)
-template black*(a: float = 1.0): Color = gray(0.0, a)
-template white*(a: int):         Color = gray(255, a)
-template white*(a: float = 1.0): Color = gray(1.0, a)
+  hsla(h.cfloat, s.cfloat, l.cfloat, clamp(a * 255, 0, 255).byte)
 
 template withAlpha*(c: Color, a: int): Color =
-  wrapper.withAlpha(c, clampToCuchar(a))
+  wrapper.withAlpha(c, clampToByte(a))
 
 template withAlpha*(c: Color, a: float): Color =
   wrapper.withAlpha(c, a)
+
+template gray*(g: float, a: float = 1.0): Color = rgba(g, g, g, a)
+template gray*(g: int, a: int = 255): Color = rgba(g, g, g, a)
+
+template black*(a: float = 1.0): Color = gray(0.0, a)
+template white*(a: float = 1.0): Color = gray(1.0, a)
+
+template black*(a: int): Color = black(a/255)
+template white*(a: int): Color = white(a/255)
+
+# Useful for debugging
+template blue*(a: float = 1.0):    Color = rgba(0.0, 0.0, 1.0, a)
+template green*(a: float = 1.0):   Color = rgba(0.0, 1.0, 0.0, a)
+template cyan*(a: float = 1.0):    Color = rgba(0.0, 1.0, 1.0, a)
+template red*(a: float = 1.0):     Color = rgba(1.0, 0.0, 0.0, a)
+template magenta*(a: float = 1.0): Color = rgba(1.0, 0.0, 1.0, a)
+template yellow*(a: float = 1.0):  Color = rgba(1.0, 1.0, 0.0, a)
+
+template blue*(a: int):    Color = blue(a/255)
+template green*(a: int):   Color = green(a/255)
+template cyan*(a: int):    Color = cyan(a/255)
+template red*(a: int):     Color = red(a/255)
+template magenta*(a: int): Color = magenta(a/255)
+template yellow*(a: int):  Color = yellow(a/255)
 
 # }}}
 

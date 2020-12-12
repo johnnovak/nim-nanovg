@@ -797,10 +797,6 @@ proc freeDemoData*(vg: NVGcontext, data: DemoData) =
     vg.deleteImage(data.images[i])
 
 
-template ptrAdd[A](a: ptr A, offset: int): ptr A =
-  cast[ptr A](cast[int](a) + offset)
-
-
 proc drawParagraph(vg: NVGcontext, x, y, width, height, mx, my: float) =
   vg.save()
 

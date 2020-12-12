@@ -58,7 +58,10 @@ proc main() =
   var flags = {nifStencilStrokes, nifDebug}
   when not defined(demoMSAA): flags = flags + {nifAntialias}
 
-  var vg = nvgInit(getProcAddress, flags) # TODO exception like glfw?
+  if not nvgInit(getProcAddress):
+    quit "Error initialising NanoVG"
+
+  var vg = nvgCreateContext(flags) # TODO exception like glfw?
   if vg == nil:
     quit "Error creating NanoVG context"
 
@@ -145,7 +148,7 @@ proc main() =
 
   freeDemoData(vg, data)
 
-  nvgDeinit(vg)
+  nvgDeleteContext(vg)
 
   let
     frameTime = getGraphAverage(fps)      * 1000
