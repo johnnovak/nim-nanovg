@@ -58,18 +58,14 @@ proc main() =
   var flags = {nifStencilStrokes, nifDebug}
   when not defined(demoMSAA): flags = flags + {nifAntialias}
 
-  if not nvgInit(getProcAddress):
-    quit "Error initialising NanoVG"
-
-  var vg = nvgCreateContext(flags) # TODO exception like glfw?
-  if vg == nil:
-    quit "Error creating NanoVG context"
+  nvgInit(getProcAddress)
+  var vg = nvgCreateContext(flags)
 
   if not gladLoadGL(getProcAddress):
     quit "Error initialising OpenGL"
 
   var data: DemoData
-  if not loadDemoData(vg, data):   # TODO cleanup
+  if not loadDemoData(vg, data):
     quit "Could not load demo data"
 
   var fps      = initGraph(grsFramesPerSec, "Frame Time")

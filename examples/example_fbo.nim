@@ -94,12 +94,8 @@ proc main() =
 
   glfw.makeContextCurrent(win)
 
-  if not nvgInit(getProcAddress):
-    quit "Error initialising NanoVG"
-
+  nvgInit(getProcAddress)
   var vg = nvgCreateContext({nifStencilStrokes, nifDebug, nifAntialias})
-  if vg == nil:
-    quit "Error creating NanoVG context"
 
   let
     (winWidth, _) = win.size

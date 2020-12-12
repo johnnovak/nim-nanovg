@@ -807,7 +807,7 @@ proc createFontMem*(ctx; name: cstring,
   ## Creates font by loading it from the specified memory chunk.
   ## Returns handle to the font.
 
-proc createFontMematIndex*(ctx; name: cstring,
+proc createFontMemAtIndex*(ctx; name: cstring,
                            data: ptr byte, ndata: cint,
                            freeData: cint, fontIndex: cint): Font
     {.cdecl, importc: "nvgCreateFontMem".}

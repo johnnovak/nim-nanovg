@@ -54,12 +54,8 @@ proc main() =
   win.keyCb = keyCb
   glfw.makeContextCurrent(win)
 
-  if not nvgInit(getProcAddress):
-    quit "Error initialising NanoVG"
-
+  nvgInit(getProcAddress)
   var vg = nvgCreateContext({})
-  if vg == nil:
-    quit "Error creating NanoVG context"
 
   if not gladLoadGL(getProcAddress):
     quit "Error initialising OpenGL"

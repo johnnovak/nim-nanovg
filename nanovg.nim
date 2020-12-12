@@ -1,3 +1,5 @@
+import strformat
+
 import nanovg/wrapper
 
 # Types
@@ -8,42 +10,40 @@ export wrapper.NoImage
 export wrapper.`==`
 
 export wrapper.NVGContext
+export wrapper.NVGInitFlag
+
+export wrapper.BlendFactor
+export wrapper.Bounds
 export wrapper.Color
+export wrapper.CompositeOperation
+export wrapper.CompositeOperationState
+export wrapper.GlyphPosition
+export wrapper.HorizontalAlign
+export wrapper.ImageFlags
+export wrapper.LineCapJoin
 export wrapper.Paint
 export wrapper.PathWinding
 export wrapper.Solidity
-export wrapper.LineCapJoin
-export wrapper.HorizontalAlign
-export wrapper.VerticalAlign
-export wrapper.BlendFactor
-export wrapper.CompositeOperation
-export wrapper.ImageFlags
-export wrapper.CompositeOperationState
 export wrapper.TransformMatrix
-export wrapper.Bounds
-export wrapper.GlyphPosition
-export wrapper.NvgInitFlag
+export wrapper.VerticalAlign
 
 export wrapper.NVGLUFramebuffer
 
 # Global
-export wrapper.nvgCreateContext
 export wrapper.nvgDeleteContext
 
 export wrapper.beginFrame
 export wrapper.cancelFrame
 export wrapper.endFrame
+
 export wrapper.globalCompositeOperation
 export wrapper.globalCompositeBlendFunc
 export wrapper.globalCompositeBlendFuncSeparate
 
 # Color utils
 export wrapper.rgb
-export wrapper.rgb
-export wrapper.rgba
 export wrapper.rgba
 export wrapper.lerp
-export wrapper.withAlpha
 export wrapper.withAlpha
 export wrapper.hsl
 export wrapper.hsla
@@ -73,8 +73,6 @@ export wrapper.skewY
 export wrapper.scale
 
 # Images
-export wrapper.createImage
-export wrapper.createImageRGBA
 export wrapper.updateImage
 export wrapper.deleteImage
 
@@ -107,8 +105,6 @@ export wrapper.fill
 export wrapper.stroke
 
 # Text
-export wrapper.createFont
-export wrapper.createFontAtIndex
 export wrapper.findFont
 export wrapper.addFallbackFont
 export wrapper.resetFallbackFonts
@@ -117,65 +113,51 @@ export wrapper.fontBlur
 export wrapper.textLetterSpacing
 export wrapper.textLineHeight
 export wrapper.fontFace
-export wrapper.fontFace
 export wrapper.text
 export wrapper.textBox
-
-
-template `++`[A](a: ptr A, offset: int): ptr A =
-  cast[ptr A](cast[int](a) + offset)
-
-template `--`[A](a, b: ptr A): int =
-  cast[int](a) - cast[int](b)
 
 # Framebuffer
 export wrapper.nvgluBindFramebuffer
 export wrapper.nvgluDeleteFramebuffer
 
+
+type
+  NVGError* = object of CatchableError
+    message*: string
+
 using ctx: NVGContext
 
-proc nvgluCreateFramebuffer*(ctx; width: int, height: int,
-                             imageFlags: set[ImageFlags]): NVGLUFramebuffer =
-  nvgluCreateFramebuffer(ctx, width.cint, height.cint, cast[cint](imageFlags))
+# {{{ General functions
 
-
-# Nim API
-var gladInitialized = false
+var g_gladInitialized = false
 
 proc gladLoadGLLoader*(a: pointer): int {.importc.}
 
-proc nvgInit*(getProcAddress: pointer): bool =
-  if not gladInitialized:
+proc nvgInit*(getProcAddress: pointer) =
+  if not g_gladInitialized:
     if gladLoadGLLoader(getProcAddress) > 0:
-      gladInitialized = true
-  result = gladInitialized
+      g_gladInitialized = true
+
+  if not g_gladInitialized:
+    raise newException(NVGError, "Failed to initialise NanoVG")
+
+
+proc nvgCreateContext*(flags: set[NVGInitFlag]): NVGContext =
+  result = wrapper.nvgCreateContext(flags)
+  if result == nil:
+    raise newException(NVGError, "Failed to create NanoVG context")
 
 
 template shapeAntiAlias*(ctx; enabled: bool) =
   shapeAntiAlias(ctx, enabled.cint)
 
-proc imageSize*(ctx; image: Image): tuple[w, h: int] =
-  var w, h: cint
-  imageSize(ctx, image, w.addr, h.addr)
-  result = (w.int, h.int)
 
+proc nvgluCreateFramebuffer*(ctx; width: int, height: int,
+                             imageFlags: set[ImageFlags]): NVGLUFramebuffer =
 
-proc createImageMem*(ctx; imageFlags: set[ImageFlags] = {},
-                     data: var openArray[byte]): Image =
-  createImageMem(ctx, imageFlags, cast[ptr byte](data[0].addr), data.len.cint)
+  nvgluCreateFramebuffer(ctx, width.cint, height.cint, cast[cint](imageFlags))
 
-proc createImageRGBA*(ctx; w: Natural, h: Natural,
-                      imageFlags: set[ImageFlags] = {},
-                      data: var openArray[byte]): Image =
-  createImageRGBA(ctx, w.cint, h.cint, imageFlags,
-                  cast[ptr byte](data[0].addr))
-
-proc createFontMem*(ctx; name: string,
-                    data: var openArray[byte]): Font =
-  createFontMem(ctx, name, cast[ptr byte](data[0].addr), data.len.cint,
-                freeData=0)
-
-
+# }}}
 # {{{ Transform functions
 
 proc currentTransform*(ctx): TransformMatrix =
@@ -218,7 +200,44 @@ proc transformPoint*(xform: TransformMatrix,
   result = (destX.float, destY.float)
 
 # }}}
+#  {{{ Font functions
+
+proc createFont*(ctx; name: string, filename: string): Font =
+  result = wrapper.createFont(ctx, name, filename)
+  if result == NoFont:
+    raise newException(NVGError, "Failed to create font")
+
+
+proc createFontAtIndex*(ctx; name: string, filename: string,
+                        fontIndex: Natural): Font =
+  result = createFontAtIndex(ctx, name, filename, fontIndex.cint)
+  if result == NoFont:
+    raise newException(NVGError, "Failed to create font")
+
+
+proc createFontMem*(ctx; name: string,
+                    data: var openArray[byte]): Font =
+  result = createFontMem(ctx, name, cast[ptr byte](data[0].addr),
+                         data.len.cint, freeData=0)
+  if result == NoFont:
+    raise newException(NVGError, "Failed to create font")
+
+
+proc createFontMemAtIndex*(ctx; name: string, data: var openArray[byte],
+                           fontIndex: Natural): Font =
+  result = createFontMemAtIndex(ctx, name, cast[ptr byte](data[0].addr),
+                                data.len.cint, freeData=0, fontIndex.cint)
+  if result == NoFont:
+    raise newException(NVGError, "Failed to create font")
+
+#  }}}
 # {{{ Text functions
+
+template `++`[A](a: ptr A, offset: int): ptr A =
+  cast[ptr A](cast[int](a) + offset)
+
+template `--`[A](a, b: ptr A): int =
+  cast[int](a) - cast[int](b)
 
 template getStartPtr(s: string, startPos: Natural): cstring =
   s[0].unsafeAddr ++ startPos
@@ -228,18 +247,18 @@ template getEndPtr(s: string, endPos: int): cstring =
 
 
 proc textAlign*(ctx; halign: HorizontalAlign = haLeft,
-                    valign: VerticalAlign = vaBaseline) {.inline.} =
+                valign: VerticalAlign = vaBaseline) {.inline.} =
   textAlign(ctx, halign.cint or valign.cint)
 
 
 proc text*(ctx; x, y: float, s: string,
-               startPos: Natural = 0, endPos: int = -1,): float {.inline.} =
+           startPos: Natural = 0, endPos: int = -1,): float {.inline.} =
   if s == "": return
   text(ctx, x, y, getStartPtr(s, startPos), getEndPtr(s, endPos))
 
 
 proc textBox*(ctx; x, y, breakRowWidth: float, s: string,
-                  startPos: Natural = 0, endPos: int = -1,) {.inline.} =
+              startPos: Natural = 0, endPos: int = -1,) {.inline.} =
   if s == "": return
   textBox(ctx, x, y, breakRowWidth,
           getStartPtr(s, startPos), getEndPtr(s, endPos))
@@ -417,6 +436,82 @@ template red*(a: int):     Color = red(a/255)
 template magenta*(a: int): Color = magenta(a/255)
 template yellow*(a: int):  Color = yellow(a/255)
 
+# }}}
+# {{{ Image functions
+
+proc createImage*(ctx; filename: string, flags: set[ImageFlags] = {}): Image =
+  result = wrapper.createImage(ctx, filename, flags)
+  if result == NoImage:
+    raise newException(NVGError, "Failed to create image")
+
+
+proc createImageMem*(ctx; flags: set[ImageFlags] = {},
+                     data: var openArray[byte]): Image =
+  result = createImageMem(ctx, flags, cast[ptr byte](data[0].addr),
+                          data.len.cint)
+  if result == NoImage:
+    raise newException(NVGError, "Failed to create image")
+
+
+proc createImageRGBA*(ctx; w: Natural, h: Natural, flags: set[ImageFlags] = {},
+                      data: var openArray[byte]): Image =
+
+  result = createImageRGBA(ctx, w.cint, h.cint, flags,
+                           cast[ptr byte](data[0].addr))
+  if result == NoImage:
+    raise newException(NVGError, "Failed to create image")
+
+
+proc imageSize*(ctx; image: Image): tuple[w, h: int] =
+  var w, h: cint
+  imageSize(ctx, image, w.addr, h.addr)
+  result = (w.int, h.int)
+
+
+# {{{ Image extensions
+
+proc stbi_load(filename: cstring, x, y, channels: ptr cint,
+               desiredChannels: cint): ptr UncheckedArray[byte]
+    {.cdecl, importc: "stbi_load".}
+
+proc stbi_image_free(data: ptr UncheckedArray[byte])
+    {.cdecl, importc: "stbi_image_free".}
+
+
+type ImageData* = object
+  width*, height*: Natural
+  numChannels*:    Natural
+  data*:           ptr UncheckedArray[byte]
+
+proc size*(d: ImageData): Natural =
+  d.width * d.height * d.numChannels
+
+proc `=destroy`*(d: var ImageData) =
+  if d.data != nil:
+    stbi_image_free(d.data)
+    d.width = 0
+    d.height = 0
+    d.numChannels = 0
+    d.data = nil
+
+
+proc loadImage*(filename: string, desiredChannels: Natural): ImageData =
+  var w, h, channels: cint
+
+  var data = stbi_load(filename, w.addr, h.addr, channels.addr,
+                       desiredChannels.cint)
+
+  if data == nil:
+    raise newException(IOError, fmt"Could not load image '{filename}'")
+
+  result = ImageData(
+    width:  w.Natural,
+    height: h.Natural,
+    numChannels: desiredChannels,
+    data: data
+  )
+
+# }}}
 # }}}
 
 # vim: et:ts=2:sw=2:fdm=marker

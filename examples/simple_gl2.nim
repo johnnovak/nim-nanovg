@@ -14,12 +14,8 @@ var win = newWindow(cfg)
 
 glfw.makeContextCurrent(win)
 
-if not nvgInit(getProcAddress):
-  quit "Error initialising NanoVG"
-
+nvgInit(getProcAddress)
 var vg = nvgCreateContext({})
-if vg == nil:
-  quit "Error creating NanoVG context"
 
 glfw.swapInterval(1)
 
