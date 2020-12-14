@@ -495,7 +495,7 @@ proc `=destroy`*(d: var ImageData) =
     d.data = nil
 
 
-proc loadImage*(filename: string, desiredChannels: Natural): ImageData =
+proc loadImage*(filename: string, desiredChannels: Natural = 4): ImageData =
   var w, h, channels: cint
 
   var data = stbi_load(filename, w.addr, h.addr, channels.addr,
