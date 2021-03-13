@@ -135,7 +135,6 @@ proc main() =
       nvgDeleteContext(vgB)
       winBDestroyed = true
 
-    # Swap buffers
     glfw.pollEvents()
 
   nvgDeleteContext(vgA)

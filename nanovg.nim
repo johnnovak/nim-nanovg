@@ -1,3 +1,4 @@
+import math
 import strformat
 
 import nanovg/wrapper
@@ -435,6 +436,22 @@ template cyan*(a: int):    Color = cyan(a/255)
 template red*(a: int):     Color = red(a/255)
 template magenta*(a: int): Color = magenta(a/255)
 template yellow*(a: int):  Color = yellow(a/255)
+
+func sRGBLuma*(c: Color): float =
+  c.r*0.2126 + c.g*0.7152 * c.b*0.722
+
+func weightedEuclidanDistance*(c: Color): float =
+  sqrt(c.r*c.r*0.299 + c.g*c.g*0.587 + c.b*c.b*0.114)
+
+func isLight*(c: Color, threshold: float = 0.7): bool =
+  weightedEuclidanDistance(c) > threshold
+
+func isDark*(c: Color): bool = not c.isLight
+
+func isLightFast*(c: Color, threshold: float = 0.6): bool =
+  sRGBLuma(c) > threshold
+
+func isDarkFast*(c: Color): bool = not c.isLightFast
 
 # }}}
 # {{{ Image functions
