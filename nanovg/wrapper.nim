@@ -354,27 +354,27 @@ using ctx: NVGContext
 
 when GLVersion == "GL2":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
-      {.importc: "nvgCreateGL2".}
+      {.cdecl, importc: "nvgCreateGL2".}
 
-  proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGL2".}
+  proc nvgDeleteContext*(ctx: NVGContext) {.cdecl, importc: "nvgDeleteGL2".}
 
 elif GLVersion == "GL3":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
-      {.importc: "nvgCreateGL3".}
+      {.cdecl, importc: "nvgCreateGL3".}
 
-  proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGL3".}
+  proc nvgDeleteContext*(ctx: NVGContext) {.cdecl, importc: "nvgDeleteGL3".}
 
 elif GLVersion == "GLES2":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
-      {.importc: "nvgCreateGLES2".}
+      {.cdecl, importc: "nvgCreateGLES2".}
 
-  proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGLES2".}
+  proc nvgDeleteContext*(ctx: NVGContext) {.cdecl, importc: "nvgDeleteGLES2".}
 
 elif GLVersion == "GLES3":
   proc nvgCreateContext*(flags: set[NvgInitFlag]): NVGContext
-      {.importc: "nvgCreateGLES3".}
+      {.cdecl, importc: "nvgCreateGLES3".}
 
-  proc nvgDeleteContext*(ctx: NVGContext) {.importc: "nvgDeleteGLES3".}
+  proc nvgDeleteContext*(ctx: NVGContext) {.cdecl, importc: "nvgDeleteGLES3".}
 
 #}}}
 #{{{ Drawing ----------------------------------------------------------------
@@ -639,8 +639,7 @@ proc imageSize*(ctx; image: Image,
                 w: ptr cint, h: ptr cint) {.cdecl, importc: "nvgImageSize".}
   ## Returns the dimensions of an image.
 
-proc deleteImage*(ctx; image: Image) {.cdecl,
-    importc: "nvgDeleteImage".}
+proc deleteImage*(ctx; image: Image) {.cdecl, importc: "nvgDeleteImage".}
   ## Deletes an image.
 
 #}}}

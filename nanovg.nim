@@ -132,7 +132,7 @@ using ctx: NVGContext
 
 var g_gladInitialized = false
 
-proc gladLoadGLLoader*(a: pointer): int {.importc.}
+proc gladLoadGLLoader*(a: pointer): int {.cdecl, importc.}
 
 proc nvgInit*(getProcAddress: pointer) =
   if not g_gladInitialized:
