@@ -3,6 +3,10 @@
 *Nim wrapper for the C [NanoVG](https://github.com/memononen/nanovg)
 antialiased vector graphics rendering library for OpenGL*
 
+**IMPORTANT: The library will crash when compiled with Nim 1.6.2. Please use
+1.6.0 or an earlier version for now. This will be eventually fixed one way or
+another.**
+
 ## Installation
 
 **nim-nanovg** can be installed via Nimble:
@@ -28,7 +32,7 @@ for further info.
 
 ## Notes
 
-Attempting to compile the library on **Mac OS X 10.14.5 Mojave** / ** XCode
+Attempting to compile the library on **Mac OS X 10.14.5 Mojave** / **XCode
 11.3.1** with the GL2 backend results in compilation errors. I can't be
 bothered fixing this as GL3 works fine.
 
