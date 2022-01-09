@@ -183,7 +183,7 @@ var NoFont* = Font(-1)
 var NoImage* = Image(0)
 
 type
-  NVGContextObj* = object
+  NVGContextObj* {.byCopy.} = object
   NVGContext* = ptr NVGContextObj
 
   Color* {.byCopy.} = object
@@ -201,22 +201,22 @@ type
     outerColor*: Color
     image*:      Image
 
-  PathWinding* {.size: cint.sizeof.} = enum
+  PathWinding* = enum
     pwCCW = (1, "CCW")
     pwCW  = (2, "CW")
 
-  Solidity* {.size: cint.sizeof.} = enum
+  Solidity* = enum
     sSolid = (1, "Solid")
     sHole  = (2, "Hole")
 
-  LineCapJoin* {.size: cint.sizeof.} = enum
+  LineCapJoin* = enum
     lcjButt   = (0, "Butt")
     lcjRound  = (1, "Round")
     lcjSquare = (2, "Square")
     lcjBevel  = (3, "Bevel")
     lcjMiter  = (4, "Miter")
 
-  HorizontalAlign* {.size: cint.sizeof.} = enum
+  HorizontalAlign* = enum
     haLeft     = (1 shl 0, "Left")
     ## Default, align text horizontally to left.
 
@@ -227,7 +227,7 @@ type
     ## Align text horizontally to right.
 
 
-  VerticalAlign* {.size: cint.sizeof.} = enum
+  VerticalAlign* = enum
     vaTop      = (1 shl 3, "Top")
     ## Align text vertically to top.
 
@@ -241,7 +241,7 @@ type
     ## Default, align text vertically to baseline.
 
 
-  BlendFactor* {.size: cint.sizeof.} = enum
+  BlendFactor* = enum
     bfZero                     = (0, "Zero")
     bfOne                      = (1, "One")
     bfSourceColor              = (2, "SourceColor")
@@ -254,7 +254,7 @@ type
     bfOneMinusDestinationAlpha = (9, "OneMinusDestinationAlpha")
     bfSourceAlphaSaturate      = (10, "SourceAlphaSaturate")
 
-  CompositeOperation* {.size: cint.sizeof.} = enum
+  CompositeOperation* = enum
     coSourceOver      = (0, "SourceOver")
     coSourceIn        = (1, "SourceIn")
     coSourceOut       = (2, "SourceOut")
@@ -267,7 +267,7 @@ type
     coCopy            = (9, "Copy")
     coXor             = (10, "Xor")
 
-  ImageFlags* {.size: cint.sizeof.} = enum
+  ImageFlags* = enum
     ifGenerateMipmaps = (0, "GenerateMipmaps")
     ## Generate mipmaps during creation of the image.
 
@@ -307,7 +307,7 @@ type
   TransformMatrix* = object
     m*: array[6, cfloat]
 
-  Bounds* = object
+  Bounds* {.bycopy.} = object
     x1*, y1*, x2*, y2*: cfloat
 
   TextRow* {.bycopy.} = object
@@ -645,9 +645,7 @@ proc deleteImage*(ctx; image: Image) {.cdecl, importc: "nvgDeleteImage".}
 #}}}
 #{{{ Paints -----------------------------------------------------------------
 
-proc linearGradient*(ctx; sx: cfloat, sy: cfloat,
-                     ex: cfloat, ey: cfloat,
-                     inCol: Color, outCol: Color): Paint
+proc linearGradient*(ctx; sx, sy, ex, ey: cfloat; inCol, outCol: Color): Paint
     {.cdecl, importc: "nvgLinearGradient" .}
   ## Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify
   ## the start and end coordinates of the linear gradient, icol specifies the
@@ -656,9 +654,7 @@ proc linearGradient*(ctx; sx: cfloat, sy: cfloat,
   ## The gradient is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
-proc boxGradient*(ctx; x: cfloat, y: cfloat,
-                  w: cfloat, h: cfloat, r: cfloat, f: cfloat,
-                  inCol: Color, outCol: Color): Paint
+proc boxGradient*(ctx; x, y, w, h, r, f: cfloat; inCol, outCol: Color): Paint
     {.cdecl, importc: "nvgBoxGradient".}
   ## Creates and returns a box gradient. Box gradient is a feathered rounded
   ## rectangle, it is useful for rendering drop shadows or highlights for
@@ -671,9 +667,8 @@ proc boxGradient*(ctx; x: cfloat, y: cfloat,
   ## The gradient is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
-proc radialGradient*(ctx; cx: cfloat, cy: cfloat,
-                     inr: cfloat, outr: cfloat,
-                     inCol: Color, outCol: Color): Paint
+proc radialGradient*(ctx; cx, cy, inr, outr: cfloat;
+                     inCol, outCol: Color): Paint
     {.cdecl, importc: "nvgRadialGradient".}
   ## Creates and returns a radial gradient. Parameters (cx,cy) specify the
   ## center, inr and outr specify the inner and outer radius of the gradient,
@@ -682,8 +677,7 @@ proc radialGradient*(ctx; cx: cfloat, cy: cfloat,
   ## The gradient is transformed by the current transform when it is passed to
   ## `fillPaint()` or `strokePaint()`.
 
-proc imagePattern*(ctx; ox: cfloat, oy: cfloat,
-                   ex: cfloat, ey: cfloat, angle: cfloat, image: Image,
+proc imagePattern*(ctx; ox, oy, ex, ey, angle: cfloat; image: Image;
                    alpha: cfloat): Paint {.cdecl, importc: "nvgImagePattern".}
   ## Creates and returns an image pattern. Parameters (ox,oy) specify the
   ## left-top location of the image pattern, (ex,ey) the size of one image,
