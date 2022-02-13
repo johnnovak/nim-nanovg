@@ -12,7 +12,7 @@ antialiased vector graphics rendering library for OpenGL*
 ## Usage
 
 Have a look at `demo.nim` in the [examples](/examples) directory. You can
-build the examples by executing one of the following command:
+build the examples by executing one of the following commands:
 
     nimble examplesGL2
     nimble examplesGL2Debug
