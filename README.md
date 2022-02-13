@@ -3,10 +3,6 @@
 *Nim wrapper for the C [NanoVG](https://github.com/memononen/nanovg)
 antialiased vector graphics rendering library for OpenGL*
 
-**IMPORTANT: The library will crash when compiled with Nim 1.6.2. Please use
-1.6.0 or an earlier version for now. This will be eventually fixed one way or
-another.**
-
 ## Installation
 
 **nim-nanovg** can be installed via Nimble:
@@ -16,16 +12,19 @@ another.**
 ## Usage
 
 Have a look at `demo.nim` in the [examples](/examples) directory. You can
-build the examples by executing the following command:
+build the examples by executing one of the following command:
 
-    nimble examples
+    nimble examplesGL2
+    nimble examplesGL2Debug
+    nimble examplesGL3
+    nimble examplesGL3Debug
 
 The examples require [nim-glfw](https://github.com/ephja/nim-glfw).
 
 ## Documentation
 
-The [API documentation](/doc) is in-progress, currently it's a slightly edited
-version of the original NanoVG source comments.
+The [API documentation](/doc) is in-progress; currently, it's a slightly
+edited version of the original NanoVG source comments.
 
 You can also check out the [NanoVG README](https://github.com/memononen/nanovg)
 for further info.
