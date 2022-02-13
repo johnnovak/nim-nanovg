@@ -1,4 +1,6 @@
 import glfw
+
+import glad/gl
 import nanovg
 
 
@@ -15,7 +17,10 @@ var win = newWindow(cfg)
 glfw.makeContextCurrent(win)
 
 nvgInit(getProcAddress)
-var vg = nvgCreateContext({})
+var vg = nvgCreateContext()
+
+if not gladLoadGL(getProcAddress):
+  quit "Error initialising OpenGL"
 
 glfw.swapInterval(1)
 

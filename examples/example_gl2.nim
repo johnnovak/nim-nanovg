@@ -1,8 +1,9 @@
-import glad/gl
 import glfw
 
+import demo
+import glad/gl
 import nanovg
-import demo, perf
+import perf
 
 
 var
@@ -55,7 +56,7 @@ proc main() =
   glfw.makeContextCurrent(win)
 
   nvgInit(getProcAddress)
-  var vg = nvgCreateContext({})
+  var vg = nvgCreateContext()
 
   if not gladLoadGL(getProcAddress):
     quit "Error initialising OpenGL"

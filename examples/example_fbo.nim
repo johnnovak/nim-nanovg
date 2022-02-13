@@ -1,9 +1,9 @@
 import math
 import strformat
 
-import glad/gl
 import glfw
 
+import glad/gl
 import nanovg
 import perf
 
@@ -96,6 +96,9 @@ proc main() =
 
   nvgInit(getProcAddress)
   var vg = nvgCreateContext({nifStencilStrokes, nifDebug, nifAntialias})
+
+  if not gladLoadGL(getProcAddress):
+    quit "Error initialising OpenGL"
 
   let
     (winWidth, _) = win.size

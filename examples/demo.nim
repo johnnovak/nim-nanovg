@@ -1,4 +1,7 @@
-import math, unicode, strformat
+import math
+import strformat
+import unicode
+
 import nanovg
 
 

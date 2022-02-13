@@ -34,7 +34,6 @@ function main() {
     }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -45,21 +44,29 @@ function main() {
       }
   }
 
-  toggleSwitch.addEventListener('change', switchTheme, false);
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+  if (toggleSwitch !== null) {
+    toggleSwitch.addEventListener('change', switchTheme, false);
+  }
 
-  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  var currentTheme = localStorage.getItem('theme');
+  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    currentTheme = 'dark';
+  }
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark') {
+    if (currentTheme === 'dark' && toggleSwitch !== null) {
       toggleSwitch.checked = true;
     }
   }
 }
+
+window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body onload="main()">
+<body>
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">nanovg</h1>
@@ -98,115 +105,266 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
+  <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">nvgDeinit
-      <li><a class="reference" href="#nvgDeinit"
-    title="nvgDeinit(ctx)">nvgDeinit<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">gladLoadGLLoader
-      <li><a class="reference" href="#gladLoadGLLoader%2Cpointer"
-    title="gladLoadGLLoader(a: pointer): int">gladLoadGLLoader,pointer<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">transform
-      <li><a class="reference" href="#transform%2CTransformMatrix%2Ccfloat%2Ccfloat"
-    title="transform(xform: TransformMatrix; x: cfloat; y: cfloat): tuple[x: float,
-    y: float]">transform,TransformMatrix,cfloat,cfloat<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">horizontalAdvance
-      <li><a class="reference" href="#horizontalAdvance%2C%2Cfloat%2Cfloat%2Ccstring%2Ccstring"
-    title="horizontalAdvance(ctx; x: float; y: float; string: cstring; end: cstring = nil): float">horizontalAdvance,,float,float,cstring,cstring<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">textBounds
-      <li><a class="reference" href="#textBounds%2C%2Cfloat%2Cfloat%2Ccstring%2Ccstring"
-    title="textBounds(ctx; x: float; y: float; string: cstring; end: cstring = nil): tuple[
-    bounds: Bounds, horizAdvance: float]">textBounds,,float,float,cstring,cstring<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">nvgInit
-      <li><a class="reference" href="#nvgInit%2Cpointer%2Cset%5BNvgInitFlag%5D"
-    title="nvgInit(getProcAddress: pointer; flags: set[NvgInitFlag] = {}): NVGContext">nvgInit,pointer,set[NvgInitFlag]<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">createImageMem
-      <li><a class="reference" href="#createImageMem%2C%2Cset%5BImageFlags%5D%2CopenArray%5Bbyte%5D"
-    title="createImageMem(ctx; imageFlags: set[ImageFlags] = {}; data: var openArray[byte]): Image">createImageMem,,set[ImageFlags],openArray[byte]<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">textGlyphPositions
-      <li><a class="reference" href="#textGlyphPositions%2C%2Cfloat%2Cfloat%2Ccstring%2Ccstring%2CopenArray%5BGlyphPosition%5D"
-    title="textGlyphPositions(ctx; x: float; y: float; string: cstring; end: cstring;
-                   positions: var openArray[GlyphPosition]): int">textGlyphPositions,,float,float,cstring,cstring,openArray[GlyphPosition]<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#textGlyphPositions%2C%2Cfloat%2Cfloat%2Cstring%2CopenArray%5BGlyphPosition%5D"
-    title="textGlyphPositions(ctx; x: float; y: float; string: string;
-                   positions: var openArray[GlyphPosition]): int">textGlyphPositions,,float,float,string,openArray[GlyphPosition]<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">textWidth
-      <li><a class="reference" href="#textWidth%2C%2Ccstring%2Ccstring"
-    title="textWidth(ctx; string: cstring; end: cstring = nil): float">textWidth,,cstring,cstring<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">currentTransform
-      <li><a class="reference" href="#currentTransform"
-    title="currentTransform(ctx): TransformMatrix">currentTransform<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">imageSize
-      <li><a class="reference" href="#imageSize%2C%2CImage"
-    title="imageSize(ctx; image: Image): tuple[w, h: int]">imageSize,,Image<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">textBoxBounds
-      <li><a class="reference" href="#textBoxBounds%2C%2Cfloat%2Cfloat%2Cfloat%2Ccstring%2Ccstring"
-    title="textBoxBounds(ctx; x: float; y: float; breakRowWidth: float; string: cstring;
-              end: cstring = nil): Bounds">textBoxBounds,,float,float,float,cstring,cstring<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">nvgluCreateFramebuffer
-      <li><a class="reference" href="#nvgluCreateFramebuffer%2C%2Cint%2Cint%2Cset%5BImageFlags%5D"
-    title="nvgluCreateFramebuffer(ctx; width: int; height: int; imageFlags: set[ImageFlags]): NVGLUFramebuffer">nvgluCreateFramebuffer,,int,int,set[ImageFlags]<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">textMetrics
-      <li><a class="reference" href="#textMetrics"
-    title="textMetrics(ctx): tuple[ascender: float, descender: float, lineHeight: float]">textMetrics<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">createFontMem
-      <li><a class="reference" href="#createFontMem%2C%2Ccstring%2CopenArray%5Bbyte%5D"
-    title="createFontMem(ctx; name: cstring; data: var openArray[byte]): Font">createFontMem,,cstring,openArray[byte]<span class="attachedType"></span></a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">textBreakLines
-      <li><a class="reference" href="#textBreakLines%2C%2Ccstring%2Ccstring%2Cfloat%2CopenArray%5BTextRow%5D"
-    title="textBreakLines(ctx; string: cstring; end: cstring; breakRowWidth: float;
-               rows: var openArray[TextRow]): cint">textBreakLines,,cstring,cstring,float,openArray[TextRow]<span class="attachedType"></span></a></li>
-
-  </ul>
+      <li><a class="reference" href="#ImageData"
+    title="ImageData = object
+  width*, height*: Natural
+  numChannels*: Natural
+  data*: ptr UncheckedArray[byte]">ImageData</a></li>
+  <li><a class="reference" href="#NVGError"
+    title="NVGError = object of CatchableError
+  message*: string">NVGError</a></li>
+  <li><a class="reference" href="#TextRow"
+    title="TextRow = object
+  startPos*: Natural
+  endPos*: Natural
+  nextPos*: Natural
+  width*: float
+  minX*: float
+  maxX*: float">TextRow</a></li>
 
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#13" id="63">Funcs</a>
+  <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">rgba
-      <li><a class="reference" href="#rgba%2Cint%2Cint%2Cint%2Cint"
-    title="rgba(r, g, b, a: int): Color">rgba,int,int,int,int<span class="attachedType"></span></a></li>
+      <ul class="simple nested-toc-section">=destroy
+      <li><a class="reference" href="#%3Ddestroy%2CImageData"
+    title="`=destroy`(d: var ImageData)">`=destroy`(d: var ImageData)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createFont
+      <li><a class="reference" href="#createFont%2C%2Cstring%2Cstring"
+    title="createFont(ctx; name: string; filename: string): Font">createFont(ctx; name: string; filename: string): Font</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createFontAtIndex
+      <li><a class="reference" href="#createFontAtIndex%2C%2Cstring%2Cstring%2CNatural"
+    title="createFontAtIndex(ctx; name: string; filename: string; fontIndex: Natural): Font">createFontAtIndex(ctx; name: string; filename: string; fontIndex: Natural): Font</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createFontMem
+      <li><a class="reference" href="#createFontMem%2C%2Cstring%2CopenArray%5Bbyte%5D"
+    title="createFontMem(ctx; name: string; data: var openArray[byte]): Font">createFontMem(ctx; name: string; data: var openArray[byte]): Font</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createFontMemAtIndex
+      <li><a class="reference" href="#createFontMemAtIndex%2C%2Cstring%2CopenArray%5Bbyte%5D%2CNatural"
+    title="createFontMemAtIndex(ctx; name: string; data: var openArray[byte];
+                     fontIndex: Natural): Font">createFontMemAtIndex(ctx; name: string; data: var openArray[byte];
+                     fontIndex: Natural): Font</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createImage
+      <li><a class="reference" href="#createImage%2C%2Cstring%2Cset%5BImageFlags%5D"
+    title="createImage(ctx; filename: string; flags: set[ImageFlags] = {}): Image">createImage(ctx; filename: string; flags: set[ImageFlags] = {}): Image</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createImageMem
+      <li><a class="reference" href="#createImageMem%2C%2Cset%5BImageFlags%5D%2CopenArray%5Bbyte%5D"
+    title="createImageMem(ctx; flags: set[ImageFlags] = {}; data: var openArray[byte]): Image">createImageMem(ctx; flags: set[ImageFlags] = {}; data: var openArray[byte]): Image</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">createImageRGBA
+      <li><a class="reference" href="#createImageRGBA%2C%2CNatural%2CNatural%2Cset%5BImageFlags%5D%2CopenArray%5Bbyte%5D"
+    title="createImageRGBA(ctx; w: Natural; h: Natural; flags: set[ImageFlags] = {};
+                data: var openArray[byte]): Image">createImageRGBA(ctx; w: Natural; h: Natural; flags: set[ImageFlags] = {};
+                data: var openArray[byte]): Image</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">currentTransform
+      <li><a class="reference" href="#currentTransform"
+    title="currentTransform(ctx): TransformMatrix">currentTransform(ctx): TransformMatrix</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">gladLoadGLLoader
+      <li><a class="reference" href="#gladLoadGLLoader%2Cpointer"
+    title="gladLoadGLLoader(a: pointer): int">gladLoadGLLoader(a: pointer): int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">horizontalAdvance
+      <li><a class="reference" href="#horizontalAdvance%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"
+    title="horizontalAdvance(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+                  endPos: int = -1): float">horizontalAdvance(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+                  endPos: int = -1): float</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">hsla
       <li><a class="reference" href="#hsla%2Cfloat%2Cfloat%2Cfloat%2Cfloat"
-    title="hsla(h: float; s: float; l: float; a: float): Color">hsla,float,float,float,float<span class="attachedType"></span></a></li>
+    title="hsla(h: float; s: float; l: float; a: float): Color">hsla(h: float; s: float; l: float; a: float): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">identity
+      <li><a class="reference" href="#identity%2CTransformMatrix"
+    title="identity(dst: var TransformMatrix)">identity(dst: var TransformMatrix)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">imageSize
+      <li><a class="reference" href="#imageSize%2C%2CImage"
+    title="imageSize(ctx; image: Image): tuple[w, h: int]">imageSize(ctx; image: Image): tuple[w, h: int]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">inverse
+      <li><a class="reference" href="#inverse%2CTransformMatrix"
+    title="inverse(src: TransformMatrix): (bool, TransformMatrix)">inverse(src: TransformMatrix): (bool, TransformMatrix)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">isDark
+      <li><a class="reference" href="#isDark%2CColor"
+    title="isDark(c: Color): bool">isDark(c: Color): bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">isDarkFast
+      <li><a class="reference" href="#isDarkFast%2CColor"
+    title="isDarkFast(c: Color): bool">isDarkFast(c: Color): bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">isLight
+      <li><a class="reference" href="#isLight%2CColor%2Cfloat"
+    title="isLight(c: Color; threshold: float = 0.7): bool">isLight(c: Color; threshold: float = 0.7): bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">isLightFast
+      <li><a class="reference" href="#isLightFast%2CColor%2Cfloat"
+    title="isLightFast(c: Color; threshold: float = 0.6): bool">isLightFast(c: Color; threshold: float = 0.6): bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">loadImage
+      <li><a class="reference" href="#loadImage%2Cstring%2CNatural"
+    title="loadImage(filename: string; desiredChannels: Natural = 4): ImageData">loadImage(filename: string; desiredChannels: Natural = 4): ImageData</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">multiply
+      <li><a class="reference" href="#multiply%2CTransformMatrix%2CTransformMatrix"
+    title="multiply(dst: var TransformMatrix; src: TransformMatrix)">multiply(dst: var TransformMatrix; src: TransformMatrix)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">nvgCreateContext
+      <li><a class="reference" href="#nvgCreateContext%2Cset%5BNvgInitFlag%5D"
+    title="nvgCreateContext(flags: set[NvgInitFlag] = {}): NVGContext">nvgCreateContext(flags: set[NvgInitFlag] = {}): NVGContext</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">nvgInit
+      <li><a class="reference" href="#nvgInit%2Cpointer"
+    title="nvgInit(getProcAddress: pointer)">nvgInit(getProcAddress: pointer)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">nvgluCreateFramebuffer
+      <li><a class="reference" href="#nvgluCreateFramebuffer%2C%2Cint%2Cint%2Cset%5BImageFlags%5D"
+    title="nvgluCreateFramebuffer(ctx; width: int; height: int; imageFlags: set[ImageFlags]): NVGLUFramebuffer">nvgluCreateFramebuffer(ctx; width: int; height: int; imageFlags: set[ImageFlags]): NVGLUFramebuffer</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">premultiply
+      <li><a class="reference" href="#premultiply%2CTransformMatrix%2CTransformMatrix"
+    title="premultiply(dst: var TransformMatrix; src: TransformMatrix)">premultiply(dst: var TransformMatrix; src: TransformMatrix)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">rgb
       <li><a class="reference" href="#rgb%2Cint%2Cint%2Cint"
-    title="rgb(r, g, b: int): Color">rgb,int,int,int<span class="attachedType"></span></a></li>
+    title="rgb(r, g, b: int): Color">rgb(r, g, b: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">rgba
+      <li><a class="reference" href="#rgba%2Cint%2Cint%2Cint%2Cint"
+    title="rgba(r, g, b, a: int): Color">rgba(r, g, b, a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">rotate
+      <li><a class="reference" href="#rotate%2CTransformMatrix%2Cfloat"
+    title="rotate(dst: var TransformMatrix; angle: float)">rotate(dst: var TransformMatrix; angle: float)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">scale
+      <li><a class="reference" href="#scale%2CTransformMatrix%2Cfloat%2Cfloat"
+    title="scale(dst: var TransformMatrix; sx: float; sy: float)">scale(dst: var TransformMatrix; sx: float; sy: float)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">size
+      <li><a class="reference" href="#size%2CImageData"
+    title="size(d: ImageData): Natural">size(d: ImageData): Natural</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skewX
+      <li><a class="reference" href="#skewX%2CTransformMatrix%2Cfloat"
+    title="skewX(dst: var TransformMatrix; angle: float)">skewX(dst: var TransformMatrix; angle: float)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skewY
+      <li><a class="reference" href="#skewY%2CTransformMatrix%2Cfloat"
+    title="skewY(dst: var TransformMatrix; angle: float)">skewY(dst: var TransformMatrix; angle: float)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">sRGBLuma
+      <li><a class="reference" href="#sRGBLuma%2CColor"
+    title="sRGBLuma(c: Color): float">sRGBLuma(c: Color): float</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">text
+      <li><a class="reference" href="#text%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"
+    title="text(ctx; x, y: float; s: string; startPos: Natural = 0; endPos: int = -1): float">text(ctx; x, y: float; s: string; startPos: Natural = 0; endPos: int = -1): float</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textAlign
+      <li><a class="reference" href="#textAlign%2C%2CHorizontalAlign%2CVerticalAlign"
+    title="textAlign(ctx; halign: HorizontalAlign = haLeft;
+          valign: VerticalAlign = vaBaseline)">textAlign(ctx; halign: HorizontalAlign = haLeft;
+          valign: VerticalAlign = vaBaseline)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textBounds
+      <li><a class="reference" href="#textBounds%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"
+    title="textBounds(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+           endPos: int = -1): tuple[bounds: Bounds, horizAdvance: float]">textBounds(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+           endPos: int = -1): tuple[bounds: Bounds, horizAdvance: float]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textBox
+      <li><a class="reference" href="#textBox%2C%2Cfloat%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"
+    title="textBox(ctx; x, y, breakRowWidth: float; s: string; startPos: Natural = 0;
+        endPos: int = -1)">textBox(ctx; x, y, breakRowWidth: float; s: string; startPos: Natural = 0;
+        endPos: int = -1)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textBoxBounds
+      <li><a class="reference" href="#textBoxBounds%2C%2Cfloat%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"
+    title="textBoxBounds(ctx; x: float; y: float; breakRowWidth: float; s: string;
+              startPos: Natural = 0; endPos: int = -1): Bounds">textBoxBounds(ctx; x: float; y: float; breakRowWidth: float; s: string;
+              startPos: Natural = 0; endPos: int = -1): Bounds</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textBreakLines
+      <li><a class="reference" href="#textBreakLines%2C%2Cstring%2CNatural%2Cint%2Cfloat%2Cint"
+    title="textBreakLines(ctx; s: string; startPos: Natural = 0; endPos: int = -1;
+               breakRowWidth: float; maxRows: int = -1): seq[TextRow]">textBreakLines(ctx; s: string; startPos: Natural = 0; endPos: int = -1;
+               breakRowWidth: float; maxRows: int = -1): seq[TextRow]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textGlyphPositions
+      <li><a class="reference" href="#textGlyphPositions%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint%2CopenArray%5BGlyphPosition%5D"
+    title="textGlyphPositions(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+                   endPos: int = -1; positions: var openArray[GlyphPosition]): int">textGlyphPositions(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+                   endPos: int = -1; positions: var openArray[GlyphPosition]): int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textWidth
+      <li><a class="reference" href="#textWidth%2C%2Cstring%2CNatural%2Cint"
+    title="textWidth(ctx; s: string; startPos: Natural = 0; endPos: int = -1): float">textWidth(ctx; s: string; startPos: Natural = 0; endPos: int = -1): float</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">transformPoint
+      <li><a class="reference" href="#transformPoint%2CTransformMatrix%2Cfloat%2Cfloat"
+    title="transformPoint(xform: TransformMatrix; x: float; y: float): (float, float)">transformPoint(xform: TransformMatrix; x: float; y: float): (float, float)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">translate
+      <li><a class="reference" href="#translate%2CTransformMatrix%2Cfloat%2Cfloat"
+    title="translate(dst: var TransformMatrix; tx: float; ty: float)">translate(dst: var TransformMatrix; tx: float; ty: float)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">weightedEuclidanDistance
+      <li><a class="reference" href="#weightedEuclidanDistance%2CColor"
+    title="weightedEuclidanDistance(c: Color): float">weightedEuclidanDistance(c: Color): float</a></li>
 
   </ul>
 
@@ -215,29 +373,108 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#shapeAntiAlias.t%2C%2Cbool"
-    title="shapeAntiAlias(ctx; enabled: bool)"><wbr />shape<wbr />Anti<wbr />Alias<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#textAlign.t%2C%2CHorizontalAlign%2CVerticalAlign"
-    title="textAlign(ctx; halign: HorizontalAlign = haLeft;
-          valign: VerticalAlign = vaBaseline)"><wbr />text<wbr />Align<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#text.t%2C%2Cfloat%2Cfloat%2Cstring"
-    title="text(ctx; x, y: float; string: string): float"><wbr />text<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#textBox.t%2C%2Cfloat%2Cfloat%2Cfloat%2Cstring"
-    title="textBox(ctx; x, y, breakRowWidth: float; string: string)"><wbr />text<wbr />Box<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#gray.t%2Cint%2Cint"
-    title="gray(g: int; a: int = 255): Color"><wbr />gray<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#gray.t%2Cfloat%2Cfloat"
-    title="gray(g: float; a: float = 1.0): Color"><wbr />gray<span class="attachedType"></span></a></li>
+      <ul class="simple nested-toc-section">black
+      <li><a class="reference" href="#black.t%2Cfloat"
+    title="black(a: float = 1.0): Color">black(a: float = 1.0): Color</a></li>
   <li><a class="reference" href="#black.t%2Cint"
-    title="black(a: int): Color"><wbr />black<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#black.t%2Cfloat"
-    title="black(a: float = 1.0): Color"><wbr />black<span class="attachedType"></span></a></li>
+    title="black(a: int): Color">black(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">blue
+      <li><a class="reference" href="#blue.t%2Cfloat"
+    title="blue(a: float = 1.0): Color">blue(a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#blue.t%2Cint"
+    title="blue(a: int): Color">blue(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">cyan
+      <li><a class="reference" href="#cyan.t%2Cfloat"
+    title="cyan(a: float = 1.0): Color">cyan(a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#cyan.t%2Cint"
+    title="cyan(a: int): Color">cyan(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">gray
+      <li><a class="reference" href="#gray.t%2Cfloat%2Cfloat"
+    title="gray(g: float; a: float = 1.0): Color">gray(g: float; a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#gray.t%2Cint%2Cint"
+    title="gray(g: int; a: int = 255): Color">gray(g: int; a: int = 255): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">green
+      <li><a class="reference" href="#green.t%2Cfloat"
+    title="green(a: float = 1.0): Color">green(a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#green.t%2Cint"
+    title="green(a: int): Color">green(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">magenta
+      <li><a class="reference" href="#magenta.t%2Cfloat"
+    title="magenta(a: float = 1.0): Color">magenta(a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#magenta.t%2Cint"
+    title="magenta(a: int): Color">magenta(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">red
+      <li><a class="reference" href="#red.t%2Cfloat"
+    title="red(a: float = 1.0): Color">red(a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#red.t%2Cint"
+    title="red(a: int): Color">red(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">shapeAntiAlias
+      <li><a class="reference" href="#shapeAntiAlias.t%2C%2Cbool"
+    title="shapeAntiAlias(ctx; enabled: bool)">shapeAntiAlias(ctx; enabled: bool)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textBreakLines
+      <li><a class="reference" href="#textBreakLines.t%2C%2Cstring%2Cfloat%2Cint"
+    title="textBreakLines(ctx; s: string; breakRowWidth: float; maxRows: int = -1): seq[
+    TextRow]">textBreakLines(ctx; s: string; breakRowWidth: float; maxRows: int = -1): seq[
+    TextRow]</a></li>
+  <li><a class="reference" href="#textBreakLines.t%2C%2Cstring%2CNatural%2Cfloat%2Cint"
+    title="textBreakLines(ctx; s: string; startPos: Natural = 0; breakRowWidth: float;
+               maxRows: int = -1): seq[TextRow]">textBreakLines(ctx; s: string; startPos: Natural = 0; breakRowWidth: float;
+               maxRows: int = -1): seq[TextRow]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textGlyphPositions
+      <li><a class="reference" href="#textGlyphPositions.t%2C%2Cfloat%2Cfloat%2Cstring%2CopenArray%5BGlyphPosition%5D"
+    title="textGlyphPositions(ctx; x: float; y: float; s: string;
+                   positions: var openArray[GlyphPosition]): int">textGlyphPositions(ctx; x: float; y: float; s: string;
+                   positions: var openArray[GlyphPosition]): int</a></li>
+  <li><a class="reference" href="#textGlyphPositions.t%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2CopenArray%5BGlyphPosition%5D"
+    title="textGlyphPositions(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+                   positions: var openArray[GlyphPosition]): int">textGlyphPositions(ctx; x: float; y: float; s: string; startPos: Natural = 0;
+                   positions: var openArray[GlyphPosition]): int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">textMetrics
+      <li><a class="reference" href="#textMetrics.t"
+    title="textMetrics(ctx): tuple[ascender: float, descender: float, lineHeight: float]">textMetrics(ctx): tuple[ascender: float, descender: float, lineHeight: float]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">white
+      <li><a class="reference" href="#white.t%2Cfloat"
+    title="white(a: float = 1.0): Color">white(a: float = 1.0): Color</a></li>
   <li><a class="reference" href="#white.t%2Cint"
-    title="white(a: int): Color"><wbr />white<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#white.t%2Cfloat"
-    title="white(a: float = 1.0): Color"><wbr />white<span class="attachedType"></span></a></li>
+    title="white(a: int): Color">white(a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">withAlpha
+      <li><a class="reference" href="#withAlpha.t%2CColor%2Cfloat"
+    title="withAlpha(c: Color; a: float): Color">withAlpha(c: Color; a: float): Color</a></li>
   <li><a class="reference" href="#withAlpha.t%2CColor%2Cint"
-    title="withAlpha(c: Color; a: int): Color"><wbr />with<wbr />Alpha<span class="attachedType"></span></a></li>
+    title="withAlpha(c: Color; a: int): Color">withAlpha(c: Color; a: int): Color</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">yellow
+      <li><a class="reference" href="#yellow.t%2Cfloat"
+    title="yellow(a: float = 1.0): Color">yellow(a: float = 1.0): Color</a></li>
+  <li><a class="reference" href="#yellow.t%2Cint"
+    title="yellow(a: int): Color">yellow(a: int): Color</a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -251,6 +488,7 @@ function main() {
 </ul>
 
   </div>
+  
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
@@ -260,260 +498,663 @@ function main() {
 <dl class="item">
 <a class="reference external" href="wrapper.html">wrapper</a>
 </dl></div>
+<div class="section" id="7">
+<h1><a class="toc-backref" href="#7">Types</a></h1>
+<dl class="item">
+<div id="ImageData">
+<dt><pre><a href="nanovg.html#ImageData"><span class="Identifier">ImageData</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">width</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">height</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Natural</span>
+  <span class="Identifier">numChannels</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Natural</span>
+  <span class="Identifier">data</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="NVGError">
+<dt><pre><a href="nanovg.html#NVGError"><span class="Identifier">NVGError</span></a> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">CatchableError</span>
+  <span class="Identifier">message</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="TextRow">
+<dt><pre><a href="nanovg.html#TextRow"><span class="Identifier">TextRow</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">startPos</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Natural</span>
+  <span class="Identifier">endPos</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Natural</span>
+  <span class="Identifier">nextPos</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Natural</span>
+  <span class="Identifier">width</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float</span>
+  <span class="Identifier">minX</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float</span>
+  <span class="Identifier">maxX</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+
+</dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="nvgluCreateFramebuffer,,int,int,set[ImageFlags]"></a>
+<div id="=destroy,ImageData">
+<dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CImageData"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">d</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nanovg.html#ImageData"><span class="Identifier">ImageData</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createFont,,string,string">
+<dt><pre><span class="Keyword">proc</span> <a href="#createFont%2C%2Cstring%2Cstring"><span class="Identifier">createFont</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Font"><span class="Identifier">Font</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createFontAtIndex,,string,string,Natural">
+<dt><pre><span class="Keyword">proc</span> <a href="#createFontAtIndex%2C%2Cstring%2Cstring%2CNatural"><span class="Identifier">createFontAtIndex</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fontIndex</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Font"><span class="Identifier">Font</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createFontMem,,string,openArray[byte]">
+<dt><pre><span class="Keyword">proc</span> <a href="#createFontMem%2C%2Cstring%2CopenArray%5Bbyte%5D"><span class="Identifier">createFontMem</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Font"><span class="Identifier">Font</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createFontMemAtIndex,,string,openArray[byte],Natural">
+<dt><pre><span class="Keyword">proc</span> <a href="#createFontMemAtIndex%2C%2Cstring%2CopenArray%5Bbyte%5D%2CNatural"><span class="Identifier">createFontMemAtIndex</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">;</span>
+                          <span class="Identifier">fontIndex</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Font"><span class="Identifier">Font</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createImage,,string,set[ImageFlags]">
+<dt><pre><span class="Keyword">proc</span> <a href="#createImage%2C%2Cstring%2Cset%5BImageFlags%5D"><span class="Identifier">createImage</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Other">{</span><span class="Other">}</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createImageMem,,set[ImageFlags],openArray[byte]">
+<dt><pre><span class="Keyword">proc</span> <a href="#createImageMem%2C%2Cset%5BImageFlags%5D%2CopenArray%5Bbyte%5D"><span class="Identifier">createImageMem</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Other">{</span><span class="Other">}</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="createImageRGBA,,Natural,Natural,set[ImageFlags],openArray[byte]">
+<dt><pre><span class="Keyword">proc</span> <a href="#createImageRGBA%2C%2CNatural%2CNatural%2Cset%5BImageFlags%5D%2CopenArray%5Bbyte%5D"><span class="Identifier">createImageRGBA</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">w</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">;</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">;</span> <span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Other">{</span><span class="Other">}</span><span class="Other">;</span>
+                     <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="currentTransform">
+<dt><pre><span class="Keyword">proc</span> <a href="#currentTransform"><span class="Identifier">currentTransform</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="gladLoadGLLoader,pointer">
+<dt><pre><span class="Keyword">proc</span> <a href="#gladLoadGLLoader%2Cpointer"><span class="Identifier">gladLoadGLLoader</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="horizontalAdvance,,float,float,string,Natural,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#horizontalAdvance%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"><span class="Identifier">horizontalAdvance</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+                       <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="hsla,float,float,float,float">
+<dt><pre><span class="Keyword">func</span> <a href="#hsla%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">hsla</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">l</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="identity,TransformMatrix">
+<dt><pre><span class="Keyword">proc</span> <a href="#identity%2CTransformMatrix"><span class="Identifier">identity</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="imageSize,,Image">
+<dt><pre><span class="Keyword">proc</span> <a href="#imageSize%2C%2CImage"><span class="Identifier">imageSize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">w</span><span class="Other">,</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="inverse,TransformMatrix">
+<dt><pre><span class="Keyword">proc</span> <a href="#inverse%2CTransformMatrix"><span class="Identifier">inverse</span></a><span class="Other">(</span><span class="Identifier">src</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">bool</span><span class="Other">,</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="isDark,Color">
+<dt><pre><span class="Keyword">func</span> <a href="#isDark%2CColor"><span class="Identifier">isDark</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="isDarkFast,Color">
+<dt><pre><span class="Keyword">func</span> <a href="#isDarkFast%2CColor"><span class="Identifier">isDarkFast</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="isLight,Color,float">
+<dt><pre><span class="Keyword">func</span> <a href="#isLight%2CColor%2Cfloat"><span class="Identifier">isLight</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">;</span> <span class="Identifier">threshold</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">0.7</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="isLightFast,Color,float">
+<dt><pre><span class="Keyword">func</span> <a href="#isLightFast%2CColor%2Cfloat"><span class="Identifier">isLightFast</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">;</span> <span class="Identifier">threshold</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">0.6</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="loadImage,string,Natural">
+<dt><pre><span class="Keyword">proc</span> <a href="#loadImage%2Cstring%2CNatural"><span class="Identifier">loadImage</span></a><span class="Other">(</span><span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">desiredChannels</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">4</span><span class="Other">)</span><span class="Other">:</span> <a href="nanovg.html#ImageData"><span class="Identifier">ImageData</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="multiply,TransformMatrix,TransformMatrix">
+<dt><pre><span class="Keyword">proc</span> <a href="#multiply%2CTransformMatrix%2CTransformMatrix"><span class="Identifier">multiply</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="nvgCreateContext,set[NvgInitFlag]">
+<dt><pre><span class="Keyword">proc</span> <a href="#nvgCreateContext%2Cset%5BNvgInitFlag%5D"><span class="Identifier">nvgCreateContext</span></a><span class="Other">(</span><span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#NvgInitFlag"><span class="Identifier">NvgInitFlag</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Other">{</span><span class="Other">}</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="nvgInit,pointer">
+<dt><pre><span class="Keyword">proc</span> <a href="#nvgInit%2Cpointer"><span class="Identifier">nvgInit</span></a><span class="Other">(</span><span class="Identifier">getProcAddress</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">NVGError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="nvgluCreateFramebuffer,,int,int,set[ImageFlags]">
 <dt><pre><span class="Keyword">proc</span> <a href="#nvgluCreateFramebuffer%2C%2Cint%2Cint%2Cset%5BImageFlags%5D"><span class="Identifier">nvgluCreateFramebuffer</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
-                            <span class="Identifier">imageFlags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#NVGLUFramebuffer"><span class="Identifier">NVGLUFramebuffer</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+                            <span class="Identifier">imageFlags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#NVGLUFramebuffer"><span class="Identifier">NVGLUFramebuffer</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="gladLoadGLLoader,pointer"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#gladLoadGLLoader%2Cpointer"><span class="Identifier">gladLoadGLLoader</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">importc</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="premultiply,TransformMatrix,TransformMatrix">
+<dt><pre><span class="Keyword">proc</span> <a href="#premultiply%2CTransformMatrix%2CTransformMatrix"><span class="Identifier">premultiply</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="nvgInit,pointer,set[NvgInitFlag]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#nvgInit%2Cpointer%2Cset%5BNvgInitFlag%5D"><span class="Identifier">nvgInit</span></a><span class="Other">(</span><span class="Identifier">getProcAddress</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#NvgInitFlag"><span class="Identifier">NvgInitFlag</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Other">{</span><span class="Other">}</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="rgb,int,int,int">
+<dt><pre><span class="Keyword">func</span> <a href="#rgb%2Cint%2Cint%2Cint"><span class="Identifier">rgb</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">,</span> <span class="Identifier">g</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="nvgDeinit"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#nvgDeinit"><span class="Identifier">nvgDeinit</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="rgba,int,int,int,int">
+<dt><pre><span class="Keyword">func</span> <a href="#rgba%2Cint%2Cint%2Cint%2Cint"><span class="Identifier">rgba</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">,</span> <span class="Identifier">g</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">,</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="imageSize,,Image"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#imageSize%2C%2CImage"><span class="Identifier">imageSize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">w</span><span class="Other">,</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="rotate,TransformMatrix,float">
+<dt><pre><span class="Keyword">proc</span> <a href="#rotate%2CTransformMatrix%2Cfloat"><span class="Identifier">rotate</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textMetrics"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textMetrics"><span class="Identifier">textMetrics</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">ascender</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">,</span> <span class="Identifier">descender</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">,</span>
-                             <span class="Identifier">lineHeight</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="scale,TransformMatrix,float,float">
+<dt><pre><span class="Keyword">proc</span> <a href="#scale%2CTransformMatrix%2Cfloat%2Cfloat"><span class="Identifier">scale</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">sx</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">sy</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="createImageMem,,set[ImageFlags],openArray[byte]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#createImageMem%2C%2Cset%5BImageFlags%5D%2CopenArray%5Bbyte%5D"><span class="Identifier">createImageMem</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">imageFlags</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Other">{</span><span class="Other">}</span><span class="Other">;</span>
-                    <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Image"><span class="Identifier">Image</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="size,ImageData">
+<dt><pre><span class="Keyword">proc</span> <a href="#size%2CImageData"><span class="Identifier">size</span></a><span class="Other">(</span><span class="Identifier">d</span><span class="Other">:</span> <a href="nanovg.html#ImageData"><span class="Identifier">ImageData</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Natural</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="createFontMem,,cstring,openArray[byte]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#createFontMem%2C%2Ccstring%2CopenArray%5Bbyte%5D"><span class="Identifier">createFontMem</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Font"><span class="Identifier">Font</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="skewX,TransformMatrix,float">
+<dt><pre><span class="Keyword">proc</span> <a href="#skewX%2CTransformMatrix%2Cfloat"><span class="Identifier">skewX</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="currentTransform"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#currentTransform"><span class="Identifier">currentTransform</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="skewY,TransformMatrix,float">
+<dt><pre><span class="Keyword">proc</span> <a href="#skewY%2CTransformMatrix%2Cfloat"><span class="Identifier">skewY</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="transform,TransformMatrix,cfloat,cfloat"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#transform%2CTransformMatrix%2Ccfloat%2Ccfloat"><span class="Identifier">transform</span></a><span class="Other">(</span><span class="Identifier">xform</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">,</span>
-    <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="sRGBLuma,Color">
+<dt><pre><span class="Keyword">func</span> <a href="#sRGBLuma%2CColor"><span class="Identifier">sRGBLuma</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textBreakLines,,cstring,cstring,float,openArray[TextRow]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textBreakLines%2C%2Ccstring%2Ccstring%2Cfloat%2CopenArray%5BTextRow%5D"><span class="Identifier">textBreakLines</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">end</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span>
-                    <span class="Identifier">rows</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="wrapper.html#TextRow"><span class="Identifier">TextRow</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="text,,float,float,string,Natural,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#text%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"><span class="Identifier">text</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="horizontalAdvance,,float,float,cstring,cstring"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#horizontalAdvance%2C%2Cfloat%2Cfloat%2Ccstring%2Ccstring"><span class="Identifier">horizontalAdvance</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
-                       <span class="Identifier">end</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textAlign,,HorizontalAlign,VerticalAlign">
+<dt><pre><span class="Keyword">proc</span> <a href="#textAlign%2C%2CHorizontalAlign%2CVerticalAlign"><span class="Identifier">textAlign</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">halign</span><span class="Other">:</span> <a href="wrapper.html#HorizontalAlign"><span class="Identifier">HorizontalAlign</span></a> <span class="Other">=</span> <span class="Identifier">haLeft</span><span class="Other">;</span>
+               <span class="Identifier">valign</span><span class="Other">:</span> <a href="wrapper.html#VerticalAlign"><span class="Identifier">VerticalAlign</span></a> <span class="Other">=</span> <span class="Identifier">vaBaseline</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textWidth,,cstring,cstring"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textWidth%2C%2Ccstring%2Ccstring"><span class="Identifier">textWidth</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">end</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textBounds,,float,float,string,Natural,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#textBounds%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"><span class="Identifier">textBounds</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
+                <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">bounds</span><span class="Other">:</span> <a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a><span class="Other">,</span> <span class="Identifier">horizAdvance</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">]</span> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textBounds,,float,float,cstring,cstring"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textBounds%2C%2Cfloat%2Cfloat%2Ccstring%2Ccstring"><span class="Identifier">textBounds</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">end</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span>
-    <span class="Identifier">bounds</span><span class="Other">:</span> <a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a><span class="Other">,</span> <span class="Identifier">horizAdvance</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textBox,,float,float,float,string,Natural,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#textBox%2C%2Cfloat%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"><span class="Identifier">textBox</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">,</span> <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
+             <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textBoxBounds,,float,float,float,cstring,cstring"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textBoxBounds%2C%2Cfloat%2Cfloat%2Cfloat%2Ccstring%2Ccstring"><span class="Identifier">textBoxBounds</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span>
-                   <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">end</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textBoxBounds,,float,float,float,string,Natural,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#textBoxBounds%2C%2Cfloat%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint"><span class="Identifier">textBoxBounds</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+                   <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textGlyphPositions,,float,float,cstring,cstring,openArray[GlyphPosition]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textGlyphPositions%2C%2Cfloat%2Cfloat%2Ccstring%2Ccstring%2CopenArray%5BGlyphPosition%5D"><span class="Identifier">textGlyphPositions</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">end</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
-                        <span class="Identifier">positions</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textBreakLines,,string,Natural,int,float,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#textBreakLines%2C%2Cstring%2CNatural%2Cint%2Cfloat%2Cint"><span class="Identifier">textBreakLines</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">;</span>
+                    <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">maxRows</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="nanovg.html#TextRow"><span class="Identifier">TextRow</span></a><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textGlyphPositions,,float,float,string,openArray[GlyphPosition]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textGlyphPositions%2C%2Cfloat%2Cfloat%2Cstring%2CopenArray%5BGlyphPosition%5D"><span class="Identifier">textGlyphPositions</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
-                        <span class="Identifier">positions</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textGlyphPositions,,float,float,string,Natural,int,openArray[GlyphPosition]">
+<dt><pre><span class="Keyword">proc</span> <a href="#textGlyphPositions%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2Cint%2CopenArray%5BGlyphPosition%5D"><span class="Identifier">textGlyphPositions</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+                        <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">;</span>
+                        <span class="Identifier">positions</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-
-</dl></div>
-<div class="section" id="13">
-<h1><a class="toc-backref" href="#13">Funcs</a></h1>
-<dl class="item">
-<a id="rgb,int,int,int"></a>
-<dt><pre><span class="Keyword">func</span> <a href="#rgb%2Cint%2Cint%2Cint"><span class="Identifier">rgb</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">,</span> <span class="Identifier">g</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="textWidth,,string,Natural,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#textWidth%2C%2Cstring%2CNatural%2Cint"><span class="Identifier">textWidth</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">endPos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="rgba,int,int,int,int"></a>
-<dt><pre><span class="Keyword">func</span> <a href="#rgba%2Cint%2Cint%2Cint%2Cint"><span class="Identifier">rgba</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">,</span> <span class="Identifier">g</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">,</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="transformPoint,TransformMatrix,float,float">
+<dt><pre><span class="Keyword">proc</span> <a href="#transformPoint%2CTransformMatrix%2Cfloat%2Cfloat"><span class="Identifier">transformPoint</span></a><span class="Other">(</span><span class="Identifier">xform</span><span class="Other">:</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">float</span><span class="Other">,</span> <span class="Identifier">float</span><span class="Other">)</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="hsla,float,float,float,float"></a>
-<dt><pre><span class="Keyword">func</span> <a href="#hsla%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">hsla</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">l</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="translate,TransformMatrix,float,float">
+<dt><pre><span class="Keyword">proc</span> <a href="#translate%2CTransformMatrix%2Cfloat%2Cfloat"><span class="Identifier">translate</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a><span class="Other">;</span> <span class="Identifier">tx</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">ty</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
+</div>
+<div id="weightedEuclidanDistance,Color">
+<dt><pre><span class="Keyword">func</span> <a href="#weightedEuclidanDistance%2CColor"><span class="Identifier">weightedEuclidanDistance</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 
 </dl></div>
 <div class="section" id="18">
 <h1><a class="toc-backref" href="#18">Templates</a></h1>
 <dl class="item">
-<a id="shapeAntiAlias.t,,bool"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#shapeAntiAlias.t%2C%2Cbool"><span class="Identifier">shapeAntiAlias</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">enabled</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="textAlign.t,,HorizontalAlign,VerticalAlign"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#textAlign.t%2C%2CHorizontalAlign%2CVerticalAlign"><span class="Identifier">textAlign</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">halign</span><span class="Other">:</span> <a href="wrapper.html#HorizontalAlign"><span class="Identifier">HorizontalAlign</span></a> <span class="Other">=</span> <span class="Identifier">haLeft</span><span class="Other">;</span>
-                   <span class="Identifier">valign</span><span class="Other">:</span> <a href="wrapper.html#VerticalAlign"><span class="Identifier">VerticalAlign</span></a> <span class="Other">=</span> <span class="Identifier">vaBaseline</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="text.t,,float,float,string"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#text.t%2C%2Cfloat%2Cfloat%2Cstring"><span class="Identifier">text</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="textBox.t,,float,float,float,string"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#textBox.t%2C%2Cfloat%2Cfloat%2Cfloat%2Cstring"><span class="Identifier">textBox</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">,</span> <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="gray.t,int,int"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#gray.t%2Cint%2Cint"><span class="Identifier">gray</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="gray.t,float,float"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#gray.t%2Cfloat%2Cfloat"><span class="Identifier">gray</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="black.t,int"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#black.t%2Cint"><span class="Identifier">black</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="black.t,float"></a>
+<div id="black.t,float">
 <dt><pre><span class="Keyword">template</span> <a href="#black.t%2Cfloat"><span class="Identifier">black</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="white.t,int"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#white.t%2Cint"><span class="Identifier">white</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+</div>
+<div id="black.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#black.t%2Cint"><span class="Identifier">black</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="white.t,float"></a>
+</div>
+<div id="blue.t,float">
+<dt><pre><span class="Keyword">template</span> <a href="#blue.t%2Cfloat"><span class="Identifier">blue</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="blue.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#blue.t%2Cint"><span class="Identifier">blue</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="cyan.t,float">
+<dt><pre><span class="Keyword">template</span> <a href="#cyan.t%2Cfloat"><span class="Identifier">cyan</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="cyan.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#cyan.t%2Cint"><span class="Identifier">cyan</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="gray.t,float,float">
+<dt><pre><span class="Keyword">template</span> <a href="#gray.t%2Cfloat%2Cfloat"><span class="Identifier">gray</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="gray.t,int,int">
+<dt><pre><span class="Keyword">template</span> <a href="#gray.t%2Cint%2Cint"><span class="Identifier">gray</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="green.t,float">
+<dt><pre><span class="Keyword">template</span> <a href="#green.t%2Cfloat"><span class="Identifier">green</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="green.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#green.t%2Cint"><span class="Identifier">green</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="magenta.t,float">
+<dt><pre><span class="Keyword">template</span> <a href="#magenta.t%2Cfloat"><span class="Identifier">magenta</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="magenta.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#magenta.t%2Cint"><span class="Identifier">magenta</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="red.t,float">
+<dt><pre><span class="Keyword">template</span> <a href="#red.t%2Cfloat"><span class="Identifier">red</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="red.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#red.t%2Cint"><span class="Identifier">red</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="shapeAntiAlias.t,,bool">
+<dt><pre><span class="Keyword">template</span> <a href="#shapeAntiAlias.t%2C%2Cbool"><span class="Identifier">shapeAntiAlias</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">enabled</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="textBreakLines.t,,string,float,int">
+<dt><pre><span class="Keyword">template</span> <a href="#textBreakLines.t%2C%2Cstring%2Cfloat%2Cint"><span class="Identifier">textBreakLines</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">maxRows</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span>
+    <a href="nanovg.html#TextRow"><span class="Identifier">TextRow</span></a><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="textBreakLines.t,,string,Natural,float,int">
+<dt><pre><span class="Keyword">template</span> <a href="#textBreakLines.t%2C%2Cstring%2CNatural%2Cfloat%2Cint"><span class="Identifier">textBreakLines</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
+                        <span class="Identifier">breakRowWidth</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">maxRows</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">-1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="nanovg.html#TextRow"><span class="Identifier">TextRow</span></a><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="textGlyphPositions.t,,float,float,string,openArray[GlyphPosition]">
+<dt><pre><span class="Keyword">template</span> <a href="#textGlyphPositions.t%2C%2Cfloat%2Cfloat%2Cstring%2CopenArray%5BGlyphPosition%5D"><span class="Identifier">textGlyphPositions</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+                            <span class="Identifier">positions</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="textGlyphPositions.t,,float,float,string,Natural,openArray[GlyphPosition]">
+<dt><pre><span class="Keyword">template</span> <a href="#textGlyphPositions.t%2C%2Cfloat%2Cfloat%2Cstring%2CNatural%2CopenArray%5BGlyphPosition%5D"><span class="Identifier">textGlyphPositions</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+                            <span class="Identifier">startPos</span><span class="Other">:</span> <span class="Identifier">Natural</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
+                            <span class="Identifier">positions</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="textMetrics.t">
+<dt><pre><span class="Keyword">template</span> <a href="#textMetrics.t"><span class="Identifier">textMetrics</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">ascender</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">,</span> <span class="Identifier">descender</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">,</span>
+                                 <span class="Identifier">lineHeight</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="white.t,float">
 <dt><pre><span class="Keyword">template</span> <a href="#white.t%2Cfloat"><span class="Identifier">white</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="withAlpha.t,Color,int"></a>
+</div>
+<div id="white.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#white.t%2Cint"><span class="Identifier">white</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="withAlpha.t,Color,float">
+<dt><pre><span class="Keyword">template</span> <a href="#withAlpha.t%2CColor%2Cfloat"><span class="Identifier">withAlpha</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="withAlpha.t,Color,int">
 <dt><pre><span class="Keyword">template</span> <a href="#withAlpha.t%2CColor%2Cint"><span class="Identifier">withAlpha</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
 <dd>
 
 
 
 </dd>
+</div>
+<div id="yellow.t,float">
+<dt><pre><span class="Keyword">template</span> <a href="#yellow.t%2Cfloat"><span class="Identifier">yellow</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">1.0</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="yellow.t,int">
+<dt><pre><span class="Keyword">template</span> <a href="#yellow.t%2Cint"><span class="Identifier">yellow</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="wrapper.html#Color"><span class="Identifier">Color</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 
 </dl></div>
 <div class="section" id="19">
 <h1><a class="toc-backref" href="#19">Exports</a></h1>
 <dl class="item">
-<a href="wrapper.html#Font"><span class="Identifier">Font</span></a>, <a href="wrapper.html#Image"><span class="Identifier">Image</span></a>, <a href="wrapper.html#NoFont"><span class="Identifier">NoFont</span></a>, <a href="wrapper.html#NoImage"><span class="Identifier">NoImage</span></a>, <a href="wrapper.html#=="><span class="Identifier">==</span></a>, <a href="wrapper.html#=="><span class="Identifier">==</span></a>, <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a>, <a href="wrapper.html#Color"><span class="Identifier">Color</span></a>, <a href="wrapper.html#Paint"><span class="Identifier">Paint</span></a>, <a href="wrapper.html#PathWinding"><span class="Identifier">PathWinding</span></a>, <a href="wrapper.html#Solidity"><span class="Identifier">Solidity</span></a>, <a href="wrapper.html#LineCapJoin"><span class="Identifier">LineCapJoin</span></a>, <a href="wrapper.html#HorizontalAlign"><span class="Identifier">HorizontalAlign</span></a>, <a href="wrapper.html#VerticalAlign"><span class="Identifier">VerticalAlign</span></a>, <a href="wrapper.html#BlendFactor"><span class="Identifier">BlendFactor</span></a>, <a href="wrapper.html#CompositeOperation"><span class="Identifier">CompositeOperation</span></a>, <a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a>, <a href="wrapper.html#CompositeOperationState"><span class="Identifier">CompositeOperationState</span></a>, <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a>, <a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a>, <a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a>, <a href="wrapper.html#TextRow"><span class="Identifier">TextRow</span></a>, <a href="wrapper.html#NvgInitFlag"><span class="Identifier">NvgInitFlag</span></a>, <a href="wrapper.html#NVGLUFramebuffer"><span class="Identifier">NVGLUFramebuffer</span></a>, <a href="wrapper.html#beginFrame"><span class="Identifier">beginFrame</span></a>, <a href="wrapper.html#cancelFrame"><span class="Identifier">cancelFrame</span></a>, <a href="wrapper.html#endFrame"><span class="Identifier">endFrame</span></a>, <a href="wrapper.html#globalCompositeOperation"><span class="Identifier">globalCompositeOperation</span></a>, <a href="wrapper.html#globalCompositeBlendFunc"><span class="Identifier">globalCompositeBlendFunc</span></a>, <a href="wrapper.html#globalCompositeBlendFuncSeparate"><span class="Identifier">globalCompositeBlendFuncSeparate</span></a>, <a href="wrapper.html#rgb"><span class="Identifier">rgb</span></a>, <a href="wrapper.html#rgb"><span class="Identifier">rgb</span></a>, <a href="wrapper.html#rgb"><span class="Identifier">rgb</span></a>, <a href="wrapper.html#rgb"><span class="Identifier">rgb</span></a>, <a href="wrapper.html#rgba"><span class="Identifier">rgba</span></a>, <a href="wrapper.html#rgba"><span class="Identifier">rgba</span></a>, <a href="wrapper.html#rgba"><span class="Identifier">rgba</span></a>, <a href="wrapper.html#rgba"><span class="Identifier">rgba</span></a>, <a href="wrapper.html#lerp"><span class="Identifier">lerp</span></a>, <a href="wrapper.html#withAlpha"><span class="Identifier">withAlpha</span></a>, <a href="wrapper.html#withAlpha"><span class="Identifier">withAlpha</span></a>, <a href="wrapper.html#withAlpha"><span class="Identifier">withAlpha</span></a>, <a href="wrapper.html#withAlpha"><span class="Identifier">withAlpha</span></a>, <a href="wrapper.html#hsl"><span class="Identifier">hsl</span></a>, <a href="wrapper.html#hsla"><span class="Identifier">hsla</span></a>, <a href="wrapper.html#save"><span class="Identifier">save</span></a>, <a href="wrapper.html#restore"><span class="Identifier">restore</span></a>, <a href="wrapper.html#reset"><span class="Identifier">reset</span></a>, <a href="wrapper.html#strokeColor"><span class="Identifier">strokeColor</span></a>, <a href="wrapper.html#strokePaint"><span class="Identifier">strokePaint</span></a>, <a href="wrapper.html#fillColor"><span class="Identifier">fillColor</span></a>, <a href="wrapper.html#fillPaint"><span class="Identifier">fillPaint</span></a>, <a href="wrapper.html#strokeWidth"><span class="Identifier">strokeWidth</span></a>, <a href="wrapper.html#lineCap"><span class="Identifier">lineCap</span></a>, <a href="wrapper.html#lineJoin"><span class="Identifier">lineJoin</span></a>, <a href="wrapper.html#globalAlpha"><span class="Identifier">globalAlpha</span></a>, <a href="wrapper.html#resetTransform"><span class="Identifier">resetTransform</span></a>, <a href="wrapper.html#transform"><span class="Identifier">transform</span></a>, <a href="wrapper.html#translate"><span class="Identifier">translate</span></a>, <a href="wrapper.html#translate"><span class="Identifier">translate</span></a>, <a href="wrapper.html#rotate"><span class="Identifier">rotate</span></a>, <a href="wrapper.html#rotate"><span class="Identifier">rotate</span></a>, <a href="wrapper.html#skewX"><span class="Identifier">skewX</span></a>, <a href="wrapper.html#skewX"><span class="Identifier">skewX</span></a>, <a href="wrapper.html#skewY"><span class="Identifier">skewY</span></a>, <a href="wrapper.html#skewY"><span class="Identifier">skewY</span></a>, <a href="wrapper.html#scale"><span class="Identifier">scale</span></a>, <a href="wrapper.html#scale"><span class="Identifier">scale</span></a>, <a href="wrapper.html#identity"><span class="Identifier">identity</span></a>, <a href="wrapper.html#multiply"><span class="Identifier">multiply</span></a>, <a href="wrapper.html#premultiply"><span class="Identifier">premultiply</span></a>, <a href="wrapper.html#inverse"><span class="Identifier">inverse</span></a>, <a href="wrapper.html#createImage"><span class="Identifier">createImage</span></a>, <a href="wrapper.html#createImageRGBA"><span class="Identifier">createImageRGBA</span></a>, <a href="wrapper.html#updateImage"><span class="Identifier">updateImage</span></a>, <a href="wrapper.html#deleteImage"><span class="Identifier">deleteImage</span></a>, <a href="wrapper.html#linearGradient"><span class="Identifier">linearGradient</span></a>, <a href="wrapper.html#boxGradient"><span class="Identifier">boxGradient</span></a>, <a href="wrapper.html#radialGradient"><span class="Identifier">radialGradient</span></a>, <a href="wrapper.html#imagePattern"><span class="Identifier">imagePattern</span></a>, <a href="wrapper.html#scissor"><span class="Identifier">scissor</span></a>, <a href="wrapper.html#intersectScissor"><span class="Identifier">intersectScissor</span></a>, <a href="wrapper.html#resetScissor"><span class="Identifier">resetScissor</span></a>, <a href="wrapper.html#beginPath"><span class="Identifier">beginPath</span></a>, <a href="wrapper.html#moveTo"><span class="Identifier">moveTo</span></a>, <a href="wrapper.html#lineTo"><span class="Identifier">lineTo</span></a>, <a href="wrapper.html#bezierTo"><span class="Identifier">bezierTo</span></a>, <a href="wrapper.html#quadTo"><span class="Identifier">quadTo</span></a>, <a href="wrapper.html#arcTo"><span class="Identifier">arcTo</span></a>, <a href="wrapper.html#closePath"><span class="Identifier">closePath</span></a>, <a href="wrapper.html#pathWinding"><span class="Identifier">pathWinding</span></a>, <a href="wrapper.html#arc"><span class="Identifier">arc</span></a>, <a href="wrapper.html#rect"><span class="Identifier">rect</span></a>, <a href="wrapper.html#roundedRect"><span class="Identifier">roundedRect</span></a>, <a href="wrapper.html#roundedRectVarying"><span class="Identifier">roundedRectVarying</span></a>, <a href="wrapper.html#ellipse"><span class="Identifier">ellipse</span></a>, <a href="wrapper.html#circle"><span class="Identifier">circle</span></a>, <a href="wrapper.html#fill"><span class="Identifier">fill</span></a>, <a href="wrapper.html#stroke"><span class="Identifier">stroke</span></a>, <a href="wrapper.html#createFont"><span class="Identifier">createFont</span></a>, <a href="wrapper.html#findFont"><span class="Identifier">findFont</span></a>, <a href="wrapper.html#addFallbackFont"><span class="Identifier">addFallbackFont</span></a>, <a href="wrapper.html#addFallbackFont"><span class="Identifier">addFallbackFont</span></a>, <a href="wrapper.html#addFallbackFont"><span class="Identifier">addFallbackFont</span></a>, <a href="wrapper.html#addFallbackFont"><span class="Identifier">addFallbackFont</span></a>, <a href="wrapper.html#fontSize"><span class="Identifier">fontSize</span></a>, <a href="wrapper.html#fontBlur"><span class="Identifier">fontBlur</span></a>, <a href="wrapper.html#textLetterSpacing"><span class="Identifier">textLetterSpacing</span></a>, <a href="wrapper.html#textLineHeight"><span class="Identifier">textLineHeight</span></a>, <a href="wrapper.html#fontFace"><span class="Identifier">fontFace</span></a>, <a href="wrapper.html#fontFace"><span class="Identifier">fontFace</span></a>, <a href="wrapper.html#fontFace"><span class="Identifier">fontFace</span></a>, <a href="wrapper.html#fontFace"><span class="Identifier">fontFace</span></a>, <a href="wrapper.html#text"><span class="Identifier">text</span></a>, <a href="wrapper.html#textBox"><span class="Identifier">textBox</span></a>, <a href="wrapper.html#nvgluBindFramebuffer"><span class="Identifier">nvgluBindFramebuffer</span></a>, <a href="wrapper.html#nvgluDeleteFramebuffer"><span class="Identifier">nvgluDeleteFramebuffer</span></a>
+<a href="wrapper.html#Font"><span class="Identifier">Font</span></a>, <a href="wrapper.html#Image"><span class="Identifier">Image</span></a>, <a href="wrapper.html#NoFont"><span class="Identifier">NoFont</span></a>, <a href="wrapper.html#NoImage"><span class="Identifier">NoImage</span></a>, <a href="wrapper.html#==,Font,Font"><span class="Identifier">==</span></a>, <a href="wrapper.html#==,Image,Image"><span class="Identifier">==</span></a>, <a href="wrapper.html#NVGContext"><span class="Identifier">NVGContext</span></a>, <a href="wrapper.html#NvgInitFlag"><span class="Identifier">NvgInitFlag</span></a>, <a href="wrapper.html#BlendFactor"><span class="Identifier">BlendFactor</span></a>, <a href="wrapper.html#Bounds"><span class="Identifier">Bounds</span></a>, <a href="wrapper.html#Color"><span class="Identifier">Color</span></a>, <a href="wrapper.html#CompositeOperation"><span class="Identifier">CompositeOperation</span></a>, <a href="wrapper.html#CompositeOperationState"><span class="Identifier">CompositeOperationState</span></a>, <a href="wrapper.html#GlyphPosition"><span class="Identifier">GlyphPosition</span></a>, <a href="wrapper.html#HorizontalAlign"><span class="Identifier">HorizontalAlign</span></a>, <a href="wrapper.html#ImageFlags"><span class="Identifier">ImageFlags</span></a>, <a href="wrapper.html#LineCapJoin"><span class="Identifier">LineCapJoin</span></a>, <a href="wrapper.html#Paint"><span class="Identifier">Paint</span></a>, <a href="wrapper.html#PathWinding"><span class="Identifier">PathWinding</span></a>, <a href="wrapper.html#Solidity"><span class="Identifier">Solidity</span></a>, <a href="wrapper.html#TransformMatrix"><span class="Identifier">TransformMatrix</span></a>, <a href="wrapper.html#VerticalAlign"><span class="Identifier">VerticalAlign</span></a>, <a href="wrapper.html#NVGLUFramebuffer"><span class="Identifier">NVGLUFramebuffer</span></a>, <a href="wrapper.html#nvgDeleteContext,NVGContext"><span class="Identifier">nvgDeleteContext</span></a>, <a href="wrapper.html#beginFrame,,cfloat,cfloat,cfloat"><span class="Identifier">beginFrame</span></a>, <a href="wrapper.html#cancelFrame,NVGContext"><span class="Identifier">cancelFrame</span></a>, <a href="wrapper.html#endFrame,NVGContext"><span class="Identifier">endFrame</span></a>, <a href="wrapper.html#globalCompositeOperation,,CompositeOperation"><span class="Identifier">globalCompositeOperation</span></a>, <a href="wrapper.html#globalCompositeBlendFunc,,set[BlendFactor],set[BlendFactor]"><span class="Identifier">globalCompositeBlendFunc</span></a>, <a href="wrapper.html#globalCompositeBlendFuncSeparate,NVGContext,cint,cint,cint,cint"><span class="Identifier">globalCompositeBlendFuncSeparate</span></a>, <a href="wrapper.html#rgb,cfloat,cfloat,cfloat"><span class="Identifier">rgb</span></a>, <a href="wrapper.html#rgb,byte,byte,byte"><span class="Identifier">rgb</span></a>, <a href="wrapper.html#rgba,byte,byte,byte,byte"><span class="Identifier">rgba</span></a>, <a href="wrapper.html#rgba,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">rgba</span></a>, <a href="wrapper.html#lerp,Color,Color,cfloat"><span class="Identifier">lerp</span></a>, <a href="wrapper.html#withAlpha,Color,cfloat"><span class="Identifier">withAlpha</span></a>, <a href="wrapper.html#withAlpha,Color,byte"><span class="Identifier">withAlpha</span></a>, <a href="wrapper.html#hsl,cfloat,cfloat,cfloat"><span class="Identifier">hsl</span></a>, <a href="wrapper.html#hsla,cfloat,cfloat,cfloat,byte"><span class="Identifier">hsla</span></a>, <a href="wrapper.html#save,NVGContext"><span class="Identifier">save</span></a>, <a href="wrapper.html#restore,NVGContext"><span class="Identifier">restore</span></a>, <a href="wrapper.html#reset,NVGContext"><span class="Identifier">reset</span></a>, <a href="wrapper.html#strokeColor,,Color"><span class="Identifier">strokeColor</span></a>, <a href="wrapper.html#strokePaint,,Paint"><span class="Identifier">strokePaint</span></a>, <a href="wrapper.html#fillColor,,Color"><span class="Identifier">fillColor</span></a>, <a href="wrapper.html#fillPaint,,Paint"><span class="Identifier">fillPaint</span></a>, <a href="wrapper.html#strokeWidth,,cfloat"><span class="Identifier">strokeWidth</span></a>, <a href="wrapper.html#lineCap,,LineCapJoin"><span class="Identifier">lineCap</span></a>, <a href="wrapper.html#lineJoin,,LineCapJoin"><span class="Identifier">lineJoin</span></a>, <a href="wrapper.html#globalAlpha,,cfloat"><span class="Identifier">globalAlpha</span></a>, <a href="wrapper.html#resetTransform,NVGContext"><span class="Identifier">resetTransform</span></a>, <a href="wrapper.html#transform,NVGContext,cfloat,cfloat,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">transform</span></a>, <a href="wrapper.html#translate,,cfloat,cfloat"><span class="Identifier">translate</span></a>, <a href="wrapper.html#rotate,,cfloat"><span class="Identifier">rotate</span></a>, <a href="wrapper.html#skewX,,cfloat"><span class="Identifier">skewX</span></a>, <a href="wrapper.html#skewY,,cfloat"><span class="Identifier">skewY</span></a>, <a href="wrapper.html#scale,,cfloat,cfloat"><span class="Identifier">scale</span></a>, <a href="wrapper.html#updateImage,,Image,ptr.byte"><span class="Identifier">updateImage</span></a>, <a href="wrapper.html#deleteImage,,Image"><span class="Identifier">deleteImage</span></a>, <a href="wrapper.html#linearGradient,,cfloat,cfloat,cfloat,cfloat,Color,Color"><span class="Identifier">linearGradient</span></a>, <a href="wrapper.html#boxGradient,,cfloat,cfloat,cfloat,cfloat,cfloat,cfloat,Color,Color"><span class="Identifier">boxGradient</span></a>, <a href="wrapper.html#radialGradient,,cfloat,cfloat,cfloat,cfloat,Color,Color"><span class="Identifier">radialGradient</span></a>, <a href="wrapper.html#imagePattern,,cfloat,cfloat,cfloat,cfloat,cfloat,Image,cfloat"><span class="Identifier">imagePattern</span></a>, <a href="wrapper.html#scissor,,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">scissor</span></a>, <a href="wrapper.html#intersectScissor,,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">intersectScissor</span></a>, <a href="wrapper.html#resetScissor,NVGContext"><span class="Identifier">resetScissor</span></a>, <a href="wrapper.html#beginPath,NVGContext"><span class="Identifier">beginPath</span></a>, <a href="wrapper.html#moveTo,NVGContext,cfloat,cfloat"><span class="Identifier">moveTo</span></a>, <a href="wrapper.html#lineTo,NVGContext,cfloat,cfloat"><span class="Identifier">lineTo</span></a>, <a href="wrapper.html#bezierTo,,cfloat,cfloat,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">bezierTo</span></a>, <a href="wrapper.html#quadTo,,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">quadTo</span></a>, <a href="wrapper.html#arcTo,,cfloat,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">arcTo</span></a>, <a href="wrapper.html#closePath,NVGContext"><span class="Identifier">closePath</span></a>, <a href="wrapper.html#pathWinding,,"><span class="Identifier">pathWinding</span></a>, <a href="wrapper.html#arc,,cfloat,cfloat,cfloat,cfloat,cfloat,"><span class="Identifier">arc</span></a>, <a href="wrapper.html#rect,,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">rect</span></a>, <a href="wrapper.html#roundedRect,,cfloat,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">roundedRect</span></a>, <a href="wrapper.html#roundedRect,,cfloat,cfloat,cfloat,cfloat,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">roundedRect</span></a>, <a href="wrapper.html#ellipse,,cfloat,cfloat,cfloat,cfloat"><span class="Identifier">ellipse</span></a>, <a href="wrapper.html#circle,,cfloat,cfloat,cfloat"><span class="Identifier">circle</span></a>, <a href="wrapper.html#fill,NVGContext"><span class="Identifier">fill</span></a>, <a href="wrapper.html#stroke,NVGContext"><span class="Identifier">stroke</span></a>, <a href="wrapper.html#findFont,,cstring"><span class="Identifier">findFont</span></a>, <a href="wrapper.html#addFallbackFont,,cstring,cstring"><span class="Identifier">addFallbackFont</span></a>, <a href="wrapper.html#addFallbackFont,,Font,Font"><span class="Identifier">addFallbackFont</span></a>, <a href="wrapper.html#resetFallbackFonts,,Font"><span class="Identifier">resetFallbackFonts</span></a>, <a href="wrapper.html#resetFallbackFonts,,cstring"><span class="Identifier">resetFallbackFonts</span></a>, <a href="wrapper.html#fontSize,,cfloat"><span class="Identifier">fontSize</span></a>, <a href="wrapper.html#fontBlur,,cfloat"><span class="Identifier">fontBlur</span></a>, <a href="wrapper.html#textLetterSpacing,,cfloat"><span class="Identifier">textLetterSpacing</span></a>, <a href="wrapper.html#textLineHeight,NVGContext,cfloat"><span class="Identifier">textLineHeight</span></a>, <a href="wrapper.html#fontFace,,Font"><span class="Identifier">fontFace</span></a>, <a href="wrapper.html#fontFace,NVGContext,cstring"><span class="Identifier">fontFace</span></a>, <a href="wrapper.html#text,,cfloat,cfloat,cstring,cstring"><span class="Identifier">text</span></a>, <a href="wrapper.html#textBox,,cfloat,cfloat,cfloat,cstring,cstring"><span class="Identifier">textBox</span></a>, <a href="wrapper.html#nvgluBindFramebuffer,NVGLUFramebuffer"><span class="Identifier">nvgluBindFramebuffer</span></a>, <a href="wrapper.html#nvgluDeleteFramebuffer,NVGLUFramebuffer"><span class="Identifier">nvgluDeleteFramebuffer</span></a>
 </dl></div>
 
   </div>
@@ -523,7 +1164,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-11-02 07:26:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-13 04:52:17 UTC</small>
       </div>
     </div>
   </div>

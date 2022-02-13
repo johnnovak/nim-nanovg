@@ -1,6 +1,14 @@
-import glad/gl
 import glfw
+
+import glad/gl
 import nanovg
+
+
+# Multi-window demo
+# -----------------
+# Two windows are created, each with its own GL context: a "main" application
+# window, and a "splash" window with transparency and no window decoration.
+# The splash window is destroyed after 3 seconds.
 
 
 proc keyCb(win: Window, key: Key, scanCode: int32, action: KeyAction,
@@ -29,7 +37,6 @@ proc createWindow(w, h: int, title: string,
     cfg.version = glv32
     cfg.forwardCompat = true
     cfg.profile = opCoreProfile
-
 
   newWindow(cfg)
 
@@ -63,8 +70,7 @@ proc main() =
 
   var flags = {nifStencilStrokes, nifAntialias}
 
-  if not nvgInit(getProcAddress):
-    quit "Error initialising NanoVG"
+  nvgInit(getProcAddress)
 
   if not gladLoadGL(getProcAddress):
     quit "Error initialising OpenGL"
@@ -79,7 +85,7 @@ proc main() =
   if vgB == nil:
     quit "Error creating NanoVG context"
 
-  var splashImage = vgB.createImage("gridmonger-logo.png")
+  var splashImage = vgB.createImage("data/images/gridmonger-logo.png")
   if splashImage == NoImage:
     quit "Could not load image"
 
@@ -130,7 +136,7 @@ proc main() =
 
       glfw.swapBuffers(winB)
 
-    if not winBDestroyed and getTime() - d0 > 5:
+    if not winBDestroyed and getTime() - d0 > 3:
       winB.destroy()
       nvgDeleteContext(vgB)
       winBDestroyed = true

@@ -1,7 +1,11 @@
-import glad/gl
 import glfw
+
+import glad/gl
 import nanovg
 
+
+# Pixel-perfect pixel, line & rectangle drawing experiments
+#
 
 proc keyCb(win: Window, key: Key, scanCode: int32, action: KeyAction,
            modKeys: set[ModifierKey]) =
@@ -387,12 +391,11 @@ proc main() =
 
   glfw.makeContextCurrent(win)
 
+  nvgInit(getProcAddress)
+
   var flags = {nifStencilStrokes, nifDebug}
   when not defined(demoMSAA): flags = flags + {nifAntialias}
-
-  var vg = nvgInit(getProcAddress, flags) # TODO exception like glfw?
-  if vg == nil:
-    quit "Error creating NanoVG context"
+  var vg = nvgCreateContext(flags)
 
   if not gladLoadGL(getProcAddress):
     quit "Error initialising OpenGL"
@@ -427,8 +430,6 @@ proc main() =
 
     glfw.swapBuffers(win)
     glfw.pollEvents()
-
-  nvgDeinit(vg)
 
   glfw.terminate()
 

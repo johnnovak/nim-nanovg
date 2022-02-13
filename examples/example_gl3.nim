@@ -1,10 +1,11 @@
 import strformat
 
-import glad/gl
 import glfw
-import nanovg
 
-import demo, perf
+import demo
+import glad/gl
+import nanovg
+import perf
 
 
 var

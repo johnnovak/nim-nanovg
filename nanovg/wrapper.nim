@@ -586,12 +586,12 @@ proc nvgSkewY*(dst: ptr cfloat, angle: cfloat)
 proc nvgMultiply*(dst: ptr cfloat, src: ptr cfloat)
     {.cdecl, importc: "nvgTransformMultiply".}
   ## Sets the transform to the result of multiplication of two transforms, of
-  ## A = A*B.
+  ## A = A * B.
 
 proc nvgPremultiply*(dst: ptr cfloat, src: ptr cfloat)
     {.cdecl, importc: "nvgTransformPremultiply".}
   ## Sets the transform to the result of multiplication of two transforms, of
-  ## A = B*A.
+  ## A = B * A.
 
 proc nvgInverse*(dst: ptr cfloat, src: ptr cfloat): cint
     {.cdecl, importc: "nvgTransformInverse".}

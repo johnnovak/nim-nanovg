@@ -148,7 +148,7 @@ proc nvgInit*(getProcAddress: pointer) =
     raise newException(NVGError, "Failed to initialise NanoVG")
 
 
-proc nvgCreateContext*(flags: set[NVGInitFlag]): NVGContext =
+proc nvgCreateContext*(flags: set[NVGInitFlag] = {}): NVGContext =
   result = wrapper.nvgCreateContext(flags)
   if result == nil:
     raise newException(NVGError, "Failed to create NanoVG context")
