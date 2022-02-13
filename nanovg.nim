@@ -3,6 +3,8 @@ import strformat
 
 import nanovg/wrapper
 
+# {{{ Exports
+
 # Types
 export wrapper.Font
 export wrapper.Image
@@ -121,12 +123,15 @@ export wrapper.textBox
 export wrapper.nvgluBindFramebuffer
 export wrapper.nvgluDeleteFramebuffer
 
+# }}}
 
 type
   NVGError* = object of CatchableError
     message*: string
 
 using ctx: NVGContext
+
+{.push warning[CStringConv]:off.}
 
 # {{{ General functions
 
@@ -530,5 +535,7 @@ proc loadImage*(filename: string, desiredChannels: Natural = 4): ImageData =
 
 # }}}
 # }}}
+
+{.push warning[CStringConv]:on.}
 
 # vim: et:ts=2:sw=2:fdm=marker
