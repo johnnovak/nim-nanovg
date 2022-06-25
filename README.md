@@ -36,3 +36,9 @@ Attempting to compile the library on **Mac OS X 10.14.5 Mojave** / **XCode
 11.3.1** with the GL2 backend results in compilation errors. I can't be
 bothered fixing this as GL3 works fine.
 
+## License
+
+This work is free. You can redistribute it and/or modify it under the terms of
+the [Do What The Fuck You Want To Public License, Version 2](http://www.wtfpl.net/), as published
+by Sam Hocevar. See the [COPYING](./COPYING) file for more details.
+
