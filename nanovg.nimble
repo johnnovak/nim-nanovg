@@ -1,8 +1,8 @@
 # Package
 
-version       = "0.3.3"
+version       = "0.3.4"
 author        = "John Novak <john@johnnovak.net>"
-description   = "Nim wrapper for the NanoVG antialiased vector graphics rendering library for OpenGL"
+description   = "Nim wrapper for the NanoVG vector graphics library for OpenGL"
 license       = "MIT"
 
 skipDirs = @["doc", "examples"]
