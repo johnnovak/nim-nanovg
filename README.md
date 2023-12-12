@@ -20,7 +20,7 @@ build the examples by executing one of the following commands:
     nimble examplesGL3
     nimble examplesGL3Debug
 
-The examples require [nim-glfw](https://github.com/ephja/nim-glfw).
+The examples require [nim-glfw](https://github.com/johnnovak/nim-glfw).
 
 ## Documentation
 
