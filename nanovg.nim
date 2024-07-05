@@ -442,21 +442,92 @@ template red*(a: int):     Color = red(a/255)
 template magenta*(a: int): Color = magenta(a/255)
 template yellow*(a: int):  Color = yellow(a/255)
 
-func sRGBLuma*(c: Color): float =
-  c.r*0.2126 + c.g*0.7152 * c.b*0.722
+# {{{ toLinear*()
+proc toLinear(c: Color): Color =
+  # From: https://entropymine.com/imageworsener/srgbformula/
+  proc conv(x: float): float=
+    if x <= 0.0404482362771082: x / 12.92
+    else: pow((x + 0.055) / 1.055, 2.4)
+
+  rgb(conv(c.r), conv(c.g), conv(c.b))
+
+# }}}
+# {{{ fromLinear*()
+proc fromLinear(c: Color): Color =
+  # From: https://entropymine.com/imageworsener/srgbformula/
+  proc conv(x: float): float=
+    if x <=  0.00313066844250063: x * 12.92
+    else: 1.055 * pow(x, 1/2.4) - 0.055
+
+  rgb(conv(c.r), conv(c.g), conv(c.b))
+
+# }}}
+# {{{ toHSV*()
+func toHSV*(c: Color): (float, float, float) =
+  const HueMax = 360
+
+  let
+    r = c.r
+    g = c.g
+    b = c.b
+    xmax = max(r, max(g, b))
+    xmin = min(r, min(g, b))
+    v = xmax
+    c = xmax - xmin
+
+  let h = if   c == 0: 0.0
+          elif v == r: ((60 * (g-b)/c + HueMax) mod HueMax) / HueMax
+          elif v == g: ((60 * (b-r)/c + 120)    mod HueMax) / HueMax
+          else:        ((60 * (r-g)/c + 240)    mod HueMax) / HueMax  # v == b
+
+  let s = if v == 0.0: 0.0 else: c/v
+
+  result = (h.float, s.float, v.float)
+
+# }}}
+# {{{ hsva*()
+func hsva*(h, s, v, a: float): Color =
+  var r, g, b: float
+  if s == 0.0:
+    r = v
+    g = v
+    b = v
+  else:
+    let
+      hf = if h >= 1.0: 0.0 else: h*6
+      i = hf.int  # should be in the range 0..5
+      f = hf - i.float  # fractional part
+
+      m = v * (1 - s)
+      n = v * (1 - s*f)
+      k = v * (1 - s*(1-f))
+
+    (r, g, b) = if   i == 0: (v, k, m)
+                elif i == 1: (n, v, m)
+                elif i == 2: (m, v, k)
+                elif i == 3: (m, n, v)
+                elif i == 4: (k, m, v)
+                else:        (v, m, n)
+
+  result = rgba(r, g, b, a)
+
+# }}}
+
+func luma*(c: Color): float =
+  # Luma calculations according to the Rec. 709 spec
+  # https://en.wikipedia.org/wiki/Luma_(video)
+  c.r*0.2126 + c.g*0.7152 * c.b*0.0722
+
+func isLight*(c: Color): bool = c.luma > 0.179
+func isDark*(c: Color):  bool = not c.isLight
 
 func weightedEuclidanDistance*(c: Color): float =
   sqrt(c.r*c.r*0.299 + c.g*c.g*0.587 + c.b*c.b*0.114)
 
-func isLight*(c: Color, threshold: float = 0.7): bool =
-  weightedEuclidanDistance(c) > threshold
+func isLightEuclidan*(c: Color): bool =
+  weightedEuclidanDistance(c) > 0.7
 
-func isDark*(c: Color): bool = not c.isLight
-
-func isLightFast*(c: Color, threshold: float = 0.6): bool =
-  sRGBLuma(c) > threshold
-
-func isDarkFast*(c: Color): bool = not c.isLightFast
+func isDarkEuclidan*(c: Color): bool = not c.isLightEuclidan
 
 # }}}
 # {{{ Image functions
