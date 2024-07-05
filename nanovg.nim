@@ -482,7 +482,7 @@ func toHSV*(c: Color): (float, float, float) =
 
   let s = if v == 0.0: 0.0 else: c/v
 
-  result = (h.float, s.float, v.float)
+  (h.float, s.float, v.float)
 
 # }}}
 # {{{ hsva*()
@@ -509,7 +509,7 @@ func hsva*(h, s, v, a: float): Color =
                 elif i == 4: (k, m, v)
                 else:        (v, m, n)
 
-  result = rgba(r, g, b, a)
+  rgba(r, g, b, a)
 
 # }}}
 
