@@ -10,7 +10,7 @@ skipDirs = @["doc", "examples"]
 
 # Dependencies
 
-requires "nim >= 1.6.4"
+requires "nim >= 2.0.6"
 
 task examplesGL2Debug, "Compiles the examples":
   exec "nim c -d:debug -D:glfwStaticLib -D:demoMSAA -D:nvgGL2 examples/example_gl2.nim"
