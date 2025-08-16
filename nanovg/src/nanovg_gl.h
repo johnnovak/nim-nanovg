@@ -202,10 +202,11 @@ struct GLNVGfragUniforms {
 		float strokeThr;
 		int texType;
 		int type;
+		int colorSpace;
 	#else
 		// note: after modifying layout or size of uniform array,
 		// don't forget to also update the fragment shader source!
-		#define NANOVG_GL_UNIFORMARRAY_SIZE 11
+		#define NANOVG_GL_UNIFORMARRAY_SIZE 12
 		union {
 			struct {
 				float scissorMat[12]; // matrices are actually 3 vec4s
@@ -221,6 +222,7 @@ struct GLNVGfragUniforms {
 				float strokeThr;
 				float texType;
 				float type;
+				float colorSpace;
 			};
 			float uniformArray[NANOVG_GL_UNIFORMARRAY_SIZE][4];
 		};
@@ -576,6 +578,7 @@ static int glnvg__renderCreate(void* uptr)
 		"		float strokeThr;\n"
 		"		int texType;\n"
 		"		int type;\n"
+		"		int colorSpace;\n"
 		"	};\n"
 		"#else\n" // NANOVG_GL3 && !USE_UNIFORMBUFFER
 		"	uniform vec4 frag[UNIFORMARRAY_SIZE];\n"
@@ -604,6 +607,7 @@ static int glnvg__renderCreate(void* uptr)
 		"	#define strokeThr frag[10].y\n"
 		"	#define texType int(frag[10].z)\n"
 		"	#define type int(frag[10].w)\n"
+		"	#define colorSpace int(frag[11].x)\n"
 		"#endif\n"
 		"\n"
 		"float sdroundrect(vec2 pt, vec2 ext, float rad) {\n"
@@ -625,6 +629,32 @@ static int glnvg__renderCreate(void* uptr)
 		"}\n"
 		"#endif\n"
 		"\n"
+		"// Color profile transforms\n"
+		"// sRGB (Rec.709 / BT.709) to DCI-P3 (DCI whitepoint, 2.6 gamma)\n"
+		"const mat3 srgb_to_dci_p3 =\n"
+		"mat3(\n"
+		"	0.868579739716132,   0.0345404102543194,  0.0167714290414503,\n"
+		"	0.128919138460847,   0.96181138636192,    0.0710399977868858,\n"
+		"	0.00250112182302048, 0.00364820338376059, 0.912188573171664\n"
+		");\n"
+		"// sRGB (Rec.709 / BT.709) to Display P3 (D65 whitepoint, 2.2 gamma)\n"
+		"const mat3 srgb_to_display_p3 = mat3(\n"
+		"	0.822461968714362,   0.0331941988509616,  0.01708263072112,\n"
+		"	0.177538031285638,   0.966805801149038,   0.0723974406639634,\n"
+		"	0.0,                 0.0,                 0.910519928614916\n"
+		");\n"
+	    "// sRGB (Rec.709 / BT.709) to BT.2020\n"
+		"const mat3	srgb_to_bt2020 = mat3(\n"
+		"	0.627403895934699,   0.069097289358232,   0.0163914388751502,\n"
+		"	0.329283038377884,   0.919540395075459,   0.0880133078772258,\n"
+		"	0.0433130656874172,  0.0113623155663092,  0.895595253247624\n"
+		");\n"
+		"// # sRGB (Rec.709 / BT.709) to Adobe RGB (1998)\n"
+		"const mat3 srgb_to_adobe_rgb = mat3(\n"
+		"	0.715125606855624,   0.0,                 0.0,\n"
+		"	0.284874393144375,   1.0,                 0.0411619484501184,\n"
+		"	0.0,                 0.0,                 0.958838051549882\n"
+		");\n"
 		"void main(void) {\n"
 		"   vec4 result;\n"
 		"	float scissor = scissorMask(fpos);\n"
@@ -670,10 +700,22 @@ static int glnvg__renderCreate(void* uptr)
 		"		color *= scissor;\n"
 		"		result = color * innerCol;\n"
 		"	}\n"
+		"	// Gamma decode\n"
+		"	vec3 col = pow(result.rgb, vec3(2.2));\n"
+		"	// Transform color to output colorspace\n"
+		"	float gamma_out = 0;\n"
+		"	mat3 m_out;\n"
+		"	if      (colorSpace == 0.0) { gamma_out = 2.2; m_out = srgb_to_adobe_rgb;  }\n"
+		"	else if (colorSpace == 1.0) { gamma_out = 2.4; m_out = srgb_to_bt2020;     }\n"
+		"	else if (colorSpace == 2.0) { gamma_out = 2.6; m_out = srgb_to_dci_p3;     }\n"
+		"	else if (colorSpace == 3.0) { gamma_out = 2.2; m_out = srgb_to_display_p3; };\n"
+		"	col = m_out * col;\n"
+		"	// Gamma encode\n"
+		"	col = pow(col, vec3(1.0 / gamma_out));\n"
 		"#ifdef NANOVG_GL3\n"
-		"	outColor = result;\n"
+		"	outColor = vec4(col, result.a);\n"
 		"#else\n"
-		"	gl_FragColor = result;\n"
+		"	gl_FragColor = vec4(col, result.a);\n"
 		"#endif\n"
 		"}\n";
 
@@ -973,6 +1015,9 @@ static int glnvg__convertPaint(GLNVGcontext* gl, GLNVGfragUniforms* frag, NVGpai
 	}
 
 	glnvg__xformToMat3x4(frag->paintMat, invxform);
+
+	// TODO
+	frag->colorSpace = 2;
 
 	return 1;
 }
